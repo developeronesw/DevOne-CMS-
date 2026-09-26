@@ -5,11 +5,15 @@
   "description": "DevOne CMS serverless edition for Cloudflare",
   "type": "module",
   "scripts": {
-    "cloudflare:setup": "node scripts/cloudflare-setup.mjs",
-    "cloudflare:deploy": "npm run cloudflare:setup && wrangler pages deploy dist",
-    "build": "vite build"
+    "dev": "vite",
+    "build": "vite build",
+    "cloudflare:deploy": "npm run build && wrangler deploy",
+    "cloudflare:dev": "vite dev",
+    "cloudflare:preview": "npm run build && wrangler dev"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.17.1",
+    "@vitejs/plugin-react": "^5.0.4",
     "vite": "^7.1.7",
     "typescript": "^5.9.2",
     "wrangler": "^4.40.0"
