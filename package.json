@@ -2,20 +2,26 @@
   "name": "devone-cms-serverless",
   "version": "2.0.0-alpha.1",
   "private": true,
-  "description": "DevOne CMS serverless edition for Cloudflare",
+  "description": "DevOne CMS — Performance, Security, Design",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "cloudflare:deploy": "npm run build && wrangler deploy",
-    "cloudflare:dev": "vite dev",
-    "cloudflare:preview": "npm run build && wrangler dev"
+    "preview": "vite preview",
+    "cf:dev": "wrangler dev",
+    "cf:deploy": "vite build && wrangler deploy",
+    "cf:typegen": "wrangler types",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.0.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.17.1",
-    "@vitejs/plugin-react": "^5.0.4",
-    "vite": "^7.1.7",
+    "@cloudflare/vite-plugin": "^1.60.1",
     "typescript": "^5.9.2",
+    "vite": "^8.3.1",
     "wrangler": "^4.40.0"
   }
 }
