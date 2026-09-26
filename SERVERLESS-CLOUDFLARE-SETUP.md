@@ -6,7 +6,7 @@ The serverless edition is designed for Cloudflare Workers + Static Assets rather
 
 **You do not manually create or bind D1, KV, or R2.**
 
-The Wrangler configuration intentionally declares the bindings without resource IDs/names. Current Wrangler supports automatic provisioning for D1, KV, and R2: when the Worker is deployed, Cloudflare creates the missing resources and attaches them to the Worker. citeturn2search1turn2search2
+The Wrangler configuration intentionally declares the bindings without resource IDs/names. Current Wrangler supports automatic provisioning for D1, KV, and R2: when the Worker is deployed, Cloudflare creates the missing resources and attaches them to the Worker.
 
 ### Install/deploy
 
@@ -27,7 +27,7 @@ On first deployment Wrangler provisions:
 - **R2** → `MEDIA`
 - **Worker + static assets** → one deployment
 
-Static React/Vite output is deployed with the Worker as Cloudflare Static Assets. This is the current recommended architecture for new full-stack Cloudflare applications. citeturn2search2turn2search11
+Static React/Vite output is deployed with the Worker as Cloudflare Static Assets. This is the current recommended architecture for new full-stack Cloudflare applications.
 
 ### Why this is better than a setup script
 
@@ -41,7 +41,7 @@ wrangler r2 bucket create
 
 That works, but it creates unnecessary installer state and requires us to parse resource IDs.
 
-Wrangler now has native automatic provisioning. The repository can simply declare the bindings and let Cloudflare create the resources during deployment. citeturn2search1
+Wrangler now has native automatic provisioning. The repository can simply declare the bindings and let Cloudflare create the resources during deployment.
 
 This also means a customer can deploy the repository from a clean machine without first opening the Cloudflare dashboard to create infrastructure.
 
