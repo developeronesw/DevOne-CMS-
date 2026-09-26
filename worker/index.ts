@@ -2,6 +2,8 @@ import type { Env } from "./types";
 import { hashPassword, json } from "./lib/crypto";
 import { getCurrentUser, login, logout, requireCsrf, requireUser } from "./lib/auth";
 import { isInstalled, setSetting, setting } from "./lib/db";
+import { createCoreApi } from "../core/api";
+import { createCloudflareServices } from "../adapters/cloudflare/providers";
 
 function securityHeaders(): HeadersInit {
   return {
@@ -80,6 +82,21 @@ async function install(request: Request, env: Env): Promise<Response> {
 async function api(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
   const path = url.pathname.replace(/\\/+$/, "") || "/";
+
+  if (path.startsWith("/api/core/")) {
+    const services = createCloudflareServices(env);
+    const core = createCoreApi({
+      services,
+      authenticate: async (req) => await getCurrentUser(req, env),
+      authorize: async (user, permission) => {
+        if (!user) return false;
+        if (user.role === "administrator") return true;
+        if (permission === "system.read") return user.role === "site_admin";
+        return false;
+      },
+    });
+    return core.api.handle(request);
+  }
 
   if (path === "/api/health" && request.method === "GET") {
     const installed = await isInstalled(env);
