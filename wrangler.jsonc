@@ -12,7 +12,8 @@
   },
   "d1_databases": [
     {
-      "binding": "DB"
+      "binding": "DB",
+      "migrations_dir": "./migrations"
     }
   ],
   "kv_namespaces": [
