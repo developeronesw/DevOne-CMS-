@@ -1,0 +1,17 @@
+{
+  "name": "devone-cms-serverless",
+  "version": "2.0.0-alpha.1",
+  "private": true,
+  "description": "DevOne CMS serverless edition for Cloudflare",
+  "type": "module",
+  "scripts": {
+    "cloudflare:setup": "node scripts/cloudflare-setup.mjs",
+    "cloudflare:deploy": "npm run cloudflare:setup && wrangler pages deploy dist",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^7.1.7",
+    "typescript": "^5.9.2",
+    "wrangler": "^4.40.0"
+  }
+}
