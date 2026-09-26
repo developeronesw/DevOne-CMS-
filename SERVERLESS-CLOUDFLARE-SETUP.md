@@ -1,49 +1,67 @@
 # DevOne CMS Serverless — Cloudflare Setup
 
-The serverless edition is designed so a new deployment does **not** require manually creating D1, KV, R2, or Pages bindings in the Cloudflare dashboard.
+## Zero-manual-resource deployment
 
-## One-time bootstrap
+The serverless edition is designed for Cloudflare Workers + Static Assets rather than the older Pages-only deployment model.
+
+**You do not manually create or bind D1, KV, or R2.**
+
+The Wrangler configuration intentionally declares the bindings without resource IDs/names. Current Wrangler supports automatic provisioning for D1, KV, and R2: when the Worker is deployed, Cloudflare creates the missing resources and attaches them to the Worker. citeturn2search1turn2search2
+
+### Install/deploy
 
 From the repository root:
 
 ```bash
 npm install
-npm run cloudflare:setup
+npx wrangler login
+npm run cloudflare:deploy
 ```
 
-The bootstrap:
+That's the entire Cloudflare setup flow.
 
-1. Authenticates with Cloudflare through Wrangler when needed.
-2. Creates the DevOne D1 database if it does not already exist.
-3. Creates the DevOne KV namespace if it does not already exist.
-4. Creates the DevOne R2 media bucket if it does not already exist.
-5. Writes the generated resource IDs into `wrangler.jsonc`.
-6. Creates the Cloudflare Pages project if it does not already exist.
+On first deployment Wrangler provisions:
 
-Resource names can be customized:
+- **D1** → `DB`
+- **KV** → `CACHE`
+- **R2** → `MEDIA`
+- **Worker + static assets** → one deployment
 
-```bash
-DEVONE_CF_PROJECT=my-client-site npm run cloudflare:setup
+Static React/Vite output is deployed with the Worker as Cloudflare Static Assets. This is the current recommended architecture for new full-stack Cloudflare applications. citeturn2search2turn2search11
+
+### Why this is better than a setup script
+
+We originally considered a script that explicitly called:
+
+```text
+wrangler d1 create
+wrangler kv namespace create
+wrangler r2 bucket create
 ```
 
-Or independently:
+That works, but it creates unnecessary installer state and requires us to parse resource IDs.
 
-```bash
-DEVONE_CF_D1=my-client-db \
-DEVONE_CF_KV=my-client-cache \
-DEVONE_CF_R2=my-client-media \
-DEVONE_CF_PAGES=my-client-site \
-npm run cloudflare:setup
-```
+Wrangler now has native automatic provisioning. The repository can simply declare the bindings and let Cloudflare create the resources during deployment. citeturn2search1
 
-## Important security model
+This also means a customer can deploy the repository from a clean machine without first opening the Cloudflare dashboard to create infrastructure.
 
-Cloudflare resource creation is a **deployment-time operation**, not something the public CMS runtime should perform. The site itself never receives a Cloudflare API token.
+### Authentication
 
-Wrangler uses the installer's Cloudflare authentication to provision the resources. The resulting D1/KV/R2 identifiers are configuration, not secrets.
+The installer/deployer authenticates **the customer's own Cloudflare account**. DevOne never needs a master Cloudflare API token embedded in the CMS.
 
-The application will still enforce least-privilege access through Cloudflare bindings and server-side authorization.
+For CI/CD, a customer can instead provide a scoped Cloudflare API token through the CI provider's secret store.
 
-## Future one-click installer
+### Future browser installer
 
-A hosted DevOne installer can eventually replace the terminal step with Cloudflare OAuth. That installer would authorize the user's own Cloudflare account, create the same resources, generate the deployment configuration, and then hand off to Cloudflare deployment. No DevOne master API token should ever be embedded in the CMS.
+We can later add a DevOne hosted "Deploy to Cloudflare" flow using Cloudflare OAuth. That can provide the same zero-dashboard experience from a browser while still provisioning resources inside the customer's Cloudflare account.
+
+## Resource ownership
+
+The resources belong to the Cloudflare account that deploys the Worker. DevOne does not take custody of:
+
+- database data
+- uploaded media
+- cache data
+- Cloudflare credentials
+
+This is important for the self-hosted/serverless edition.
