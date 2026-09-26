@@ -1,0 +1,1468 @@
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;min-height:100vh}.topnav{display:flex;align-items:center;gap:24px;padding:16px 28px;position:sticky;top:0;z-index:10;backdrop-filter:blur(18px)}.brand{font-weight:800;font-size:20px;text-decoration:none}.logo{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:12px;margin-right:8px}.topnav ul{display:flex;gap:16px;list-style:none;margin:0;padding:0;flex:1}.topnav a{text-decoration:none}.adminlink{padding:10px 14px;border-radius:12px}body:not(.site-width-edge2edge) main{max-width:1120px;margin:40px auto;padding:0 22px}body:not(.site-width-edge2edge) .hero{padding:70px 36px;border-radius:34px}body:not(.site-width-edge2edge) .hero h1{font-size:clamp(42px,7vw,88px);line-height:1;margin:0 0 16px}body:not(.site-width-edge2edge) .hero p{font-size:20px;max-width:760px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:26px}.card{padding:24px;border-radius:24px}.button{display:inline-block;padding:13px 18px;border-radius:14px;text-decoration:none;font-weight:700}.footer{text-align:center;padding:40px;opacity:.7}.admin-wrap{display:grid;grid-template-columns:250px 1fr;min-height:100vh}.sidebar{padding:24px}.sidebar a{display:block;padding:12px 14px;border-radius:12px;margin-bottom:8px;text-decoration:none}.panel{padding:30px}.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:12px;text-align:left;border-bottom:1px solid rgba(255,255,255,.12)}input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(128,128,128,.35);background:rgba(255,255,255,.05);color:inherit}button,.btn{border:0;padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.market-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}.market-card{padding:20px;border-radius:22px}pre{overflow:auto;padding:18px;border-radius:16px}@media(max-width:760px){.admin-wrap{display:block}.topnav{flex-wrap:wrap}.topnav ul{width:100%;overflow:auto}body:not(.site-width-edge2edge) .hero{padding:46px 24px}}
+
+input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #64748b55;background:#02061766;color:inherit;margin:6px 0 14px}.table{width:100%;border-collapse:collapse}.table th,.table td{padding:12px;border-bottom:1px solid #64748b44;text-align:left}.btn,.button,button{display:inline-block;padding:10px 16px;border:0;border-radius:10px;text-decoration:none;cursor:pointer}.dash-grid,.grid,.market-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.admin-wrap{display:grid;grid-template-columns:240px 1fr;min-height:100vh}.sidebar{padding:20px}.sidebar a{display:block;padding:10px;border-radius:10px;text-decoration:none}.panel{padding:28px}.card,.market-card{padding:18px;border-radius:16px;margin:10px 0}code,pre{white-space:pre-wrap;word-break:break-word}@media(max-width:800px){.admin-wrap{display:block}}
+
+/* DevOneCMS v1.1.5 Site Customizer + Menu Builder */
+.muted{opacity:.72}.error-card{border:1px solid rgba(248,113,113,.55)!important;background:rgba(127,29,29,.18)!important}.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;align-items:start}.settings-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;grid-column:1/-1}.inline-check{display:flex!important;align-items:center;gap:10px}.inline-check input{width:auto;margin:0}.logo-preview-wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.logo-preview{max-width:180px;max-height:86px;border-radius:16px;padding:10px;background:rgba(255,255,255,.08);border:1px solid rgba(148,163,184,.25)}
+.site-nav{display:flex;align-items:center;gap:24px;padding:14px 28px;z-index:1000;backdrop-filter:blur(18px);border-bottom:1px solid rgba(148,163,184,.14)}.menu-top-sticky{position:sticky;top:0}.menu-top-static{position:relative}.menu-bottom-sticky{position:fixed;left:18px;right:18px;bottom:18px;border:1px solid rgba(148,163,184,.18);border-radius:24px;box-shadow:0 20px 70px rgba(0,0,0,.30)}.layout-bottom-sticky main{padding-bottom:110px}.brand{display:flex;align-items:center;gap:10px}.brand-logo-img{width:44px;height:44px;object-fit:contain;border-radius:12px}.brand-text{display:flex;flex-direction:column;line-height:1.1}.brand-text small{font-size:12px;font-weight:500;opacity:.7}.menu-inline{margin-left:auto}.primary-menu{display:flex;align-items:center;gap:8px;list-style:none;margin:0;padding:0}.primary-menu a{display:block;padding:10px 13px;border-radius:12px;text-decoration:none}.primary-menu a:hover,.sidebar a:hover{background:rgba(148,163,184,.14)}.nav-toggle{margin-left:auto;font-size:22px;padding:10px 14px}.menu-overlay{display:none;position:fixed;inset:0;background:rgba(2,6,23,.58);z-index:1001}.menu-panel{position:fixed;top:0;bottom:0;width:min(360px,86vw);padding:28px;background:rgba(2,6,23,.96);border-left:1px solid rgba(148,163,184,.18);border-right:1px solid rgba(148,163,184,.18);box-shadow:0 0 80px rgba(0,0,0,.45);z-index:1002;transition:transform .24s ease;display:flex;flex-direction:column;gap:16px}.menu-offcanvas-left .menu-panel{left:0;transform:translateX(-105%)}.menu-offcanvas-right .menu-panel{right:0;transform:translateX(105%)}.menu-open .menu-panel{transform:translateX(0)}.menu-open .menu-overlay{display:block}.menu-close{align-self:flex-end;font-size:26px;line-height:1;width:44px;height:44px}.vertical-menu{display:flex;flex-direction:column;align-items:stretch}.vertical-menu a{font-size:18px;padding:14px 16px}.menu-panel .adminlink{display:block;margin-top:auto;text-align:center}
+.menu-builder-grid{display:grid;grid-template-columns:minmax(280px,360px) 1fr;gap:20px;align-items:start}.page-picker{display:grid;gap:8px;max-height:420px;overflow:auto;padding-right:6px}.page-choice{display:grid!important;grid-template-columns:auto 1fr;gap:8px 10px;align-items:center;padding:10px;border-radius:12px;border:1px solid rgba(148,163,184,.16);margin:0}.page-choice input{width:auto;margin:0}.page-choice small{grid-column:2;opacity:.65}.compact-form select{margin-bottom:0}.menu-items{display:grid;gap:12px}.menu-item-row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;border:1px solid rgba(148,163,184,.18);border-radius:18px;padding:14px;background:rgba(255,255,255,.035)}.menu-item-handle{padding:12px 4px;opacity:.7}.menu-item-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.menu-item-actions{display:grid;gap:8px}.menu-item-actions .btn{padding:8px 10px;text-align:center}.menu-editor-card{position:sticky;top:18px}hr{border:0;border-top:1px solid rgba(148,163,184,.18);margin:20px 0}@media(max-width:900px){.menu-builder-grid{grid-template-columns:1fr}.menu-editor-card{position:static}.site-nav{flex-wrap:wrap}.menu-inline{width:100%;margin-left:0}.primary-menu{overflow:auto}.menu-bottom-sticky{left:8px;right:8px;bottom:8px}.brand-text small{display:none}}@media(max-width:640px){.menu-item-row{grid-template-columns:1fr}.menu-item-handle{display:none}.menu-item-two{grid-template-columns:1fr}.menu-item-actions{display:flex;flex-wrap:wrap}.settings-grid{grid-template-columns:1fr}}
+.admin-brand{display:flex;align-items:center;gap:10px}.admin-brand-logo{width:38px;height:38px;object-fit:contain;border-radius:12px;background:rgba(255,255,255,.08);padding:4px}
+
+/* DevOneCMS v1.1.6 Front-end shell, AJAX transitions, Theme Library, Media Library */
+.site-shell{min-height:100vh;display:flex;flex-direction:column}.site-container,.nav-container,.site-main{width:min(1180px,calc(100% - 36px));margin-inline:auto}.nav-container{display:flex;align-items:center;gap:24px;width:min(1180px,calc(100% - 28px))}.site-nav{padding-left:0!important;padding-right:0!important}.site-main{flex:1;margin-top:40px;margin-bottom:40px;outline:none;transition:opacity .18s ease,transform .18s ease}.site-main.is-loading{opacity:.48;transform:translateY(4px)}.footer .site-container{padding:28px 0}.layout-bottom-sticky .site-main{padding-bottom:120px}.menu-bottom-sticky{left:50%!important;right:auto!important;transform:translateX(-50%);width:min(1180px,calc(100% - 24px))}.menu-bottom-sticky .nav-container{width:100%}.site-nav .adminlink{white-space:nowrap}.menu-panel .adminlink{white-space:normal}.primary-menu li{display:block}
+.theme-manager-grid{display:grid;grid-template-columns:minmax(280px,1fr) minmax(240px,.75fr);gap:18px;margin-bottom:18px}.theme-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}.theme-card{border:1px solid rgba(148,163,184,.18);border-radius:24px;overflow:hidden;background:rgba(255,255,255,.035)}.theme-card.active{border-color:rgba(96,165,250,.75);box-shadow:0 0 0 3px rgba(96,165,250,.15)}.theme-shot{height:170px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(96,165,250,.18),rgba(168,85,247,.16));border-bottom:1px solid rgba(148,163,184,.18);font-weight:900;font-size:26px;text-align:center;padding:18px}.theme-shot img{width:100%;height:100%;object-fit:cover}.theme-info{padding:18px}.theme-info h3{margin-top:0}.theme-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.theme-actions button:disabled{opacity:.55;cursor:not-allowed}
+.media-library-layout{display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start}.media-sidebar{position:sticky;top:18px}.folder-link{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:12px;text-decoration:none;margin-bottom:6px;color:inherit}.folder-link:hover,.folder-link.active{background:rgba(148,163,184,.14)}.media-upload-grid{display:grid;grid-template-columns:1.2fr .8fr 1fr;gap:14px}.media-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px}.media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.media-card{border:1px solid rgba(148,163,184,.18);border-radius:22px;overflow:hidden;background:rgba(255,255,255,.035)}.media-thumb{height:160px;display:grid;place-items:center;background:rgba(15,23,42,.38)}.media-thumb img{width:100%;height:100%;object-fit:cover}.file-icon{font-weight:900;font-size:24px;padding:14px 18px;border-radius:18px;background:rgba(148,163,184,.16)}.media-meta{padding:14px;display:grid;gap:8px}.media-meta small{opacity:.7}.media-meta input{font-size:12px;margin:0}.error-card{color:#fecaca}.panel .error-card{border-color:rgba(248,113,113,.55)!important}
+@media(max-width:900px){.media-library-layout,.theme-manager-grid{grid-template-columns:1fr}.media-sidebar{position:static}.media-upload-grid{grid-template-columns:1fr}.nav-container{flex-wrap:wrap}.menu-inline{order:3;width:100%}.site-container,.nav-container,.site-main{width:min(100% - 24px,1180px)}}
+
+/* DevOneCMS v1.1.7 Menu/Theme Polish
+   Purpose: make off-canvas menus solid, make menu links behave like buttons,
+   and prevent visited links from changing color after AJAX navigation. */
+:root{
+  --devone-menu-panel-bg: rgba(2, 6, 23, .94);
+  --devone-menu-panel-border: rgba(148, 163, 184, .22);
+  --devone-menu-link-bg: rgba(15, 23, 42, .72);
+  --devone-menu-link-bg-hover: rgba(14, 165, 233, .18);
+  --devone-menu-link-border: rgba(148, 163, 184, .20);
+  --devone-menu-link-border-hover: rgba(34, 211, 238, .45);
+  --devone-menu-link-text: #f8fafc;
+  --devone-menu-link-text-hover: #ffffff;
+  --devone-menu-shadow: 0 26px 90px rgba(0,0,0,.60), inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.site-nav,
+.site-nav *{
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Off-canvas overlay and panel: stronger, readable, almost solid. */
+.menu-overlay{
+  background: rgba(2, 6, 23, .72) !important;
+  backdrop-filter: blur(4px) !important;
+}
+.menu-panel,
+.site-nav .menu-panel,
+nav.menu-panel{
+  background: var(--devone-menu-panel-bg) !important;
+  border-color: var(--devone-menu-panel-border) !important;
+  box-shadow: var(--devone-menu-shadow) !important;
+  color: var(--devone-menu-link-text) !important;
+  opacity: 1 !important;
+  backdrop-filter: blur(18px) saturate(130%) !important;
+}
+.menu-panel::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius:inherit;
+  background: radial-gradient(circle at 20% 0%, rgba(34,211,238,.14), transparent 38%),
+              radial-gradient(circle at 90% 18%, rgba(168,85,247,.12), transparent 42%);
+  opacity:.9;
+}
+.menu-panel > *{
+  position:relative;
+  z-index:1;
+}
+
+/* Make links look like intentional nav buttons, not browser-default links. */
+.site-nav a,
+.site-nav a:visited,
+.site-nav .primary-menu a,
+.site-nav .primary-menu a:visited,
+.menu-panel a,
+.menu-panel a:visited,
+.menu-inline a,
+.menu-inline a:visited,
+.site-nav .adminlink,
+.site-nav .adminlink:visited{
+  color: var(--devone-menu-link-text) !important;
+  text-decoration: none !important;
+  font-weight: 800 !important;
+  letter-spacing: .01em;
+}
+
+.site-nav .primary-menu a,
+.menu-panel .primary-menu a,
+.menu-inline .primary-menu a,
+.site-nav .adminlink{
+  background: var(--devone-menu-link-bg) !important;
+  border: 1px solid var(--devone-menu-link-border) !important;
+  border-radius: 15px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 8px 20px rgba(0,0,0,.14);
+  transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+.site-nav .primary-menu a:hover,
+.site-nav .primary-menu a:focus-visible,
+.site-nav .primary-menu a[aria-current="page"],
+.menu-panel .primary-menu a:hover,
+.menu-panel .primary-menu a:focus-visible,
+.menu-inline .primary-menu a:hover,
+.menu-inline .primary-menu a:focus-visible,
+.site-nav .adminlink:hover,
+.site-nav .adminlink:focus-visible{
+  color: var(--devone-menu-link-text-hover) !important;
+  background: var(--devone-menu-link-bg-hover) !important;
+  border-color: var(--devone-menu-link-border-hover) !important;
+  box-shadow: 0 0 0 3px rgba(34,211,238,.10), 0 14px 30px rgba(0,0,0,.24) !important;
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.site-nav .brand,
+.site-nav .brand:visited{
+  color: var(--devone-menu-link-text) !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.site-nav .brand:hover{
+  transform:none;
+  color:#fff !important;
+}
+
+.nav-toggle,
+.menu-close{
+  background: linear-gradient(135deg, rgba(34,211,238,.95), rgba(168,85,247,.95)) !important;
+  color:#020617 !important;
+  border:0 !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.25) !important;
+  font-weight:900 !important;
+}
+.nav-toggle:hover,
+.menu-close:hover{
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Vertical off-canvas spacing and hit areas. */
+.menu-panel .vertical-menu{
+  gap:10px;
+}
+.menu-panel .vertical-menu a{
+  padding:15px 17px !important;
+  min-height:50px;
+  display:flex !important;
+  align-items:center;
+  justify-content:space-between;
+}
+.menu-panel .vertical-menu a::after{
+  content:'›';
+  opacity:.65;
+  font-size:22px;
+  line-height:1;
+}
+.menu-panel .adminlink{
+  padding:14px 17px !important;
+}
+
+/* Bottom sticky menu should also feel like a solid dock. */
+.menu-bottom-sticky{
+  background: rgba(2, 6, 23, .92) !important;
+  backdrop-filter: blur(18px) saturate(130%) !important;
+  box-shadow: 0 24px 70px rgba(0,0,0,.45) !important;
+}
+.menu-bottom-sticky .primary-menu a{
+  white-space:nowrap;
+}
+
+/* Light theme compatibility: if the body/theme opts into a light surface, keep readable button contrast. */
+body.theme-light .menu-panel,
+body.light .menu-panel,
+[data-theme="light"] .menu-panel{
+  --devone-menu-panel-bg: rgba(255,255,255,.94);
+  --devone-menu-link-bg: rgba(241,245,249,.92);
+  --devone-menu-link-bg-hover: rgba(14,165,233,.15);
+  --devone-menu-link-text: #0f172a;
+  --devone-menu-link-text-hover: #020617;
+  --devone-menu-panel-border: rgba(15,23,42,.12);
+}
+
+@media(max-width:700px){
+  .site-nav .primary-menu a,
+  .site-nav .adminlink{
+    padding:11px 13px !important;
+    border-radius:14px !important;
+  }
+  .menu-panel{
+    width:min(390px,92vw) !important;
+    padding:24px !important;
+  }
+}
+
+/* DevOneCMS v1.1.8 Site Width Controls
+   Global layout mode controlled from Admin > Settings.
+   Developers can keep pages boxed or allow full-width/edge-to-edge sections. */
+:root{
+  --devone-container-max: 1180px;
+  --devone-wide-max: 1380px;
+  --devone-edge-gutter: clamp(16px, 3vw, 36px);
+}
+
+body.site-width-boxed .site-container,
+body.site-width-boxed .nav-container,
+body.site-width-boxed .site-main{
+  width:min(var(--devone-container-max), calc(100% - (var(--devone-edge-gutter) * 2))) !important;
+  max-width:var(--devone-container-max) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+body.site-width-full .site-container,
+body.site-width-full .nav-container{
+  width:100% !important;
+  max-width:none !important;
+  padding-left:var(--devone-edge-gutter) !important;
+  padding-right:var(--devone-edge-gutter) !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+
+body.site-width-full .site-main{
+  width:100% !important;
+  max-width:none !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+
+body.site-width-full .site-main > :not(.alignfull):not(.full-bleed):not(.devone-full-bleed):not(.devone-edge-to-edge):not(.devone-boxed-content){
+  width:min(var(--devone-container-max), calc(100% - (var(--devone-edge-gutter) * 2)));
+  margin-left:auto;
+  margin-right:auto;
+}
+
+body.site-width-full .site-main > .hero:first-child:not(.alignfull):not(.full-bleed):not(.devone-full-bleed):not(.devone-edge-to-edge){
+  width:min(var(--devone-wide-max), calc(100% - (var(--devone-edge-gutter) * 2)));
+}
+
+.alignfull,
+.full-bleed,
+.devone-full-bleed,
+.devone-edge-to-edge{
+  width:100vw !important;
+  max-width:none !important;
+  margin-left:calc(50% - 50vw) !important;
+  margin-right:calc(50% - 50vw) !important;
+}
+
+body.site-width-full .alignfull,
+body.site-width-full .full-bleed,
+body.site-width-full .devone-full-bleed,
+body.site-width-full .devone-edge-to-edge{
+  width:100% !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+
+.alignwide,
+.devone-wide-content{
+  width:min(var(--devone-wide-max), calc(100% - (var(--devone-edge-gutter) * 2))) !important;
+  max-width:var(--devone-wide-max) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+.devone-boxed-content,
+.boxed-content{
+  width:min(var(--devone-container-max), calc(100% - (var(--devone-edge-gutter) * 2))) !important;
+  max-width:var(--devone-container-max) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+body.site-width-full .menu-bottom-sticky{
+  width:calc(100% - 24px) !important;
+  max-width:none !important;
+}
+body.site-width-boxed .menu-bottom-sticky{
+  width:min(var(--devone-container-max), calc(100% - 24px)) !important;
+}
+
+.layout-help-card code,
+.settings-grid code{
+  padding:2px 6px;
+  border-radius:8px;
+  background:rgba(148,163,184,.16);
+}
+
+@media(max-width:700px){
+  body.site-width-boxed .site-container,
+  body.site-width-boxed .nav-container,
+  body.site-width-boxed .site-main{
+    width:calc(100% - 24px) !important;
+  }
+  body.site-width-full .site-container,
+  body.site-width-full .nav-container{
+    padding-left:12px !important;
+    padding-right:12px !important;
+  }
+  body.site-width-full .site-main > :not(.alignfull):not(.full-bleed):not(.devone-full-bleed):not(.devone-edge-to-edge):not(.devone-boxed-content){
+    width:calc(100% - 24px);
+  }
+}
+
+
+
+/* DevOneCMS v1.1.9 True Full-Width Body/Layout Fix
+   Full width mode now makes the actual page body/content edge-to-edge.
+   Developers can still re-box any section with .devone-boxed-content or .boxed-content. */
+body.site-width-full,
+body.site-width-full .site-shell,
+body.site-width-full [data-devone-shell]{
+  width:100% !important;
+  max-width:none !important;
+  overflow-x:hidden;
+}
+
+body.site-width-full #cms-main.site-main,
+body.site-width-full main.site-main,
+body.site-width-full main#cms-main{
+  width:100% !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  border-radius:0 !important;
+  border:0 !important;
+  box-shadow:none !important;
+  background:transparent !important;
+  backdrop-filter:none !important;
+}
+
+/* Remove the old automatic inner boxing in full-width mode. */
+body.site-width-full #cms-main.site-main > *,
+body.site-width-full main.site-main > *{
+  width:100% !important;
+  max-width:none !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+
+/* Let common first-section/hero/page-builder blocks actually touch both edges. */
+body.site-width-full #cms-main.site-main > .hero,
+body.site-width-full #cms-main.site-main > section,
+body.site-width-full #cms-main.site-main > .section,
+body.site-width-full #cms-main.site-main > .slider,
+body.site-width-full #cms-main.site-main > .carousel,
+body.site-width-full #cms-main.site-main > .swiper,
+body.site-width-full #cms-main.site-main > .splide,
+body.site-width-full #cms-main.site-main > .page-builder-section{
+  width:100% !important;
+  max-width:none !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+
+/* Developer-controlled boxing/wide content still works inside full-width sites. */
+body.site-width-full #cms-main.site-main > .devone-boxed-content,
+body.site-width-full #cms-main.site-main > .boxed-content,
+body.site-width-full .devone-boxed-content,
+body.site-width-full .boxed-content{
+  width:min(var(--devone-container-max), calc(100% - (var(--devone-edge-gutter) * 2))) !important;
+  max-width:var(--devone-container-max) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+body.site-width-full #cms-main.site-main > .alignwide,
+body.site-width-full #cms-main.site-main > .devone-wide-content,
+body.site-width-full .alignwide,
+body.site-width-full .devone-wide-content{
+  width:min(var(--devone-wide-max), calc(100% - (var(--devone-edge-gutter) * 2))) !important;
+  max-width:var(--devone-wide-max) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+/* Optional utilities for developers who want padding inside full-width sections. */
+.devone-section-pad,
+.devone-page-gutter{
+  padding-left:var(--devone-edge-gutter) !important;
+  padding-right:var(--devone-edge-gutter) !important;
+}
+
+body.site-width-full .footer{
+  width:100% !important;
+}
+
+@media(max-width:700px){
+  body.site-width-full #cms-main.site-main,
+  body.site-width-full main.site-main{
+    width:100% !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+}
+
+/* DevOneCMS v1.1.10 Solid Off-Canvas Menu Patch
+   Off-canvas navigation now uses fully opaque solid/gradient theme colors.
+   Theme developers can override these variables in their active theme CSS. */
+:root{
+  --devone-offcanvas-bg:#0f172a;
+  --devone-offcanvas-gradient:linear-gradient(145deg,#020617 0%,#0f172a 48%,#1e1b4b 100%);
+  --devone-offcanvas-text:#f8fafc;
+  --devone-offcanvas-muted:#cbd5e1;
+  --devone-offcanvas-border:#334155;
+  --devone-offcanvas-link-bg:#111827;
+  --devone-offcanvas-link-border:#334155;
+  --devone-offcanvas-link-hover-bg:linear-gradient(135deg,#2563eb 0%,#7c3aed 100%);
+  --devone-offcanvas-link-hover-text:#ffffff;
+  --devone-offcanvas-shadow:0 30px 90px rgba(0,0,0,.55);
+  --devone-offcanvas-overlay:rgba(0,0,0,.78);
+}
+
+.menu-overlay{
+  background:var(--devone-offcanvas-overlay) !important;
+  backdrop-filter:none !important;
+}
+
+.menu-panel,
+nav.menu-panel,
+body .menu-panel,
+body nav.menu-panel{
+  background-color:var(--devone-offcanvas-bg) !important;
+  background-image:var(--devone-offcanvas-gradient) !important;
+  color:var(--devone-offcanvas-text) !important;
+  opacity:1 !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  border-color:var(--devone-offcanvas-border) !important;
+  box-shadow:var(--devone-offcanvas-shadow) !important;
+}
+
+.menu-panel::before,
+.menu-panel::after{
+  opacity:1 !important;
+}
+
+.menu-panel .brand,
+.menu-panel .brand:visited,
+.menu-panel .brand-text,
+.menu-panel .brand-text small{
+  color:var(--devone-offcanvas-text) !important;
+}
+
+.menu-panel .brand-text small{
+  color:var(--devone-offcanvas-muted) !important;
+  opacity:1 !important;
+}
+
+.menu-panel a,
+.menu-panel a:visited,
+.menu-panel .vertical-menu a,
+.menu-panel .vertical-menu a:visited,
+.menu-panel .adminlink,
+.menu-panel .adminlink:visited{
+  color:var(--devone-offcanvas-text) !important;
+  background:var(--devone-offcanvas-link-bg) !important;
+  border:1px solid var(--devone-offcanvas-link-border) !important;
+  box-shadow:none !important;
+  font-weight:900 !important;
+  text-decoration:none !important;
+  opacity:1 !important;
+}
+
+.menu-panel a:hover,
+.menu-panel a:focus,
+.menu-panel .vertical-menu a:hover,
+.menu-panel .vertical-menu a:focus,
+.menu-panel .adminlink:hover,
+.menu-panel .adminlink:focus{
+  color:var(--devone-offcanvas-link-hover-text) !important;
+  background:var(--devone-offcanvas-link-hover-bg) !important;
+  border-color:transparent !important;
+  outline:none !important;
+  transform:translateX(3px);
+}
+
+.menu-panel .menu-close,
+.menu-panel button.menu-close{
+  background:var(--devone-offcanvas-link-bg) !important;
+  color:var(--devone-offcanvas-text) !important;
+  border:1px solid var(--devone-offcanvas-link-border) !important;
+  opacity:1 !important;
+}
+
+.menu-panel .menu-close:hover,
+.menu-panel button.menu-close:hover{
+  background:var(--devone-offcanvas-link-hover-bg) !important;
+  color:var(--devone-offcanvas-link-hover-text) !important;
+}
+
+/* Inline menu links stay bold/button-like and never change after visited. */
+.site-nav .primary-menu a,
+.site-nav .primary-menu a:visited,
+.site-nav .adminlink,
+.site-nav .adminlink:visited{
+  font-weight:900 !important;
+  text-decoration:none !important;
+}
+
+/* DevOneCMS v1.1.12 Front-End Scripts Manager */
+.script-manager-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}.script-manager-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.script-manager-form .full-row{grid-column:1/-1}.script-sidebar{position:sticky;top:18px}.code-textarea{font-family:Consolas,Monaco,"Courier New",monospace;min-height:220px;line-height:1.55;font-size:13px;tab-size:2;background:rgba(2,6,23,.70)!important;border-color:rgba(96,165,250,.28)!important}.code-textarea.short{min-height:130px}.code-textarea.tall{min-height:320px}.script-help-box{border:1px solid rgba(96,165,250,.22);background:rgba(37,99,235,.10);border-radius:16px;padding:14px;margin-top:10px}.script-help-box p{margin-bottom:0}.script-steps{padding-left:22px;line-height:1.7}.script-steps li{margin-bottom:8px}.script-sidebar pre{max-height:320px;overflow:auto;font-size:12px}@media(max-width:1000px){.script-manager-grid,.script-manager-form{grid-template-columns:1fr}.script-sidebar{position:static}}
+
+/* DevOneCMS v1.2.0 Universal Store + GitHub Importer */
+.store-admin-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.55fr);gap:18px;align-items:start;margin-bottom:22px}.store-filter-row{display:grid;grid-template-columns:minmax(260px,1fr) auto;gap:14px;align-items:center;margin:18px 0 22px}.devone-search-input{min-height:46px;border-radius:14px;border:1px solid rgba(125,157,255,.28);background:rgba(255,255,255,.06);color:var(--text,#fff);padding:0 14px;font-weight:700}.store-tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}.store-tabs button{min-height:42px;border-radius:999px;padding:0 14px;border:1px solid rgba(125,157,255,.28);background:rgba(255,255,255,.06);color:var(--text,#fff);font-weight:900;cursor:pointer}.store-tabs button.active,.store-tabs button:hover{background:linear-gradient(135deg,#25b8ff,#9148ff);color:#fff;border-color:transparent}.universal-store-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.store-card{border:1px solid rgba(125,157,255,.25);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.025));box-shadow:0 20px 55px rgba(0,0,0,.22);overflow:hidden;display:flex;flex-direction:column;min-height:410px}.store-thumb{height:150px;display:grid;place-items:center;background:radial-gradient(circle at top,rgba(37,184,255,.24),transparent 45%),linear-gradient(135deg,rgba(37,184,255,.18),rgba(145,72,255,.2));border-bottom:1px solid rgba(255,255,255,.09)}.store-thumb img{width:100%;height:100%;object-fit:cover;display:block}.store-thumb span{width:74px;height:74px;border-radius:24px;display:grid;place-items:center;background:linear-gradient(135deg,#25b8ff,#9148ff);color:#fff;font-weight:950;letter-spacing:.08em;box-shadow:0 16px 45px rgba(74,91,255,.28)}.store-body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}.store-meta{display:flex;align-items:center;justify-content:space-between;gap:10px}.store-meta span{display:inline-flex;min-height:26px;align-items:center;padding:0 10px;border-radius:999px;background:rgba(37,184,255,.12);border:1px solid rgba(37,184,255,.22);color:#d9efff;text-transform:uppercase;font-size:12px;font-weight:950;letter-spacing:.05em}.store-meta code{font-size:12px}.store-card h3{margin:0;font-size:1.25rem}.store-card p{margin:0;color:var(--muted,#b8c5ff);line-height:1.55}.store-install-form{margin-top:auto;display:grid;gap:10px}.store-install-form button{width:100%}.inline-check{display:inline-flex!important;align-items:center;gap:8px;font-weight:800}.inline-check input{width:auto!important;margin:0}.error-card{border-color:rgba(255,90,90,.35)!important;background:rgba(255,70,70,.10)!important;color:#ffd6d6!important}@media(max-width:1200px){.universal-store-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.store-filter-row,.store-admin-grid{grid-template-columns:1fr}.store-tabs{justify-content:flex-start}}@media(max-width:720px){.universal-store-grid{grid-template-columns:1fr}.store-card{min-height:auto}}
+
+
+/* DevOneCMS v1.1.14 Universal Storefront + Marketplace Admin */
+.store-hero-admin{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:stretch;margin:18px 0 22px}.store-hero-admin>div:first-child{border:1px solid rgba(148,163,184,.18);border-radius:28px;padding:28px;background:radial-gradient(circle at top left,rgba(34,211,238,.14),transparent 40%),linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.025))}.store-kicker{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(148,163,184,.22);border-radius:999px;padding:8px 13px;color:#bfdbfe;font-weight:900;text-transform:uppercase;letter-spacing:.08em;font-size:.75rem;background:rgba(255,255,255,.06)}.store-kicker span{width:9px;height:9px;border-radius:99px;background:#34d399;box-shadow:0 0 16px #34d399}.store-hero-admin h2{font-size:clamp(2rem,4vw,4.2rem);line-height:.95;letter-spacing:-.06em;margin:18px 0 12px}.store-hero-admin p{color:#cbd5e1;line-height:1.7}.store-hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.button-like{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:14px;border:1px solid rgba(56,189,248,.35);background:linear-gradient(135deg,rgba(34,211,238,.28),rgba(168,85,247,.24));color:#fff!important;text-decoration:none!important;font-weight:900}.button-like.secondary{background:rgba(255,255,255,.07)}.store-slider-card{position:relative;min-height:360px;border-radius:28px;overflow:hidden;border:1px solid rgba(148,163,184,.18);background:#020617;box-shadow:0 24px 80px rgba(0,0,0,.35)}.store-slide{position:absolute;inset:0;opacity:0;transition:opacity .45s ease}.store-slide.active{opacity:1}.store-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.72}.store-slide-copy{position:absolute;inset:auto 0 0 0;padding:24px;background:linear-gradient(transparent,rgba(2,6,23,.93))}.store-slide-copy b{display:inline-flex;padding:6px 10px;border-radius:999px;background:rgba(52,211,153,.14);color:#bbf7d0;text-transform:uppercase;font-size:.7rem;letter-spacing:.08em}.store-slide-copy h3{font-size:2rem;line-height:1;margin:10px 0 8px}.store-slide-copy p{color:#dbeafe;margin:0}.store-stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:16px 0}.store-stats-row .card{display:grid;gap:5px;text-align:center}.store-stats-row strong{font-size:2rem;color:#7dd3fc}.store-stats-row span{font-weight:800;color:#cbd5e1}.store-card{position:relative}.store-featured-badge{position:absolute;top:12px;left:12px;font-style:normal;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,#22d3ee,#a855f7);color:#fff;font-weight:900;font-size:.7rem;text-transform:uppercase;letter-spacing:.07em}.store-price{display:inline-flex;padding:6px 10px;border-radius:999px;margin-bottom:8px;font-size:.74rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}.store-price.free{background:rgba(52,211,153,.12);color:#bbf7d0;border:1px solid rgba(52,211,153,.24)}.store-price.paid{background:rgba(251,191,36,.12);color:#fde68a;border:1px solid rgba(251,191,36,.24)}.store-tags{display:flex!important;gap:6px!important;flex-wrap:wrap!important;margin-top:10px!important}.store-tags span{font-size:.72rem;padding:4px 8px;border-radius:999px;background:rgba(148,163,184,.12);color:#cbd5e1}.store-install-form button:disabled{opacity:.55;cursor:not-allowed}.devone-check-list{display:grid;gap:10px;color:#cbd5e1;line-height:1.65}.store-requirements-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.store-requirements-grid>div{padding:16px;border-radius:16px;background:rgba(255,255,255,.045);border:1px solid rgba(148,163,184,.14)}.store-requirements-grid p{color:#cbd5e1;line-height:1.55}.store-requirements-grid code{background:rgba(15,23,42,.7);padding:2px 5px;border-radius:6px}
+@media(max-width:1100px){.store-hero-admin{grid-template-columns:1fr}.store-stats-row{grid-template-columns:repeat(2,1fr)}.store-requirements-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.store-stats-row,.store-requirements-grid{grid-template-columns:1fr}}
+
+
+/* DevOneCMS v1.1.15 Store Full Width Patch
+   Only affects /admin/store.php and the public marketplace page. */
+body.devone-store-admin-page .admin-wrap{
+  grid-template-columns: 240px minmax(0, 1fr) !important;
+}
+.panel.devone-store-panel-fullwidth,
+body.devone-store-admin-page .admin-wrap > .panel{
+  max-width: none !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: clamp(20px, 2vw, 34px) !important;
+}
+.devone-store-admin-shell{
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+.devone-store-admin-shell > h1,
+.devone-store-admin-shell > .muted{
+  width: min(100%, 1680px);
+}
+body.devone-store-admin-page .store-hero-admin,
+body.devone-store-admin-page .store-stats-row,
+body.devone-store-admin-page .store-admin-grid,
+body.devone-store-admin-page .store-filter-row,
+body.devone-store-admin-page .universal-store-grid,
+body.devone-store-admin-page .store-requirements-grid,
+body.devone-store-admin-page .devone-store-admin-shell > .card{
+  width: 100% !important;
+  max-width: none !important;
+}
+body.devone-store-admin-page .universal-store-grid{
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)) !important;
+}
+@media (min-width: 1600px){
+  body.devone-store-admin-page .universal-store-grid{
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+  body.devone-store-admin-page .store-hero-admin{
+    grid-template-columns: minmax(0, 1.15fr) minmax(520px, .85fr) !important;
+  }
+}
+@media (max-width: 900px){
+  body.devone-store-admin-page .admin-wrap{
+    display:block !important;
+  }
+  .panel.devone-store-panel-fullwidth,
+  body.devone-store-admin-page .admin-wrap > .panel{
+    padding: 18px 14px !important;
+  }
+}
+
+/* DeveloperOneCMS v1.0.10 Frontend Mobile Navigation Patch
+   Makes top/static, top/sticky, and bottom/sticky menus responsive on mobile,
+   keeps off-canvas menus solid, and prevents transparent slide-out containers. */
+.site-nav .nav-toggle{
+  display:none;
+  align-items:center;
+  justify-content:center;
+  min-width:46px;
+  min-height:46px;
+  margin-left:auto;
+  border-radius:14px;
+  border:1px solid rgba(148,163,184,.24);
+  background:var(--devone-offcanvas-link-bg,#111827) !important;
+  color:var(--devone-offcanvas-text,#f8fafc) !important;
+  box-shadow:0 12px 30px rgba(0,0,0,.22);
+  line-height:1;
+}
+.site-nav .nav-toggle[aria-expanded="true"]{
+  background:var(--devone-offcanvas-link-hover-bg,linear-gradient(135deg,#2563eb 0%,#7c3aed 100%)) !important;
+  color:#fff !important;
+}
+.site-nav.menu-offcanvas-left .nav-toggle,
+.site-nav.menu-offcanvas-right .nav-toggle{
+  display:inline-flex;
+}
+.site-nav .menu-panel{
+  isolation:isolate;
+  background-color:var(--devone-offcanvas-bg,#0f172a) !important;
+  background-image:var(--devone-offcanvas-gradient,linear-gradient(145deg,#020617 0%,#0f172a 48%,#1e1b4b 100%)) !important;
+  opacity:1 !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+.site-nav .menu-panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background-color:var(--devone-offcanvas-bg,#0f172a) !important;
+  background-image:var(--devone-offcanvas-gradient,linear-gradient(145deg,#020617 0%,#0f172a 48%,#1e1b4b 100%)) !important;
+  opacity:1 !important;
+}
+.site-nav .menu-panel .primary-menu,
+.site-nav .menu-panel .vertical-menu{
+  width:100%;
+}
+.site-nav .menu-panel .primary-menu li,
+.site-nav .menu-panel .vertical-menu li{
+  width:100%;
+}
+.site-nav .menu-panel .primary-menu a,
+.site-nav .menu-panel .vertical-menu a,
+.site-nav .menu-panel .adminlink-panel{
+  width:100%;
+}
+body.menu-open{
+  overflow:hidden;
+}
+
+@media(max-width:900px){
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .nav-toggle{
+    display:inline-flex;
+  }
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .menu-inline,
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .adminlink-inline{
+    display:none !important;
+  }
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .nav-container{
+    flex-wrap:nowrap !important;
+    position:relative;
+    gap:12px;
+  }
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .brand{
+    min-width:0;
+    flex:1 1 auto;
+  }
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .brand-text{
+    min-width:0;
+  }
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .brand-text strong,
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .brand-text small{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    max-width:calc(100vw - 140px);
+  }
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .menu-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:var(--devone-offcanvas-overlay,rgba(0,0,0,.78)) !important;
+    z-index:1001;
+  }
+  body.menu-open .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .menu-overlay{
+    display:block;
+  }
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .menu-panel{
+    position:fixed !important;
+    left:12px !important;
+    right:12px !important;
+    top:76px !important;
+    bottom:auto !important;
+    width:auto !important;
+    max-width:none !important;
+    max-height:calc(100vh - 96px);
+    overflow:auto;
+    padding:18px !important;
+    border-radius:24px !important;
+    border:1px solid var(--devone-offcanvas-border,#334155) !important;
+    box-shadow:var(--devone-offcanvas-shadow,0 30px 90px rgba(0,0,0,.55)) !important;
+    transform:translateY(-12px) scale(.98) !important;
+    opacity:0 !important;
+    pointer-events:none !important;
+    transition:opacity .2s ease, transform .2s ease !important;
+    z-index:1002 !important;
+  }
+  body.menu-open .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .menu-panel{
+    transform:translateY(0) scale(1) !important;
+    opacity:1 !important;
+    pointer-events:auto !important;
+  }
+  body.layout-bottom-sticky .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .menu-panel{
+    top:auto !important;
+    bottom:86px !important;
+    max-height:calc(100vh - 118px);
+  }
+  body.layout-bottom-sticky .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .menu-overlay{
+    inset:0;
+  }
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .menu-close{
+    display:inline-grid;
+    place-items:center;
+  }
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .vertical-menu{
+    display:grid !important;
+    gap:10px !important;
+    padding:0 !important;
+    margin:0 !important;
+  }
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .vertical-menu a,
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .adminlink-panel{
+    display:flex !important;
+    align-items:center;
+    min-height:48px;
+    padding:13px 15px !important;
+    border-radius:16px !important;
+    background:var(--devone-offcanvas-link-bg,#111827) !important;
+    border:1px solid var(--devone-offcanvas-link-border,#334155) !important;
+    color:var(--devone-offcanvas-text,#f8fafc) !important;
+    text-decoration:none !important;
+  }
+}
+
+@media(min-width:901px){
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .menu-overlay,
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .menu-panel{
+    display:none !important;
+  }
+  .site-nav:not(.menu-offcanvas-left):not(.menu-offcanvas-right) .menu-inline{
+    display:block;
+  }
+}
+
+
+/* DevOne CMS v1.2.1 Corporate Glass White & Gold Menu
+   Select under Admin > Settings > Menu Display > Menu Style.
+   This is a visual treatment only; existing static, sticky, bottom, and
+   off-canvas menu layouts continue to work. */
+body.menu-style-corporate-glass-gold{
+  --devone-gold:#c89b2c;
+  --devone-gold-deep:#8a6615;
+  --devone-gold-light:#f6e4a8;
+  --devone-gold-pale:#fff8df;
+  --devone-corporate-ink:#111111;
+  --devone-corporate-muted:#625d52;
+  --devone-offcanvas-bg:#ffffff;
+  --devone-offcanvas-gradient:linear-gradient(145deg,#ffffff 0%,#fffaf0 58%,#f5e8bf 100%);
+  --devone-offcanvas-text:#111111;
+  --devone-offcanvas-muted:#625d52;
+  --devone-offcanvas-border:rgba(138,102,21,.24);
+  --devone-offcanvas-link-bg:rgba(255,255,255,.88);
+  --devone-offcanvas-link-border:rgba(17,17,17,.09);
+  --devone-offcanvas-link-hover-bg:#fff8df;
+  --devone-offcanvas-link-hover-text:#8a6615;
+  --devone-offcanvas-overlay:rgba(17,17,17,.56);
+  --devone-offcanvas-shadow:0 28px 90px rgba(70,49,6,.24);
+}
+
+.site-nav.menu-style-corporate-glass-gold{
+  z-index:1000;
+  padding:16px 0 !important;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  transition:padding .25s cubic-bezier(.2,.8,.2,1);
+}
+.site-nav.menu-style-corporate-glass-gold.menu-top-sticky{
+  top:0;
+}
+.site-nav.menu-style-corporate-glass-gold.menu-bottom-sticky{
+  padding:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.site-nav.menu-style-corporate-glass-gold .nav-container{
+  min-height:68px;
+  gap:20px;
+  padding:7px 8px 7px 16px !important;
+  border:1px solid rgba(17,17,17,.08);
+  border-radius:999px;
+  background:rgba(255,255,255,.78);
+  box-shadow:0 12px 34px rgba(63,44,6,.10);
+  backdrop-filter:blur(20px) saturate(135%);
+  -webkit-backdrop-filter:blur(20px) saturate(135%);
+  transition:background .25s ease,border-color .25s ease,box-shadow .25s ease,min-height .25s ease;
+}
+.site-nav.menu-style-corporate-glass-gold.is-scrolled{
+  padding-top:10px !important;
+  padding-bottom:10px !important;
+}
+.site-nav.menu-style-corporate-glass-gold.is-scrolled .nav-container{
+  min-height:60px;
+  border-color:rgba(200,155,44,.15);
+  background:rgba(255,255,255,.93);
+  box-shadow:0 18px 50px rgba(63,44,6,.14);
+}
+.site-nav.menu-style-corporate-glass-gold .brand,
+.site-nav.menu-style-corporate-glass-gold .brand:visited{
+  min-width:max-content;
+  gap:12px;
+  color:var(--devone-corporate-ink) !important;
+  font-weight:950 !important;
+  letter-spacing:-.035em !important;
+}
+.site-nav.menu-style-corporate-glass-gold .brand:hover{
+  color:var(--devone-corporate-ink) !important;
+}
+.site-nav.menu-style-corporate-glass-gold .brand .logo{
+  position:relative;
+  display:grid;
+  width:40px;
+  height:40px;
+  flex:0 0 40px;
+  place-items:center;
+  overflow:hidden;
+  border-radius:13px;
+  background:#111 !important;
+  color:var(--devone-gold-light) !important;
+  box-shadow:0 10px 24px rgba(0,0,0,.18);
+  font-size:.92rem;
+  font-weight:950;
+  line-height:1;
+}
+.site-nav.menu-style-corporate-glass-gold .brand .logo::after{
+  content:"";
+  position:absolute;
+  width:28px;
+  height:58px;
+  transform:rotate(26deg) translateX(-42px);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
+  animation:devoneCorporateMenuShine 4.8s ease-in-out infinite;
+}
+.site-nav.menu-style-corporate-glass-gold .brand-logo-img{
+  width:42px;
+  height:42px;
+  padding:4px;
+  border-radius:13px;
+  background:#111;
+  box-shadow:0 10px 24px rgba(0,0,0,.16);
+}
+.site-nav.menu-style-corporate-glass-gold .brand-text strong{
+  color:var(--devone-corporate-ink) !important;
+  font-size:1.02rem;
+  font-weight:950;
+}
+.site-nav.menu-style-corporate-glass-gold .brand-text small{
+  color:var(--devone-gold-deep) !important;
+  font-size:.72rem;
+  font-weight:750;
+}
+.site-nav.menu-style-corporate-glass-gold .menu-inline{
+  margin-left:auto;
+}
+.site-nav.menu-style-corporate-glass-gold .menu-inline .primary-menu{
+  gap:4px;
+}
+.site-nav.menu-style-corporate-glass-gold .menu-inline .primary-menu a,
+.site-nav.menu-style-corporate-glass-gold .menu-inline .primary-menu a:visited{
+  min-height:42px;
+  display:flex !important;
+  align-items:center;
+  padding:9px 13px !important;
+  border:0 !important;
+  border-radius:999px !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#3f3b33 !important;
+  font-size:.92rem;
+  font-weight:800 !important;
+  letter-spacing:0 !important;
+}
+.site-nav.menu-style-corporate-glass-gold .menu-inline .primary-menu a:hover,
+.site-nav.menu-style-corporate-glass-gold .menu-inline .primary-menu a:focus-visible,
+.site-nav.menu-style-corporate-glass-gold .menu-inline .primary-menu a[aria-current="page"]{
+  transform:translateY(-1px);
+  background:var(--devone-gold-pale) !important;
+  color:var(--devone-gold-deep) !important;
+  box-shadow:none !important;
+}
+.site-nav.menu-style-corporate-glass-gold .adminlink-inline,
+.site-nav.menu-style-corporate-glass-gold .adminlink-inline:visited{
+  min-height:48px;
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  padding:0 20px !important;
+  border:1px solid transparent !important;
+  border-radius:999px !important;
+  background:linear-gradient(135deg,#d7aa3e,#9b741d) !important;
+  color:#fff !important;
+  box-shadow:0 13px 30px rgba(155,116,29,.28) !important;
+  font-weight:900 !important;
+}
+.site-nav.menu-style-corporate-glass-gold .adminlink-inline:hover,
+.site-nav.menu-style-corporate-glass-gold .adminlink-inline:focus-visible{
+  transform:translateY(-2px);
+  background:linear-gradient(135deg,#e0b64f,#8a6615) !important;
+  color:#fff !important;
+  box-shadow:0 18px 38px rgba(155,116,29,.36) !important;
+}
+.site-nav.menu-style-corporate-glass-gold .nav-toggle,
+.site-nav.menu-style-corporate-glass-gold .menu-close{
+  border:1px solid rgba(17,17,17,.1) !important;
+  border-radius:14px !important;
+  background:#111 !important;
+  color:var(--devone-gold-light) !important;
+  box-shadow:0 11px 26px rgba(0,0,0,.17) !important;
+}
+.site-nav.menu-style-corporate-glass-gold .nav-toggle[aria-expanded="true"],
+.site-nav.menu-style-corporate-glass-gold .menu-close:hover{
+  background:linear-gradient(135deg,#d7aa3e,#9b741d) !important;
+  color:#fff !important;
+}
+.site-nav.menu-style-corporate-glass-gold .menu-overlay{
+  background:rgba(17,17,17,.56) !important;
+  backdrop-filter:blur(7px) !important;
+  -webkit-backdrop-filter:blur(7px) !important;
+}
+.site-nav.menu-style-corporate-glass-gold .menu-panel,
+.site-nav.menu-style-corporate-glass-gold nav.menu-panel{
+  border-color:rgba(138,102,21,.22) !important;
+  background-color:#fff !important;
+  background-image:linear-gradient(145deg,#fff 0%,#fffaf0 60%,#f5e8bf 100%) !important;
+  color:var(--devone-corporate-ink) !important;
+  box-shadow:0 30px 90px rgba(70,49,6,.25) !important;
+}
+.site-nav.menu-style-corporate-glass-gold .menu-panel::before{
+  background-color:#fff !important;
+  background-image:
+    radial-gradient(circle at 18% 0%,rgba(246,228,168,.52),transparent 34%),
+    linear-gradient(145deg,#fff 0%,#fffaf0 65%,#f5e8bf 100%) !important;
+}
+.site-nav.menu-style-corporate-glass-gold .menu-panel .vertical-menu a,
+.site-nav.menu-style-corporate-glass-gold .menu-panel .vertical-menu a:visited,
+.site-nav.menu-style-corporate-glass-gold .menu-panel .adminlink-panel,
+.site-nav.menu-style-corporate-glass-gold .menu-panel .adminlink-panel:visited{
+  min-height:50px;
+  border:1px solid rgba(17,17,17,.08) !important;
+  border-radius:16px !important;
+  background:rgba(255,255,255,.82) !important;
+  color:#2f2b24 !important;
+  box-shadow:0 8px 22px rgba(72,52,9,.06) !important;
+}
+.site-nav.menu-style-corporate-glass-gold .menu-panel .vertical-menu a:hover,
+.site-nav.menu-style-corporate-glass-gold .menu-panel .vertical-menu a:focus-visible{
+  transform:translateX(3px);
+  border-color:rgba(200,155,44,.3) !important;
+  background:var(--devone-gold-pale) !important;
+  color:var(--devone-gold-deep) !important;
+}
+.site-nav.menu-style-corporate-glass-gold .menu-panel .adminlink-panel,
+.site-nav.menu-style-corporate-glass-gold .menu-panel .adminlink-panel:visited{
+  border-color:transparent !important;
+  background:linear-gradient(135deg,#d7aa3e,#9b741d) !important;
+  color:#fff !important;
+}
+
+@keyframes devoneCorporateMenuShine{
+  0%,68%{transform:rotate(26deg) translateX(-42px)}
+  100%{transform:rotate(26deg) translateX(45px)}
+}
+
+@media(max-width:900px){
+  .site-nav.menu-style-corporate-glass-gold{
+    padding:10px 0 !important;
+  }
+  .site-nav.menu-style-corporate-glass-gold .nav-container{
+    min-height:60px;
+    padding:7px 8px 7px 12px !important;
+    gap:10px !important;
+  }
+  .site-nav.menu-style-corporate-glass-gold .menu-panel{
+    top:82px !important;
+    border-radius:25px !important;
+  }
+  body.layout-bottom-sticky .site-nav.menu-style-corporate-glass-gold .menu-panel{
+    top:auto !important;
+    bottom:82px !important;
+  }
+}
+
+@media(max-width:560px){
+  .site-nav.menu-style-corporate-glass-gold .brand-logo-img,
+  .site-nav.menu-style-corporate-glass-gold .brand .logo{
+    width:38px;
+    height:38px;
+    flex-basis:38px;
+  }
+  .site-nav.menu-style-corporate-glass-gold .brand-text small{
+    display:none;
+  }
+  .site-nav.menu-style-corporate-glass-gold .brand-text strong{
+    max-width:calc(100vw - 145px) !important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .site-nav.menu-style-corporate-glass-gold .brand .logo::after{
+    animation:none;
+    display:none;
+  }
+}
+
+/* DevOne CMS v1.2.2 Top Sticky Menu Hotfix
+   A sticky element stops following the viewport when an ancestor becomes an
+   overflow scroll container. Full-width mode previously used overflow-x:hidden
+   on the site shell, which caused the Top Sticky selection to behave like a
+   normal static header on some pages and browsers. */
+body.layout-top-sticky .site-shell,
+body.layout-top-sticky [data-devone-shell]{
+  overflow-x:clip !important;
+  overflow-y:visible !important;
+}
+
+.site-nav.menu-top-sticky{
+  position:-webkit-sticky !important;
+  position:sticky !important;
+  top:0 !important;
+  right:0 !important;
+  left:0 !important;
+  width:100% !important;
+  flex:0 0 auto !important;
+  align-self:stretch !important;
+  z-index:10000 !important;
+}
+
+/* Keep the floating Corporate Glass bar clear of browser safe-area insets. */
+.site-nav.menu-style-corporate-glass-gold.menu-top-sticky{
+  top:env(safe-area-inset-top, 0px) !important;
+}
+
+/* Fallback for browsers that do not support overflow:clip. */
+@supports not (overflow:clip){
+  body.layout-top-sticky .site-shell,
+  body.layout-top-sticky [data-devone-shell]{
+    overflow-x:visible !important;
+    overflow-y:visible !important;
+  }
+}
+
+
+/* DevOne CMS v1.2.5 Edge2Edge, adaptive branding, and theme tokens */
+:root{
+  --devone-nav-title-color:#f8fafc;
+  --devone-nav-tagline-color:#cbd5e1;
+  --devone-button-background:#111827;
+  --devone-button-background-hover:#020617;
+  --devone-button-color:#ffffff;
+  --devone-button-hover-color:#ffffff;
+  --devone-button-border:rgba(148,163,184,.28);
+  --devone-button-radius:14px;
+  --devone-button-shadow:0 14px 34px rgba(15,23,42,.24);
+  --devone-button-shadow-hover:0 18px 42px rgba(15,23,42,.32);
+  --devone-button-badge-background:#ffffff;
+  --devone-button-badge-color:#111827;
+}
+
+body.site-width-edge2edge,
+body.site-width-edge2edge .site-shell,
+body.site-width-edge2edge [data-devone-shell]{
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+}
+
+body.site-width-edge2edge #cms-main.site-main,
+body.site-width-edge2edge main#cms-main,
+body.site-width-edge2edge main.site-main{
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  overflow:visible !important;
+}
+
+/* Edge2Edge leaves every child under #cms-main under the page author's control. */
+body.site-width-edge2edge #cms-main > *{
+  max-width:none;
+}
+
+body.site-width-edge2edge .menu-bottom-sticky{
+  width:calc(100% - 24px) !important;
+  max-width:none !important;
+}
+
+/* Raw canvas pages own their footer as well as their content surface. */
+body.site-width-edge2edge .site-shell > .footer{
+  display:none !important;
+}
+
+/* Brand text is controlled independently from generic link colors. */
+.site-nav .brand-text strong{
+  color:var(--devone-nav-title-color) !important;
+  transition:color .2s ease,text-shadow .2s ease;
+}
+.site-nav .brand-text small{
+  color:var(--devone-nav-tagline-color) !important;
+  opacity:1 !important;
+  transition:color .2s ease,text-shadow .2s ease;
+}
+.site-nav.menu-style-classic[data-devone-contrast="dark"]{
+  --devone-nav-title-color:#111827;
+  --devone-nav-tagline-color:#475569;
+}
+.site-nav.menu-style-classic[data-devone-contrast="light"]{
+  --devone-nav-title-color:#ffffff;
+  --devone-nav-tagline-color:rgba(255,255,255,.76);
+}
+.site-nav.menu-style-classic[data-devone-contrast="light"] .brand-text strong,
+.site-nav.menu-style-classic[data-devone-contrast="light"] .brand-text small{
+  text-shadow:0 2px 16px rgba(0,0,0,.32);
+}
+.site-nav.menu-style-corporate-glass-gold{
+  --devone-nav-title-color:var(--devone-corporate-ink,#111111);
+  --devone-nav-tagline-color:var(--devone-gold-deep,#8a6615);
+}
+
+@supports (overflow:clip){
+  body.site-width-edge2edge,
+  body.site-width-edge2edge .site-shell,
+  body.site-width-edge2edge [data-devone-shell]{overflow-x:clip;}
+}
+@supports not (overflow:clip){
+  body.site-width-edge2edge{overflow-x:hidden;}
+}
+
+
+/* DevOne CMS v1.3.0 Frontend Navigation Studio
+   Theme-aware public navigation styles + content-only mode + sticky overlap fix.
+   New menu skins intentionally consume the front-end theme token API instead of
+   forcing a light/dark palette. Marketplace themes can redefine the --devone-menu-*
+   variables and the same navigation geometry will inherit automatically. */
+
+:root{
+  --devone-menu-accent:var(--devone-button-background,#8b5cf6);
+  --devone-menu-accent-hover:var(--devone-button-background-hover,var(--devone-menu-accent));
+  --devone-menu-accent-text:var(--devone-button-color,#fff);
+  --devone-menu-surface:var(--devone-menu-panel-bg,rgba(10,14,26,.94));
+  --devone-menu-surface-border:var(--devone-menu-panel-border,rgba(148,163,184,.2));
+  --devone-menu-item:var(--devone-menu-link-bg,rgba(255,255,255,.06));
+  --devone-menu-item-hover:var(--devone-menu-link-bg-hover,rgba(139,92,246,.14));
+  --devone-menu-item-border:var(--devone-menu-link-border,rgba(148,163,184,.16));
+  --devone-menu-item-border-hover:var(--devone-menu-link-border-hover,rgba(139,92,246,.36));
+  --devone-menu-text:var(--devone-menu-link-text,var(--devone-nav-title-color,#fff));
+  --devone-menu-text-hover:var(--devone-menu-link-text-hover,var(--devone-menu-text,#fff));
+  --devone-menu-muted:var(--devone-nav-tagline-color,#94a3b8);
+  --devone-menu-overlay:rgba(2,6,23,.66);
+  --devone-menu-shadow:0 36px 110px rgba(0,0,0,.34);
+  --devone-menu-radius:30px;
+}
+
+/* No-menu is a real layout state. There is intentionally no reserved nav space. */
+body.layout-none .site-main{margin-top:0}
+body.layout-none.site-width-edge2edge .site-main{margin-top:0!important}
+
+/* Top sticky now floats over the top of the page instead of creating a visual moat.
+   The small negative margin lets the first page section tuck beneath the glass edge. */
+.site-nav.menu-top-sticky{
+  z-index:10000!important;
+  margin-bottom:-18px!important;
+  pointer-events:none;
+}
+.site-nav.menu-top-sticky .nav-container{pointer-events:auto}
+.site-nav.menu-top-sticky + .site-main{position:relative;z-index:1}
+.site-nav.menu-style-corporate-glass-gold.menu-top-sticky{
+  top:env(safe-area-inset-top,0px)!important;
+  padding-top:10px!important;
+  padding-bottom:0!important;
+  margin-bottom:-24px!important;
+}
+.site-nav.menu-style-corporate-glass-gold.menu-top-sticky .nav-container{
+  transform:translateY(0)!important;
+}
+
+/* Shared futuristic drawer foundation. */
+.site-nav.menu-offcanvas-left,
+.site-nav.menu-offcanvas-right{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+.site-nav.menu-offcanvas-left .nav-container,
+.site-nav.menu-offcanvas-right .nav-container{
+  width:min(1180px,calc(100% - 28px));
+}
+.site-nav.menu-offcanvas-left .menu-overlay,
+.site-nav.menu-offcanvas-right .menu-overlay{
+  background:var(--devone-menu-overlay)!important;
+  backdrop-filter:blur(12px) saturate(120%)!important;
+  -webkit-backdrop-filter:blur(12px) saturate(120%)!important;
+}
+.site-nav.menu-offcanvas-left .menu-panel,
+.site-nav.menu-offcanvas-right .menu-panel,
+.site-nav.menu-offcanvas-left nav.menu-panel,
+.site-nav.menu-offcanvas-right nav.menu-panel{
+  width:min(410px,calc(100vw - 20px))!important;
+  top:10px!important;
+  bottom:10px!important;
+  padding:78px 18px 20px!important;
+  overflow:auto!important;
+  border:1px solid var(--devone-menu-surface-border)!important;
+  border-radius:var(--devone-menu-radius)!important;
+  background:var(--devone-menu-surface)!important;
+  background-image:none!important;
+  color:var(--devone-menu-text)!important;
+  box-shadow:var(--devone-menu-shadow)!important;
+  backdrop-filter:blur(30px) saturate(150%)!important;
+  -webkit-backdrop-filter:blur(30px) saturate(150%)!important;
+  isolation:isolate;
+}
+.site-nav.menu-offcanvas-left .menu-panel{left:10px!important;border-left:1px solid var(--devone-menu-surface-border)!important}
+.site-nav.menu-offcanvas-right .menu-panel{right:10px!important;border-right:1px solid var(--devone-menu-surface-border)!important}
+.site-nav.menu-offcanvas-left .menu-panel::before,
+.site-nav.menu-offcanvas-right .menu-panel::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:-2!important;
+  border-radius:inherit!important;
+  background:
+    radial-gradient(circle at 18% 6%,color-mix(in srgb,var(--devone-menu-text) 9%,transparent),transparent 28%),
+    radial-gradient(circle at 82% 88%,color-mix(in srgb,var(--devone-menu-item-border-hover) 42%,transparent),transparent 30%)!important;
+  opacity:1!important;
+}
+.site-nav.menu-offcanvas-left .menu-panel::after,
+.site-nav.menu-offcanvas-right .menu-panel::after{
+  content:"";
+  position:absolute;
+  inset:10px;
+  z-index:-1;
+  pointer-events:none;
+  border-radius:calc(var(--devone-menu-radius) - 8px);
+  border:1px solid color-mix(in srgb,var(--devone-menu-surface-border) 55%,transparent);
+}
+.site-nav.menu-offcanvas-left .menu-close,
+.site-nav.menu-offcanvas-right .menu-close{
+  position:absolute!important;
+  top:18px!important;
+  right:18px!important;
+  width:44px!important;
+  height:44px!important;
+  display:grid!important;
+  place-items:center!important;
+  margin:0!important;
+  border:1px solid var(--devone-menu-item-border)!important;
+  border-radius:15px!important;
+  background:var(--devone-menu-item)!important;
+  color:var(--devone-menu-text)!important;
+  box-shadow:none!important;
+}
+.site-nav.menu-offcanvas-left .menu-panel .vertical-menu,
+.site-nav.menu-offcanvas-right .menu-panel .vertical-menu{
+  gap:9px!important;
+  padding:0!important;
+  margin:0!important;
+}
+.site-nav.menu-offcanvas-left .menu-panel .vertical-menu a,
+.site-nav.menu-offcanvas-right .menu-panel .vertical-menu a,
+.site-nav.menu-offcanvas-left .menu-panel .adminlink-panel,
+.site-nav.menu-offcanvas-right .menu-panel .adminlink-panel{
+  position:relative;
+  min-height:56px!important;
+  display:flex!important;
+  align-items:center!important;
+  padding:13px 16px!important;
+  overflow:hidden;
+  border:1px solid var(--devone-menu-item-border)!important;
+  border-radius:18px!important;
+  background:var(--devone-menu-item)!important;
+  color:var(--devone-menu-text)!important;
+  text-decoration:none!important;
+  font-size:15px!important;
+  font-weight:800!important;
+  letter-spacing:-.01em;
+  box-shadow:none!important;
+  transition:transform .22s ease,border-color .22s ease,background .22s ease,color .22s ease,box-shadow .22s ease!important;
+}
+.site-nav.menu-offcanvas-left .menu-panel .vertical-menu a:hover,
+.site-nav.menu-offcanvas-right .menu-panel .vertical-menu a:hover,
+.site-nav.menu-offcanvas-left .menu-panel .vertical-menu a:focus-visible,
+.site-nav.menu-offcanvas-right .menu-panel .vertical-menu a:focus-visible{
+  transform:translateX(5px)!important;
+  border-color:var(--devone-menu-item-border-hover)!important;
+  background:var(--devone-menu-item-hover)!important;
+  color:var(--devone-menu-text-hover)!important;
+}
+.site-nav.menu-offcanvas-left .menu-panel .adminlink-panel,
+.site-nav.menu-offcanvas-right .menu-panel .adminlink-panel{
+  margin-top:auto!important;
+  justify-content:center!important;
+  background:var(--devone-menu-accent)!important;
+  color:var(--devone-menu-accent-text)!important;
+  border-color:transparent!important;
+}
+
+/* The open button also inherits the active front-end theme. */
+.site-nav .nav-toggle{
+  border-color:var(--devone-menu-item-border)!important;
+  background:var(--devone-menu-item)!important;
+  color:var(--devone-menu-text)!important;
+  backdrop-filter:blur(20px)!important;
+  -webkit-backdrop-filter:blur(20px)!important;
+}
+.site-nav .nav-toggle:hover,
+.site-nav .nav-toggle[aria-expanded="true"]{
+  background:var(--devone-menu-accent)!important;
+  color:var(--devone-menu-accent-text)!important;
+  border-color:transparent!important;
+}
+
+/* Corporate Glass — now adaptive rather than permanently white.
+   Gold remains a tasteful fallback accent but the active theme owns the surface/text. */
+body.menu-style-corporate-glass-gold{
+  --devone-luxe-accent:var(--devone-button-background,linear-gradient(135deg,#d7aa3e,#9b741d));
+}
+.site-nav.menu-style-corporate-glass-gold .nav-container,
+.site-nav.menu-style-corporate-glass-gold .menu-panel,
+.site-nav.menu-style-corporate-glass-gold nav.menu-panel{
+  background:color-mix(in srgb,var(--devone-menu-surface) 91%,transparent)!important;
+  border-color:var(--devone-menu-surface-border)!important;
+  color:var(--devone-menu-text)!important;
+}
+.site-nav.menu-style-corporate-glass-gold .menu-panel::before{
+  background:
+    radial-gradient(circle at 12% 0%,color-mix(in srgb,var(--devone-menu-item-border-hover) 28%,transparent),transparent 34%),
+    linear-gradient(145deg,color-mix(in srgb,var(--devone-menu-surface) 94%,transparent),color-mix(in srgb,var(--devone-menu-item-hover) 55%,transparent))!important;
+}
+.site-nav.menu-style-corporate-glass-gold .menu-panel .vertical-menu a,
+.site-nav.menu-style-corporate-glass-gold .menu-panel .adminlink-panel{
+  background:var(--devone-menu-item)!important;
+  border-color:var(--devone-menu-item-border)!important;
+  color:var(--devone-menu-text)!important;
+}
+.site-nav.menu-style-corporate-glass-gold .menu-panel .vertical-menu a:hover{
+  background:var(--devone-menu-item-hover)!important;
+  border-color:var(--devone-menu-item-border-hover)!important;
+  color:var(--devone-menu-text-hover)!important;
+}
+.site-nav.menu-style-corporate-glass-gold .adminlink-inline,
+.site-nav.menu-style-corporate-glass-gold .menu-panel .adminlink-panel{
+  background:var(--devone-luxe-accent)!important;
+  color:var(--devone-button-color,#fff)!important;
+}
+
+/* PRISM FLUX — luminous spine + prismatic glass. */
+.site-nav.menu-style-prism-flux .nav-container{
+  border:1px solid var(--devone-menu-surface-border);
+  border-radius:22px;
+  background:color-mix(in srgb,var(--devone-menu-surface) 82%,transparent);
+  box-shadow:0 18px 60px rgba(0,0,0,.16);
+  backdrop-filter:blur(22px) saturate(145%);
+  -webkit-backdrop-filter:blur(22px) saturate(145%);
+  padding:8px 10px;
+}
+.site-nav.menu-style-prism-flux.menu-offcanvas-left .menu-panel::after,
+.site-nav.menu-style-prism-flux.menu-offcanvas-right .menu-panel::after{
+  inset:12px auto 12px 12px;
+  width:3px;
+  border:0;
+  border-radius:999px;
+  background:var(--devone-menu-accent);
+  box-shadow:0 0 24px color-mix(in srgb,var(--devone-menu-text) 18%,transparent);
+}
+.site-nav.menu-style-prism-flux .menu-panel .vertical-menu a::before{
+  content:"✦";
+  width:28px;
+  flex:0 0 28px;
+  color:var(--devone-menu-muted);
+  font-size:12px;
+  transition:transform .22s ease,color .22s ease;
+}
+.site-nav.menu-style-prism-flux .menu-panel .vertical-menu a:hover::before{
+  color:var(--devone-menu-text-hover);
+  transform:rotate(45deg) scale(1.15);
+}
+
+/* ORBIT RAIL — pill navigation floating away from the drawer wall. */
+.site-nav.menu-style-orbit-rail .nav-container{
+  border-radius:999px;
+  padding:7px 10px;
+  background:color-mix(in srgb,var(--devone-menu-surface) 82%,transparent);
+  border:1px solid var(--devone-menu-surface-border);
+  box-shadow:0 16px 50px rgba(0,0,0,.16);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+}
+.site-nav.menu-style-orbit-rail .menu-panel .vertical-menu{
+  padding:10px 8px 10px 22px!important;
+}
+.site-nav.menu-style-orbit-rail .menu-panel .vertical-menu a{
+  border-radius:999px!important;
+  transform-origin:left center;
+}
+.site-nav.menu-style-orbit-rail .menu-panel .vertical-menu a::before{
+  content:"";
+  width:10px;
+  height:10px;
+  flex:0 0 10px;
+  margin-right:12px;
+  border-radius:50%;
+  background:var(--devone-menu-muted);
+  box-shadow:0 0 0 5px color-mix(in srgb,var(--devone-menu-item) 78%,transparent);
+}
+.site-nav.menu-style-orbit-rail .menu-panel .vertical-menu a:hover{
+  transform:translateX(7px) scale(1.015)!important;
+  box-shadow:0 12px 30px color-mix(in srgb,var(--devone-menu-item-border-hover) 18%,transparent)!important;
+}
+.site-nav.menu-style-orbit-rail .menu-panel .vertical-menu a:hover::before{
+  background:var(--devone-menu-text-hover);
+}
+
+/* KINETIC CARDS — offset stacked cards that snap into alignment on hover. */
+.site-nav.menu-style-kinetic-cards .nav-container{
+  border-radius:18px;
+  border:1px solid var(--devone-menu-surface-border);
+  background:color-mix(in srgb,var(--devone-menu-surface) 86%,transparent);
+  padding:8px 10px;
+  box-shadow:0 18px 50px rgba(0,0,0,.15);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+.site-nav.menu-style-kinetic-cards .menu-panel .vertical-menu li:nth-child(odd) a{transform:translateX(7px)}
+.site-nav.menu-style-kinetic-cards .menu-panel .vertical-menu li:nth-child(even) a{transform:translateX(-2px)}
+.site-nav.menu-style-kinetic-cards .menu-panel .vertical-menu a{
+  border-radius:14px 24px 14px 24px!important;
+  box-shadow:0 9px 24px rgba(0,0,0,.08)!important;
+}
+.site-nav.menu-style-kinetic-cards .menu-panel .vertical-menu a:hover{
+  transform:translateX(4px) scale(1.018)!important;
+  box-shadow:0 16px 34px rgba(0,0,0,.15)!important;
+}
+
+/* Desktop inline variants inherit the same identity instead of looking unrelated. */
+.site-nav.menu-style-prism-flux .menu-inline .primary-menu a,
+.site-nav.menu-style-orbit-rail .menu-inline .primary-menu a,
+.site-nav.menu-style-kinetic-cards .menu-inline .primary-menu a{
+  color:var(--devone-menu-text)!important;
+  border:1px solid transparent;
+  transition:.2s ease;
+}
+.site-nav.menu-style-prism-flux .menu-inline .primary-menu a:hover,
+.site-nav.menu-style-orbit-rail .menu-inline .primary-menu a:hover,
+.site-nav.menu-style-kinetic-cards .menu-inline .primary-menu a:hover{
+  background:var(--devone-menu-item-hover)!important;
+  border-color:var(--devone-menu-item-border-hover)!important;
+  color:var(--devone-menu-text-hover)!important;
+}
+.site-nav.menu-style-orbit-rail .menu-inline .primary-menu a{border-radius:999px!important}
+.site-nav.menu-style-kinetic-cards .menu-inline .primary-menu a{border-radius:10px 18px 10px 18px!important}
+
+@media(max-width:900px){
+  .site-nav.menu-top-sticky{margin-bottom:-12px!important}
+  .site-nav.menu-style-corporate-glass-gold.menu-top-sticky{margin-bottom:-16px!important}
+  .site-nav.menu-style-prism-flux .nav-container,
+  .site-nav.menu-style-orbit-rail .nav-container,
+  .site-nav.menu-style-kinetic-cards .nav-container{border-radius:18px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .site-nav .menu-panel,
+  .site-nav .menu-panel a,
+  .site-nav .nav-toggle{transition:none!important}
+}

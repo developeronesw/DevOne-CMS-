@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+$cmd=$argv[1]??'help'; $name=$argv[2]??'';
+function out($s){ echo $s.PHP_EOL; }
+if($cmd==='help'){ out('DevOneCMS CLI'); out('php devone make:plugin MyPlugin'); out('php devone make:module BookingManager'); out('php devone make:theme MyTheme'); out('php devone cache:clear'); exit; }
+$base=__DIR__;
+if($cmd==='make:plugin' && $name){$safe=preg_replace('/[^a-zA-Z0-9_]/','',$name);$dir="$base/content/plugins/$safe";@mkdir($dir,0777,true);file_put_contents("$dir/manifest.json",json_encode(['name'=>$safe,'version'=>'1.0.0'],JSON_PRETTY_PRINT));file_put_contents("$dir/plugin.php","<?php
+// $safe plugin
+?>
+");out("Plugin scaffold created: $safe");exit;}
+if($cmd==='make:module' && $name){require_once $base.'/core/modules.php';$error='';$slug=devone_create_module_starter($name,'Created by the DevOne CMS CLI.',$error);if($slug!==''){out('Working module created: '.$slug);if($error!=='')out('Notice: '.$error);exit;}out('Module creation failed: '.($error?:'Unknown error'));exit(1);}
+if($cmd==='make:theme' && $name){$safe=preg_replace('/[^a-zA-Z0-9_-]/','-',strtolower($name));$dir="$base/content/themes/$safe";@mkdir($dir,0777,true);file_put_contents("$dir/theme.css","body{font-family:system-ui}
+");out("Theme scaffold created: $safe");exit;}
+if($cmd==='cache:clear'){$dir="$base/content/cache"; foreach(glob($dir.'/*') as $f){ if(is_file($f)) unlink($f);} out('Cache cleared.'); exit;}
+out('Unknown command. Run: php devone help');
+?>

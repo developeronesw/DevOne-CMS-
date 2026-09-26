@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DevOne Assets API</title>
+<style>
+:root{--gold:#c89b2c;--deep:#8a6615;--ink:#111;--muted:#625d52;--line:rgba(17,17,17,.11);--soft:#fbfaf6;--pale:#fff8df}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 8% 0%,rgba(246,228,168,.28),transparent 26%),#fff;color:var(--ink);font:16px/1.65 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.shell{width:min(1180px,calc(100% - 32px));margin:auto;padding:64px 0}.hero{padding:48px;border:1px solid var(--line);border-radius:32px;background:rgba(255,255,255,.9);box-shadow:0 24px 80px rgba(73,53,9,.12)}.eyebrow{display:inline-flex;padding:7px 12px;border:1px solid rgba(200,155,44,.3);border-radius:999px;background:var(--pale);color:var(--deep);font-size:.76rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}h1{max-width:900px;margin:22px 0 14px;font-size:clamp(3rem,7vw,6.5rem);line-height:.9;letter-spacing:-.07em}.gold{background:linear-gradient(120deg,#78560d,#d7aa3e 48%,#8d6714);-webkit-background-clip:text;background-clip:text;color:transparent}.lead{max-width:780px;color:var(--muted);font-size:1.1rem}.grid{display:grid;grid-template-columns:260px 1fr;gap:28px;margin-top:28px}.side{position:sticky;top:20px;height:max-content;padding:20px;border:1px solid var(--line);border-radius:22px;background:#111;color:#fff}.side a{display:block;padding:9px 10px;border-radius:10px;color:rgba(255,255,255,.72);text-decoration:none}.side a:hover{background:rgba(246,228,168,.1);color:#f6e4a8}.content{display:grid;gap:18px}.card{padding:28px;border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:0 10px 30px rgba(59,43,10,.06)}h2{margin:0 0 10px;font-size:2rem;letter-spacing:-.045em}h3{margin:24px 0 8px}p{color:var(--muted)}pre{overflow:auto;padding:18px;border-radius:16px;background:#111;color:#f6e4a8;font:13px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--deep)}.rule{padding:18px;border-left:4px solid var(--gold);border-radius:0 14px 14px 0;background:var(--pale);font-weight:800}@media(max-width:800px){.shell{padding:24px 0}.hero{padding:28px}.grid{grid-template-columns:1fr}.side{position:static}h1{font-size:3.5rem}.card{padding:21px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<section class="hero"><span class="eyebrow">Official Core Service</span><h1>DevOne <span class="gold">Assets API</span></h1><p class="lead">One shared media layer for every plugin, theme, module, builder, and official DevOne product. Upload once, select anywhere, track usage, and keep the ecosystem fast.</p></section>
+<div class="grid">
+<nav class="side"><strong>On this page</strong><a href="#principle">Core principle</a><a href="#php">PHP API</a><a href="#picker">JavaScript picker</a><a href="#usage">Usage tracking</a><a href="#security">Security</a><a href="#marketplace">Marketplace rules</a><a href="#migration">Migration</a></nav>
+<main class="content">
+<section class="card" id="principle"><h2>One library. Zero duplicate systems.</h2><p class="rule">Public-facing media must go through DevOne Assets. Installation packages, backups, source files, temporary imports, and private configuration belong in protected operational storage.</p></section>
+<section class="card" id="php"><h2>PHP service</h2><pre><code>$assets = DevOne::assets();
+
+$result = $assets->upload($_FILES['image'], [
+    'folder'  =&gt; 'auto',
+    'purpose' =&gt; 'one-slider',
+]);
+
+$asset = $assets->find((int) $result['asset']['id']);
+$url   = $assets->url($asset['id']);</code></pre><h3>Primary methods</h3><table><tr><th>Method</th><th>Purpose</th></tr><tr><td><code>upload()</code></td><td>Validate, sort, store, and register public media.</td></tr><tr><td><code>search()</code></td><td>Query permission-aware media records.</td></tr><tr><td><code>find()</code></td><td>Read one public asset record.</td></tr><tr><td><code>update()</code></td><td>Update supported metadata.</td></tr><tr><td><code>replace()</code></td><td>Replace the underlying file while preserving asset identity.</td></tr><tr><td><code>attach()</code> / <code>detach()</code></td><td>Track where an asset is used.</td></tr><tr><td><code>duplicates()</code></td><td>Find matching files by content.</td></tr></table></section>
+<section class="card" id="picker"><h2>Shared Asset Picker</h2><pre><code>DevOneAssets.open({
+    types: ['images', 'videos'],
+    multiple: false,
+    purpose: 'one-slider',
+    onSelect(asset) {
+        console.log(asset.id, asset.url);
+    }
+});</code></pre><p>The compatibility alias <code>DevOneMedia.open()</code> remains available.</p></section>
+<section class="card" id="usage"><h2>Usage tracking</h2><pre><code>DevOne::assets()-&gt;attach(
+    $assetId,
+    'plugin',
+    'one-slider:12',
+    'Homepage hero background'
+);</code></pre><p>Extensions should detach old references when content changes and warn before deleting assets that are still in use.</p></section>
+<section class="card" id="security"><h2>Security requirements</h2><p>Verify permissions and CSRF tokens, use the Core uploader, rely on detected MIME types, escape output, store IDs rather than paths, and respect user, site, and multisite boundaries.</p></section>
+<section class="card" id="marketplace"><h2>Marketplace certification</h2><p>Certified extensions must not create a second public media library, duplicate selected files, or call raw upload functions for content media. The shared picker and Assets service are the default standard.</p></section>
+<section class="card" id="migration"><h2>Backward-compatible migration</h2><p>Add asset-ID fields while continuing to read old URLs during a transition period. Never delete legacy values until the extension has safely migrated saved records.</p><pre><code>$url = $assetId
+    ? DevOne::assets()-&gt;url($assetId, $legacyUrl)
+    : $legacyUrl;</code></pre></section>
+</main></div></div>
+</body></html>

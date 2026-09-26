@@ -1,0 +1,45 @@
+/*
+Theme Name: DevOne Dark
+Version: 1.1.0
+Author: Developer One Inc.
+*/
+body{
+  --devone-menu-panel-bg:rgba(2,6,23,.96);
+  --devone-menu-panel-border:rgba(96,165,250,.22);
+  --devone-menu-link-bg:rgba(15,23,42,.82);
+  --devone-menu-link-bg-hover:rgba(96,165,250,.16);
+  --devone-menu-link-border:rgba(96,165,250,.22);
+  --devone-menu-link-border-hover:rgba(96,165,250,.46);
+  --devone-menu-link-text:#e5e7eb;
+  --devone-menu-link-text-hover:#ffffff;
+  --devone-nav-title-color:#ffffff;
+  --devone-nav-tagline-color:#cbd5e1;
+  --devone-button-background:linear-gradient(135deg,#60a5fa,#a855f7);
+  --devone-button-background-hover:linear-gradient(135deg,#3b82f6,#9333ea);
+  --devone-button-color:#ffffff;
+  --devone-button-hover-color:#ffffff;
+  --devone-button-border:rgba(96,165,250,.34);
+  --devone-button-radius:12px;
+  --devone-button-shadow:0 14px 34px rgba(59,130,246,.24);
+  --devone-button-shadow-hover:0 18px 42px rgba(147,51,234,.30);
+  --devone-button-badge-background:#ffffff;
+  --devone-button-badge-color:#101426;
+  background:radial-gradient(circle at top left,#a855f733,transparent 35%),#050816;
+  color:#e5e7eb;
+}
+.topnav,.site-nav{background:#050816cc;border-bottom:1px solid #60a5fa44}
+.brand,.topnav a{color:#e5e7eb}
+.logo{background:linear-gradient(135deg,#60a5fa,#a855f7);color:#fff}
+body:not(.site-width-edge2edge) #cms-main .button,
+body:not(.site-width-edge2edge) #cms-main button,
+body:not(.site-width-edge2edge) #cms-main .btn{background:var(--devone-button-background);color:var(--devone-button-color)}
+body:not(.site-width-edge2edge) #cms-main .adminlink,
+body:not(.site-width-edge2edge) #cms-main .card,
+body:not(.site-width-edge2edge) #cms-main .hero,
+body:not(.site-width-edge2edge) #cms-main .market-card,
+body:not(.site-width-edge2edge) #cms-main .sidebar,
+body:not(.site-width-edge2edge) #cms-main .panel-card{background:#111827cc;border:1px solid #60a5fa44;box-shadow:0 20px 60px #0004}
+body:not(.site-width-edge2edge) #cms-main h1,
+body:not(.site-width-edge2edge) #cms-main h2,
+body:not(.site-width-edge2edge) #cms-main h3{background:linear-gradient(135deg,#e5e7eb,#60a5fa,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent}
+body:not(.site-width-edge2edge) #cms-main pre{background:#0008}

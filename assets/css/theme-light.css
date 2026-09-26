@@ -1,0 +1,200 @@
+/* Futuristic Light Theme - Crystal Space */
+:root {
+    --bg-primary: #f8faff;
+    --bg-secondary: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.85);
+    --text-primary: #1a1e2c;
+    --text-secondary: #4a5568;
+    --accent-pink: #ff5e9e;
+    --accent-blue: #4f9eff;
+    --accent-green: #00d68f;
+    --shadow-sm: 0 8px 20px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.05);
+    --shadow-lg: 0 30px 40px -20px rgba(79, 158, 255, 0.2);
+    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #f8faff 0%, #eef2ff 100%);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+}
+
+/* Glassmorphic header effect */
+nav {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(79, 158, 255, 0.2);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    justify-content: center;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 500;
+    padding: 0.5rem 0;
+    transition: 0.2s;
+    position: relative;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-pink), var(--accent-blue));
+    transition: width 0.3s;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+/* Main content area */
+main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border-radius: 48px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255,255,255,0.8);
+}
+
+/* Cards */
+.card {
+    background: white;
+    border-radius: 32px;
+    padding: 1.5rem;
+    transition: all 0.25s;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 35px -15px rgba(79, 158, 255, 0.3);
+}
+
+/* Buttons */
+button, .button {
+    background: linear-gradient(105deg, var(--accent-pink), var(--accent-blue));
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 60px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 4px 12px rgba(79,158,255,0.3);
+}
+
+button:hover, .button:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(79,158,255,0.4);
+}
+
+/* Forms */
+input, textarea, select {
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 0.75rem 1rem;
+    border-radius: 28px;
+    width: 100%;
+    transition: 0.2s;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(79,158,255,0.2);
+}
+
+/* Code blocks */
+pre, code {
+    background: #f1f5f9;
+    border-radius: 20px;
+    padding: 1rem;
+    font-family: 'Fira Code', monospace;
+    border-left: 4px solid var(--accent-green);
+}
+
+/* Headings */
+h1 {
+    font-size: 3rem;
+    background: linear-gradient(120deg, #1a1e2c, var(--accent-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    nav ul { gap: 1rem; }
+    main { margin: 1rem; padding: 1.5rem; border-radius: 32px; }
+    h1 { font-size: 2rem; }
+}
+/* DevOneCMS v1.1.7: keep DevOne shell/menu controls consistent inside this theme. */
+.site-nav .primary-menu a,
+.site-nav .primary-menu a:visited,
+.site-nav .adminlink,
+.site-nav .adminlink:visited,
+.menu-panel a,
+.menu-panel a:visited {
+    font-weight: 800 !important;
+    text-decoration: none !important;
+}
+.menu-panel,
+nav.menu-panel {
+    opacity: 1 !important;
+}
+
+/* DevOneCMS v1.1.10 Light theme solid off-canvas colors */
+:root{
+    --devone-offcanvas-bg:#ffffff;
+    --devone-offcanvas-gradient:linear-gradient(145deg,#ffffff 0%,#eef6ff 48%,#e0e7ff 100%);
+    --devone-offcanvas-text:#111827;
+    --devone-offcanvas-muted:#475569;
+    --devone-offcanvas-border:#93c5fd;
+    --devone-offcanvas-link-bg:#ffffff;
+    --devone-offcanvas-link-border:#cbd5e1;
+    --devone-offcanvas-link-hover-bg:linear-gradient(135deg,var(--accent-pink),var(--accent-blue));
+    --devone-offcanvas-link-hover-text:#ffffff;
+    --devone-offcanvas-overlay:rgba(15,23,42,.72);
+}
+.menu-panel,
+nav.menu-panel{
+    background-color:var(--devone-offcanvas-bg) !important;
+    background-image:var(--devone-offcanvas-gradient) !important;
+    color:var(--devone-offcanvas-text) !important;
+    opacity:1 !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+}
+.menu-panel a,
+.menu-panel a:visited,
+.menu-panel .adminlink,
+.menu-panel .adminlink:visited,
+.menu-panel .menu-close{
+    color:var(--devone-offcanvas-text) !important;
+}

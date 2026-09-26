@@ -1,0 +1,189 @@
+/* Sleek Dark Theme - Neo-Cyber */
+:root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #13131a;
+    --bg-card: rgba(20, 20, 30, 0.7);
+    --text-primary: #eaeef2;
+    --text-secondary: #a0aab5;
+    --accent-cyan: #00e5ff;
+    --accent-purple: #b967ff;
+    --border-glow: 0 0 10px rgba(0, 229, 255, 0.3);
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    background-image: radial-gradient(circle at 25% 0%, rgba(185, 103, 255, 0.08) 0%, transparent 50%);
+}
+
+/* Typography */
+h1, h2, h3 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #fff, var(--accent-cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+h1 { font-size: 3rem; }
+h2 { font-size: 2rem; margin: 1.5rem 0 1rem; }
+p { margin-bottom: 1rem; }
+
+/* Navigation */
+nav {
+    background: rgba(10, 10, 15, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+}
+
+nav a:hover {
+    color: var(--accent-cyan);
+    border-bottom-color: var(--accent-cyan);
+}
+
+/* Main content */
+main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--bg-card);
+    backdrop-filter: blur(4px);
+    border-radius: 32px;
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    box-shadow: 0 25px 40px -12px rgba(0,0,0,0.5);
+}
+
+/* Cards (for any .card usage) */
+.card {
+    background: rgba(20, 20, 30, 0.6);
+    border-radius: 24px;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 30px -15px rgba(0,0,0,0.4);
+    border-color: var(--accent-cyan);
+}
+
+/* Buttons */
+button, .button {
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 40px;
+    color: #0a0a0f;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover, .button:hover {
+    transform: scale(1.02);
+    box-shadow: var(--border-glow);
+}
+
+/* Forms */
+input, textarea, select {
+    background: rgba(10,10,15,0.8);
+    border: 1px solid rgba(0,229,255,0.3);
+    padding: 0.75rem;
+    border-radius: 16px;
+    color: white;
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 3px rgba(0,229,255,0.2);
+}
+
+/* Code blocks */
+pre, code {
+    background: #0d0d12;
+    border-radius: 16px;
+    padding: 1rem;
+    font-family: 'Fira Code', monospace;
+    border-left: 4px solid var(--accent-cyan);
+    overflow-x: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    nav ul { gap: 1rem; }
+    main { margin: 1rem; padding: 1rem; }
+    h1 { font-size: 2rem; }
+}
+/* DevOneCMS v1.1.7: keep DevOne shell/menu controls consistent inside this theme. */
+.site-nav .primary-menu a,
+.site-nav .primary-menu a:visited,
+.site-nav .adminlink,
+.site-nav .adminlink:visited,
+.menu-panel a,
+.menu-panel a:visited {
+    color: #f8fafc !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+}
+.menu-panel,
+nav.menu-panel {
+    background: rgba(2,6,23,.94) !important;
+    opacity: 1 !important;
+}
+
+/* DevOneCMS v1.1.10 Dark theme solid off-canvas colors */
+:root{
+    --devone-offcanvas-bg:#020617;
+    --devone-offcanvas-gradient:linear-gradient(145deg,#020617 0%,#0f172a 45%,#2e1065 100%);
+    --devone-offcanvas-text:#f8fafc;
+    --devone-offcanvas-muted:#cbd5e1;
+    --devone-offcanvas-border:#22d3ee;
+    --devone-offcanvas-link-bg:#111827;
+    --devone-offcanvas-link-border:#334155;
+    --devone-offcanvas-link-hover-bg:linear-gradient(135deg,var(--accent-cyan),var(--accent-purple));
+    --devone-offcanvas-link-hover-text:#020617;
+    --devone-offcanvas-overlay:rgba(0,0,0,.84);
+}
+.menu-panel,
+nav.menu-panel{
+    background-color:var(--devone-offcanvas-bg) !important;
+    background-image:var(--devone-offcanvas-gradient) !important;
+    opacity:1 !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+}

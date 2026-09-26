@@ -1,0 +1,21 @@
+DevOne CMS — Licensing Notice
+
+Copyright (C) 2026 Developer One Inc.
+
+DevOne CMS Core is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
+
+DevOne CMS Core is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for details.
+
+A verbatim copy of GNU GPL version 3 is included in LICENSE.txt and COPYING.
+
+The GPL covers the software code in this distribution unless a file or bundled
+third-party component states a different compatible license. The GPL does not
+grant rights to Developer One Inc. trademarks, logos, service marks, marketplace
+accounts, hosted services, signing keys, paid support, or private service APIs.
+Modified distributions must not misrepresent their origin or imply endorsement
+by Developer One Inc.

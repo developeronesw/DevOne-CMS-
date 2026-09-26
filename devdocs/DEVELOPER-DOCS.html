@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Developer One CMS Developer Docs</title>
+<style>
+:root{--bg:#eef3fb;--panel:#fff;--line:#d9e3f2;--text:#16253d;--muted:#61738f;--primary:#356cff;--purple:#7f56ff;--shadow:0 22px 64px rgba(29,62,112,.12)}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(180deg,#f7fbff,#eef3fb);color:var(--text)}
+.hero{padding:56px 22px 34px;background:radial-gradient(circle at top left,rgba(53,108,255,.13),transparent 34%),radial-gradient(circle at top right,rgba(127,86,255,.10),transparent 34%)}
+.wrap{width:min(1180px,calc(100% - 32px));margin:auto}.kicker{display:inline-flex;padding:8px 14px;border-radius:999px;background:#eef3ff;border:1px solid #d6e2ff;color:var(--primary);font-size:.78rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+h1{font-size:clamp(2.2rem,5vw,4.8rem);line-height:1;margin:18px 0 12px;color:#0f1c33;letter-spacing:-.06em}.lead{font-size:1.12rem;line-height:1.75;color:var(--muted);max-width:860px}.layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:22px;margin:24px auto 60px}.toc{position:sticky;top:18px;align-self:start;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:24px;padding:18px}.toc a{display:block;padding:10px 12px;border-radius:12px;color:#223251;text-decoration:none;font-weight:800}.toc a:hover{background:#eef3ff;color:var(--primary)}.card{background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:28px;padding:24px;margin:0 0 18px}h2{margin:0 0 12px;color:#0f1c33}h3{color:#0f1c33}p,li{line-height:1.7;color:#3d4d66}code{background:#eef3ff;border:1px solid #d6e2ff;border-radius:8px;padding:2px 6px;color:#315fd9}pre{white-space:pre;overflow:auto;background:#0f172a;color:#dbeafe;border-radius:18px;padding:18px;line-height:1.55;border:1px solid #1e293b}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.pill{display:inline-flex;border-radius:999px;padding:7px 12px;background:#eef9f3;color:#157349;border:1px solid #c7ead3;font-size:.78rem;font-weight:900}@media(max-width:900px){.layout{grid-template-columns:1fr}.toc{position:static}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap"><span class="kicker">Developer One CMS Docs</span><h1>Build themes, plugins, modules, Apps, and marketplace packages.</h1><p class="lead">Official DevOne-native documentation for extending Developer One CMS without modifying core files.</p></div></header>
+<div class="wrap layout">
+<nav class="toc"><a href="#apps">Apps</a><a href="#themes">Themes</a><a href="#plugins">Plugins</a><a href="#hooks">Hooks</a><a href="#mail">Mail API</a><a href="#marketplace">Marketplace</a><a href="#policy">Developer Policy</a></nav>
+<main>
+<section class="card" id="apps">
+  <span class="pill">DevOne Apps</span>
+  <h2>Build full applications that run alongside DevOne Core</h2>
+  <p>DevOne Apps are installable application packages for features that are larger than a normal plugin. An App can include its own routes, views, storage, Composer dependencies, framework runtime, and business logic while DevOne Core continues to provide the CMS, authentication, permissions, marketplace, package security, and multisite foundation.</p>
+
+  <h3>Apps, plugins, and modules</h3>
+  <div class="grid">
+    <div><strong>Plugin</strong><p>Extends DevOne directly through hooks, filters, admin pages, and Core Services.</p></div>
+    <div><strong>Module</strong><p>Adds trusted application features that are loaded as part of the DevOne runtime.</p></div>
+    <div><strong>App</strong><p>Runs as a mounted application with its own entry file, storage area, routes, and optional isolated Composer autoloader.</p></div>
+    <div><strong>Theme</strong><p>Controls presentation, templates, styles, and front-end assets for a DevOne site.</p></div>
+  </div>
+
+  <h3>Required package structure</h3>
+  <pre>customer-portal/
+├── app.json
+├── public/
+│   └── index.php
+├── src/
+├── views/
+├── assets/
+├── vendor/                 optional bundled Composer packages
+├── composer.json           optional developer metadata
+├── composer.lock           recommended when Composer is used
+└── README.md</pre>
+  <p>The ZIP must contain one top-level App folder. The folder must include <code>app.json</code> and the entry file declared by the manifest.</p>
+
+  <h3>App manifest</h3>
+  <pre>{
+  "name": "Customer Portal",
+  "slug": "customer-portal",
+  "version": "1.0.0",
+  "description": "A customer account and support portal.",
+  "author": "Your Company",
+  "type": "devone-app",
+  "mount": "/portal",
+  "entry": "public/index.php",
+  "capabilities": [
+    "auth.read",
+    "content.read",
+    "media.write"
+  ],
+  "requires": {
+    "php": "8.1",
+    "devone": "1.3.0"
+  }
+}</pre>
+  <p><code>slug</code> must be unique, <code>mount</code> is the URL path assigned to the App, and <code>entry</code> is resolved inside the App folder. Never use an absolute path or a path containing <code>..</code>.</p>
+
+  <h3>App entry file</h3>
+  <pre>&lt;?php
+
+declare(strict_types=1);
+
+// DevOne prepares this context before dispatching the App.
+$app = $devone_app;
+
+$currentUser = $app['core']-&gt;service('auth')-&gt;currentUser();
+$storagePath = $app['storage'];
+$requestedPath = $app['path'];
+
+header('Content-Type: text/html; charset=utf-8');
+?&gt;
+&lt;h1&gt;Customer Portal&lt;/h1&gt;
+&lt;p&gt;Welcome, &lt;?= htmlspecialchars($currentUser['name'] ?? 'Guest') ?&gt;&lt;/p&gt;</pre>
+
+  <h3>Runtime context</h3>
+  <pre>$devone_app['root'];       // Absolute App package directory
+$devone_app['storage'];    // Writable storage assigned to this App and site
+$devone_app['manifest'];   // Parsed app.json values
+$devone_app['mount'];      // Registered URL mount
+$devone_app['path'];       // Request path inside the mount
+$devone_app['core'];       // DevOne Core Services bridge</pre>
+  <p>Apps should use the supplied Core Services bridge instead of connecting directly to DevOne internal tables. This keeps Apps compatible with single-site, multisite, Pro, Enterprise, and future Core releases.</p>
+
+  <h3>Composer and framework packages</h3>
+  <p>An App may bundle a framework such as Laravel, Symfony, Slim, or a custom Composer application. Build dependencies before publishing and include the resulting <code>vendor/</code> directory for one-click installations on hosts without shell access.</p>
+  <pre>composer install --no-dev --prefer-dist --optimize-autoloader</pre>
+  <p>Each App keeps its own <code>vendor/autoload.php</code>. Do not copy App dependencies into DevOne Core and do not assume that another App provides a package.</p>
+
+  <h3>Installation and routing</h3>
+  <ol>
+    <li>The administrator installs the ZIP or supplies an approved HTTPS/CDN package URL.</li>
+    <li>DevOne validates the archive, manifest, paths, checksum, and package integrity.</li>
+    <li>The package is extracted into the Apps directory and registered for the current site or network scope.</li>
+    <li>DevOne creates an isolated writable storage directory.</li>
+    <li>The administrator reviews requested capabilities and activates the App.</li>
+    <li>Requests matching the App mount are dispatched to its declared entry file.</li>
+  </ol>
+
+  <h3>Multisite behavior</h3>
+  <p>In a multisite installation, one physical App package may be assigned to multiple sites without duplicating its source files. Activation, settings, storage, permissions, and route ownership remain site-scoped. Network Apps may be made available across the network by an authorized Pro, Enterprise, or SuperAdmin owner.</p>
+
+  <h3>Packaging checklist</h3>
+  <ul>
+    <li>Use one top-level folder whose name matches the App slug.</li>
+    <li>Include a valid <code>app.json</code> and a real entry file.</li>
+    <li>Lock dependency versions and bundle production dependencies when marketplace users may not have Composer.</li>
+    <li>Write only to the supplied App storage directory.</li>
+    <li>Request only the capabilities the App actually needs.</li>
+    <li>Do not modify DevOne Core, another package, or another site's files.</li>
+    <li>Include version, author, license, support, upgrade, and uninstall information.</li>
+    <li>Test installation, activation, routing, update, deactivation, and uninstall before submission.</li>
+  </ul>
+
+  <h3>Marketplace and CDN delivery</h3>
+  <p>Marketplace Apps may be delivered from the DevOne package CDN. The CDN only distributes the signed package; DevOne still performs license checks, checksum verification, scanning, extraction, registration, health checks, and rollback. Published packages should use exact versions and immutable release archives.</p>
+
+  <h3>Security requirements</h3>
+  <p>Apps execute PHP and must be treated as trusted application code. DevOne and Guardian can inspect packages, but developers remain responsible for secure coding, dependency maintenance, authorization checks, input validation, output escaping, and safe database usage.</p>
+</section>
+
+<section class="card" id="themes"><span class="pill">Themes</span><h2>Theme folder structure</h2><pre>content/themes/my-theme/
+├── theme.json
+├── theme.css
+├── assets/
+│   ├── css/theme.css
+│   ├── js/theme.js
+│   └── img/screenshot.png
+└── README.md</pre><p>A theme can be as simple as <code>theme.css</code>, but marketplace-ready themes should include metadata, screenshots, and clear documentation.</p></section>
+<section class="card" id="plugins"><span class="pill">Plugins</span><h2>Plugin folder structure</h2><pre>content/plugins/my-plugin/
+├── plugin.php
+├── plugin.json
+├── includes/functions.php
+├── admin/settings.php
+├── assets/css/admin.css
+├── assets/js/admin.js
+└── README.md</pre><p>Plugins should connect through DevOne hooks, filters, admin pages, shortcodes, or documented APIs instead of editing core files.</p></section>
+<section class="card" id="hooks"><span class="pill">Hooks</span><h2>DevOne-native hooks</h2><pre>add_action('devone_head', 'my_plugin_head_assets');
+add_action('devone_footer', 'my_plugin_footer_assets');
+add_filter('page_content', 'my_plugin_shortcodes');</pre><p>Use <code>devone_head</code> and <code>devone_footer</code> for frontend assets and <code>page_content</code> for shortcode-style content filters.</p></section>
+<section class="card" id="mail"><span class="pill">Email</span><h2>DevOne mail API</h2><pre>devone_send_email('customer@example.com', 'Subject line', '&lt;p&gt;HTML message&lt;/p&gt;');
+
+devone_mail('customer@example.com', 'Subject line', 'Message body');</pre><p>Use the DevOne mail helpers so SMTP settings, future mail center controls, and platform delivery logic stay centralized.</p></section>
+<section class="card" id="marketplace"><span class="pill">Marketplace</span><h2>Package metadata</h2><pre>{
+  "name": "My DevOne Plugin",
+  "slug": "my-plugin",
+  "folder": "my-plugin",
+  "type": "plugin",
+  "version": "1.0.0",
+  "main": "plugin.php",
+  "author": "Your Company"
+}</pre><p>Every public package should include versioning, author details, description, screenshots, and license information.</p></section>
+<section class="card" id="policy"><span class="pill">Policy</span><h2>Build with extension points</h2><p>Developers may build Apps, themes, plugins, libraries, modules, and integrations for Developer One CMS. Developers may not fork, redistribute, rebrand, or modify Developer One CMS core as a competing product.</p></section>
+</main>
+</div>
+</body>
+</html>

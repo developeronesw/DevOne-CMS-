@@ -1,0 +1,3282 @@
+/* DevOneCMS v1.1.22 Admin Marketplace Theme
+   The backend now has its own theme and no longer inherits active front-end theme.css. */
+:root{
+  --da-bg:#050814;
+  --da-bg2:#080d1f;
+  --da-panel:#0b1022;
+  --da-panel2:#121936;
+  --da-text:#ffffff;
+  --da-muted:#b7c4ff;
+  --da-blue:#27b7ff;
+  --da-purple:#9543ff;
+  --da-pink:#ff3deb;
+  --da-green:#31f3ad;
+  --da-gold:#ffd166;
+  --da-border:rgba(120,150,255,.24);
+  --da-border2:rgba(255,255,255,.10);
+  --da-shadow:0 24px 75px rgba(0,0,0,.34);
+}
+
+html,body.devone-admin{min-height:100%;}
+body.devone-admin{
+  margin:0!important;
+  color:var(--da-text)!important;
+  background:
+    radial-gradient(circle at top left,rgba(39,183,255,.14),transparent 34%),
+    radial-gradient(circle at top right,rgba(149,67,255,.14),transparent 34%),
+    linear-gradient(180deg,#040713 0%,#080d1f 48%,#050814 100%)!important;
+  font-family:Inter,Segoe UI,Roboto,Arial,sans-serif!important;
+}
+body.devone-admin::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(120,150,255,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(120,150,255,.055) 1px,transparent 1px);
+  background-size:54px 54px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent 80%);
+  z-index:-1;
+}
+
+/* Kill public/front-end layout constraints inside admin. */
+body.devone-admin main,
+body.devone-admin main.panel,
+body.devone-admin .panel,
+body.devone-admin .admin-panel{
+  max-width:none!important;
+  width:100%!important;
+  margin:0!important;
+  min-width:0!important;
+}
+
+body.devone-admin .admin-wrap{
+  display:grid!important;
+  grid-template-columns:286px minmax(0,1fr)!important;
+  min-height:100vh;
+  width:100%;
+}
+
+body.devone-admin .sidebar{
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:auto;
+  padding:22px 16px!important;
+  background:
+    radial-gradient(circle at top left,rgba(39,183,255,.16),transparent 42%),
+    radial-gradient(circle at bottom right,rgba(149,67,255,.18),transparent 42%),
+    linear-gradient(180deg,#070d20 0%,#080b19 100%)!important;
+  border-right:1px solid var(--da-border)!important;
+  box-shadow:16px 0 60px rgba(0,0,0,.34);
+  z-index:20;
+}
+
+body.devone-admin .admin-brand{
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  margin:0 0 20px!important;
+  padding:12px!important;
+  border-radius:22px;
+  border:1px solid var(--da-border);
+  background:linear-gradient(135deg,rgba(39,183,255,.12),rgba(149,67,255,.13));
+  color:#fff!important;
+  font-size:1.04rem!important;
+  letter-spacing:-.03em;
+}
+body.devone-admin .admin-brand .logo,
+body.devone-admin .admin-brand-logo{
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  border-radius:15px!important;
+  display:grid!important;
+  place-items:center!important;
+  background:linear-gradient(135deg,var(--da-blue),var(--da-purple))!important;
+  color:#fff!important;
+  box-shadow:0 0 28px rgba(149,67,255,.26);
+  padding:0!important;
+  object-fit:contain;
+}
+body.devone-admin .admin-brand-logo{background:rgba(255,255,255,.08)!important;padding:5px!important;}
+
+body.devone-admin .admin-nav,
+body.devone-admin .sidebar nav{display:grid;gap:6px;}
+body.devone-admin .sidebar a{
+  display:flex!important;
+  align-items:center;
+  gap:10px;
+  padding:11px 12px!important;
+  margin:0!important;
+  border-radius:14px!important;
+  color:#dce5ff!important;
+  text-decoration:none!important;
+  font-weight:800;
+  font-size:.94rem;
+  border:1px solid transparent;
+  background:transparent!important;
+  transition:background .16s ease,border-color .16s ease,transform .16s ease,color .16s ease;
+}
+body.devone-admin .sidebar a:hover,
+body.devone-admin .sidebar a.active{
+  transform:translateX(3px);
+  color:#fff!important;
+  background:linear-gradient(135deg,rgba(39,183,255,.16),rgba(149,67,255,.20))!important;
+  border-color:var(--da-border)!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.18);
+}
+
+body.devone-admin .admin-nav-label{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:1 1 auto;
+}
+body.devone-admin .admin-nav-text{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+body.devone-admin .admin-nav-icon{
+  width:26px;
+  height:26px;
+  min-width:26px;
+  display:inline-grid;
+  place-items:center;
+  border-radius:10px;
+  color:#fff;
+  font-size:.86rem;
+  line-height:1;
+  background:linear-gradient(135deg,rgba(39,183,255,.22),rgba(149,67,255,.26));
+  border:1px solid rgba(255,255,255,.09);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10), 0 8px 18px rgba(0,0,0,.12);
+}
+body.devone-admin .sidebar a:hover .admin-nav-icon,
+body.devone-admin .sidebar a.active .admin-nav-icon{
+  background:linear-gradient(135deg,rgba(39,183,255,.56),rgba(149,67,255,.62));
+  border-color:rgba(255,255,255,.18);
+}
+body.devone-admin .admin-nav-icon-code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  font-size:.62rem;
+  font-weight:950;
+  letter-spacing:-.04em;
+}
+
+body.devone-admin .admin-panel{
+  position:relative;
+  padding:28px 30px 54px!important;
+  background:
+    radial-gradient(circle at 15% 2%,rgba(39,183,255,.10),transparent 28%),
+    radial-gradient(circle at 90% 6%,rgba(255,61,235,.09),transparent 32%);
+}
+
+body.devone-admin h1,
+body.devone-admin h2,
+body.devone-admin h3{
+  color:#fff;
+  letter-spacing:-.04em;
+}
+body.devone-admin h1{font-size:clamp(2rem,4vw,3.8rem);line-height:.95;margin:0 0 18px;}
+body.devone-admin a{color:#9bddff;}
+body.devone-admin .muted{color:var(--da-muted)!important;opacity:.82;}
+
+body.devone-admin .card,
+body.devone-admin .market-card,
+body.devone-admin .settings-grid>section,
+body.devone-admin .menu-editor-card,
+body.devone-admin .table-debug-card{
+  border:1px solid var(--da-border)!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025))!important;
+  border-radius:24px!important;
+  color:#fff!important;
+  box-shadow:var(--da-shadow);
+}
+body.devone-admin .card{padding:20px!important;}
+body.devone-admin .error-card{border-color:rgba(248,113,113,.55)!important;background:rgba(127,29,29,.22)!important;}
+
+body.devone-admin input,
+body.devone-admin select,
+body.devone-admin textarea{
+  width:100%;
+  color:#fff!important;
+  background:rgba(3,7,18,.58)!important;
+  border:1px solid var(--da-border)!important;
+  border-radius:14px!important;
+  padding:12px 14px!important;
+  outline:none;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+}
+body.devone-admin input:focus,
+body.devone-admin select:focus,
+body.devone-admin textarea:focus{
+  border-color:rgba(39,183,255,.72)!important;
+  box-shadow:0 0 0 4px rgba(39,183,255,.12);
+}
+body.devone-admin label{color:#dce5ff;font-weight:800;}
+
+body.devone-admin button,
+body.devone-admin .btn,
+body.devone-admin .button{
+  border:0!important;
+  border-radius:14px!important;
+  padding:11px 15px!important;
+  color:#fff!important;
+  background:linear-gradient(135deg,var(--da-blue),var(--da-purple))!important;
+  font-weight:900!important;
+  text-decoration:none!important;
+  cursor:pointer;
+  box-shadow:0 14px 34px rgba(87,86,255,.22);
+}
+body.devone-admin button:hover,
+body.devone-admin .btn:hover,
+body.devone-admin .button:hover{filter:brightness(1.08);transform:translateY(-1px);}
+body.devone-admin button:disabled{filter:none;opacity:.58;cursor:not-allowed;transform:none!important;box-shadow:none;background:rgba(255,255,255,.14)!important;}
+body.devone-admin .btn.secondary,
+body.devone-admin .button.secondary,
+body.devone-admin .button-like.secondary{
+  background:rgba(255,255,255,.08)!important;
+  border:1px solid var(--da-border)!important;
+  box-shadow:none!important;
+}
+
+body.devone-admin .table{
+  width:100%;
+  border-collapse:separate!important;
+  border-spacing:0 8px!important;
+}
+body.devone-admin .table th{color:var(--da-muted);font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;border:0!important;}
+body.devone-admin .table td{
+  border:0!important;
+  background:rgba(255,255,255,.045);
+  padding:13px!important;
+}
+body.devone-admin .table tr td:first-child{border-radius:14px 0 0 14px;}
+body.devone-admin .table tr td:last-child{border-radius:0 14px 14px 0;}
+
+/* Full-width DevOne Store admin page */
+body.devone-admin-page-store .admin-panel{
+  padding:20px 22px 52px!important;
+}
+body.devone-admin-page-store .devone-native-store{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+}
+body.devone-admin-page-store .store-shell-hero,
+body.devone-admin-page-store .store-stats-native,
+body.devone-admin-page-store .store-advanced-card,
+body.devone-admin-page-store .store-toolbar-native,
+body.devone-admin-page-store .native-store-grid{
+  width:100%!important;
+  max-width:none!important;
+}
+body.devone-admin-page-store .store-shell-hero{
+  border-radius:32px!important;
+}
+body.devone-admin-page-store .native-store-grid{
+  grid-template-columns:repeat(auto-fill,minmax(285px,1fr))!important;
+}
+@media(min-width:1700px){body.devone-admin-page-store .native-store-grid{grid-template-columns:repeat(5,minmax(260px,1fr))!important;}}
+@media(min-width:2100px){body.devone-admin-page-store .native-store-grid{grid-template-columns:repeat(6,minmax(260px,1fr))!important;}}
+
+/* Make all admin module grids breathe wider than the old boxed layout. */
+body.devone-admin .dash-grid,
+body.devone-admin .grid,
+body.devone-admin .market-grid{
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr))!important;
+}
+
+@media(max-width:980px){
+  body.devone-admin .admin-wrap{display:block!important;}
+  body.devone-admin .sidebar{position:relative;height:auto;max-height:none;}
+  body.devone-admin .admin-panel{padding:20px 16px 42px!important;}
+  body.devone-admin-page-store .admin-panel{padding:16px 12px 42px!important;}
+}
+
+/* DevOneCMS v1.1.23 cleanup/action polish */
+body.devone-admin .inline-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+body.devone-admin .inline-actions form{display:inline-flex!important;margin:0!important;}
+body.devone-admin button.danger,
+body.devone-admin .btn.danger{
+  background:linear-gradient(135deg,#ff5c39,#b51d1a)!important;
+  border:1px solid rgba(255,136,92,.42)!important;
+  box-shadow:0 12px 30px rgba(255,80,45,.22)!important;
+}
+body.devone-admin .media-sidebar .folder-link.active{background:linear-gradient(135deg,var(--da-blue),var(--da-purple))!important;color:#fff!important;border-color:rgba(255,255,255,.22)!important;}
+
+/* DevOneCMS v1.5.6 Dashboard Command Center + mobile admin shell */
+body.devone-admin .admin-mobile-bar,
+body.devone-admin .admin-sidebar-overlay{display:none;}
+
+body.devone-admin .sidebar{
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+body.devone-admin .sidebar::-webkit-scrollbar{width:0;height:0;display:none;}
+body.devone-admin .sidebar::after{
+  content:"";
+  position:absolute;
+  top:0;
+  right:0;
+  width:1px;
+  height:100%;
+  background:linear-gradient(180deg,transparent,rgba(120,150,255,.52),transparent);
+  pointer-events:none;
+}
+
+body.devone-admin .section-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:16px;
+}
+body.devone-admin .section-head h2{margin:0!important;font-size:1.35rem;line-height:1.1;}
+body.devone-admin .section-head span{
+  display:inline-flex;
+  align-items:center;
+  min-height:28px;
+  padding:0 10px;
+  border-radius:999px;
+  color:var(--da-green);
+  background:rgba(49,243,173,.10);
+  border:1px solid rgba(49,243,173,.22);
+  font-size:.78rem;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+body.devone-admin .admin-dashboard-hero{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:24px;
+  align-items:center;
+  margin-bottom:22px;
+  padding:30px;
+  border:1px solid var(--da-border);
+  border-radius:32px;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(39,183,255,.18),transparent 35%),
+    radial-gradient(circle at 80% 0%,rgba(149,67,255,.20),transparent 35%),
+    linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+  box-shadow:var(--da-shadow);
+  overflow:hidden;
+}
+body.devone-admin .admin-dashboard-hero h1{margin:10px 0 8px!important;}
+body.devone-admin .admin-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  margin:0;
+  min-height:34px;
+  padding:0 14px;
+  border:1px solid var(--da-border);
+  border-radius:999px;
+  background:linear-gradient(135deg,rgba(39,183,255,.12),rgba(149,67,255,.15));
+  color:var(--da-muted);
+  font-size:.78rem;
+  font-weight:900;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+body.devone-admin .admin-kicker span{
+  width:9px;height:9px;border-radius:999px;background:var(--da-green);box-shadow:0 0 18px var(--da-green);
+}
+body.devone-admin .admin-hero-copy{max-width:850px;margin:0;color:#dbe4ff;line-height:1.7;font-size:1.04rem;}
+body.devone-admin .admin-hero-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;}
+
+body.devone-admin .dashboard-stat-grid{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+body.devone-admin .dashboard-stat-card{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-height:96px;
+  padding:18px;
+  border-radius:22px;
+  border:1px solid var(--da-border);
+  background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+  box-shadow:0 18px 55px rgba(0,0,0,.24);
+}
+body.devone-admin .dashboard-stat-card .stat-icon{
+  width:48px;height:48px;min-width:48px;border-radius:18px;
+  display:grid;place-items:center;
+  color:#fff;font-weight:950;
+  background:linear-gradient(135deg,rgba(39,183,255,.26),rgba(149,67,255,.32));
+  box-shadow:0 0 30px rgba(149,67,255,.22);
+}
+body.devone-admin .dashboard-stat-card b{display:block;font-size:1.65rem;line-height:1;color:#fff;}
+body.devone-admin .dashboard-stat-card span{display:block;margin-top:6px;color:var(--da-muted);font-weight:850;font-size:.9rem;}
+
+body.devone-admin .dashboard-two-col{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(360px,.9fr);
+  gap:18px;
+  margin-bottom:18px;
+}
+body.devone-admin .dashboard-lower-grid{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);}
+
+body.devone-admin .quick-access-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+}
+body.devone-admin .quick-access-grid a{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  justify-content:center;
+  min-height:116px;
+  padding:18px;
+  border-radius:20px;
+  border:1px solid var(--da-border2);
+  background:linear-gradient(145deg,rgba(39,183,255,.08),rgba(149,67,255,.075));
+  color:#fff!important;
+  text-decoration:none!important;
+  font-weight:900;
+  transition:transform .18s ease,border-color .18s ease,background .18s ease;
+}
+body.devone-admin .quick-access-grid a:hover{transform:translateY(-3px);border-color:var(--da-border);background:linear-gradient(145deg,rgba(39,183,255,.14),rgba(149,67,255,.14));}
+body.devone-admin .quick-access-grid a span{
+  width:42px;height:42px;border-radius:15px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--da-blue),var(--da-purple));
+  box-shadow:0 0 24px rgba(149,67,255,.24);
+}
+body.devone-admin .quick-access-grid a strong{font-size:.92rem;}
+
+body.devone-admin .system-overview-list{display:grid;gap:8px;}
+body.devone-admin .system-overview-list div{
+  display:grid;
+  grid-template-columns:150px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+  padding:11px 12px;
+  border-radius:15px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.06);
+}
+body.devone-admin .system-overview-list span{color:var(--da-muted);font-weight:850;font-size:.82rem;}
+body.devone-admin .system-overview-list strong{color:#fff;word-break:break-word;font-size:.88rem;}
+
+body.devone-admin .cli-terminal{
+  min-height:170px;
+  padding:20px;
+  border-radius:22px;
+  background:#050814;
+  border:1px solid rgba(255,255,255,.10);
+  font-family:Consolas,Monaco,"Courier New",monospace;
+  color:#dfe8ff;
+  line-height:1.8;
+  box-shadow:inset 0 0 40px rgba(39,183,255,.05);
+}
+body.devone-admin .cli-terminal i{font-style:normal;color:var(--da-green);font-weight:900;margin-right:8px;}
+body.devone-admin .scaffold-form{
+  display:grid;
+  grid-template-columns:150px minmax(0,1fr) auto;
+  gap:10px;
+  margin-top:14px;
+  align-items:center;
+}
+body.devone-admin .backup-provider-grid,
+body.devone-admin .cloud-provider-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin:16px 0;
+}
+body.devone-admin .backup-provider-grid span,
+body.devone-admin .cloud-provider-grid article{
+  min-height:72px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:14px;
+  border-radius:18px;
+  border:1px solid var(--da-border2);
+  background:rgba(255,255,255,.045);
+  color:#fff;
+  font-weight:900;
+}
+body.devone-admin .cloud-provider-grid article{place-items:start;align-content:center;text-align:left;}
+body.devone-admin .cloud-provider-grid article b{display:block;color:#fff;}
+body.devone-admin .cloud-provider-grid article span{display:block;color:var(--da-muted);font-size:.82rem;margin-top:4px;}
+body.devone-admin .dashboard-check-card{margin-top:18px;}
+
+body.devone-admin .restore-form{display:grid;gap:12px;}
+body.devone-admin .backup-checkboxes{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:6px 0 10px;}
+body.devone-admin .backup-checkboxes label{display:inline-flex;gap:8px;align-items:center;}
+body.devone-admin .backup-checkboxes input{width:auto!important;}
+
+/* Mobile/off-canvas admin shell */
+@media(max-width:1280px){
+  body.devone-admin .dashboard-stat-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+  body.devone-admin .dashboard-two-col{grid-template-columns:1fr;}
+  body.devone-admin .quick-access-grid{grid-template-columns:repeat(4,minmax(0,1fr));}
+}
+@media(max-width:980px){
+  body.devone-admin{padding-top:64px;}
+  body.devone-admin .admin-mobile-bar{
+    position:fixed;
+    top:0;left:0;right:0;
+    height:64px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:0 14px;
+    background:linear-gradient(135deg,#070d20,#111936)!important;
+    border-bottom:1px solid var(--da-border);
+    box-shadow:0 14px 40px rgba(0,0,0,.34);
+    z-index:2000;
+  }
+  body.devone-admin .admin-mobile-bar strong{color:#fff;font-size:1rem;letter-spacing:-.03em;}
+  body.devone-admin .admin-mobile-bar a{color:#dce5ff!important;text-decoration:none!important;font-weight:900;font-size:.85rem;}
+  body.devone-admin .admin-menu-toggle{
+    width:44px!important;height:44px!important;min-width:44px!important;
+    display:grid!important;place-items:center!important;
+    padding:0!important;border-radius:14px!important;
+  }
+  body.devone-admin .admin-wrap{display:block!important;min-height:calc(100vh - 64px);}
+  body.devone-admin .sidebar{
+    position:fixed!important;
+    top:64px!important;
+    left:0!important;
+    bottom:0!important;
+    width:min(86vw,320px)!important;
+    height:auto!important;
+    max-height:none!important;
+    overflow:auto!important;
+    transform:translateX(-105%);
+    transition:transform .22s ease;
+    z-index:2100!important;
+    border-right:1px solid var(--da-border)!important;
+  }
+  body.devone-admin.admin-menu-open .sidebar{transform:translateX(0);}
+  body.devone-admin .admin-sidebar-overlay{
+    display:block;
+    position:fixed;
+    inset:64px 0 0 0;
+    background:rgba(0,0,0,.66);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease;
+    z-index:2050;
+  }
+  body.devone-admin.admin-menu-open .admin-sidebar-overlay{opacity:1;pointer-events:auto;}
+  body.devone-admin .admin-panel{padding:18px 14px 42px!important;}
+  body.devone-admin .admin-dashboard-hero{grid-template-columns:1fr;padding:22px;border-radius:26px;}
+  body.devone-admin .admin-hero-actions{justify-content:flex-start;}
+  body.devone-admin .dashboard-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  body.devone-admin .quick-access-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  body.devone-admin .scaffold-form{grid-template-columns:1fr;}
+  body.devone-admin .backup-provider-grid,
+  body.devone-admin .cloud-provider-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  body.devone-admin .system-overview-list div{grid-template-columns:1fr;gap:5px;}
+}
+@media(max-width:620px){
+  body.devone-admin .dashboard-stat-grid,
+  body.devone-admin .quick-access-grid,
+  body.devone-admin .backup-provider-grid,
+  body.devone-admin .cloud-provider-grid{grid-template-columns:1fr;}
+  body.devone-admin .dashboard-stat-card{min-height:auto;}
+  body.devone-admin .section-head{display:block;}
+  body.devone-admin .section-head span{margin-top:8px;}
+}
+
+/* DevOneCMS v1.5.7 Pages + Users permissions polish */
+body.devone-admin .admin-user-mini{
+  margin:0 0 14px;
+  padding:12px;
+  border-radius:18px;
+  border:1px solid var(--da-border2);
+  background:rgba(255,255,255,.045);
+}
+body.devone-admin .admin-user-mini span,
+body.devone-admin .admin-user-mini small{display:block;color:var(--da-muted);font-size:.78rem;font-weight:850;}
+body.devone-admin .admin-user-mini strong{display:block;color:#fff;margin:3px 0;font-size:.96rem;}
+body.devone-admin .page-manager-hero,
+body.devone-admin .users-hero{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:22px;
+  align-items:center;
+  margin-bottom:18px;
+  padding:28px;
+  border:1px solid var(--da-border);
+  border-radius:32px;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(39,183,255,.16),transparent 34%),
+    radial-gradient(circle at 90% 0%,rgba(149,67,255,.18),transparent 36%),
+    linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+  box-shadow:var(--da-shadow);
+}
+body.devone-admin .page-manager-hero h1,
+body.devone-admin .users-hero h1{margin:10px 0 8px!important;}
+body.devone-admin .pages-editor-layout,
+body.devone-admin .user-editor-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 340px;
+  gap:18px;
+  align-items:start;
+}
+body.devone-admin .page-editor-card,
+body.devone-admin .user-editor-card,
+body.devone-admin .role-editor-card{display:grid;gap:14px;}
+body.devone-admin .editor-row{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+body.devone-admin .pages-list-card .table-scroll,
+body.devone-admin .users-grid-layout .table-scroll{overflow:auto;}
+body.devone-admin .status-pill{
+  display:inline-flex;align-items:center;min-height:28px;padding:0 10px;border-radius:999px;
+  color:#fff;font-size:.78rem;font-weight:900;text-transform:uppercase;letter-spacing:.04em;
+}
+body.devone-admin .status-published{background:rgba(49,243,173,.16);border:1px solid rgba(49,243,173,.26);color:var(--da-green);}
+body.devone-admin .status-draft{background:rgba(255,209,102,.13);border:1px solid rgba(255,209,102,.28);color:var(--da-gold);}
+body.devone-admin .users-grid-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 380px;
+  gap:18px;
+  align-items:start;
+}
+body.devone-admin .user-profile-row{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;align-items:center;}
+body.devone-admin .avatar-preview,
+body.devone-admin .tiny-avatar{
+  display:grid;place-items:center;overflow:hidden;
+  background:linear-gradient(135deg,var(--da-blue),var(--da-purple));
+  color:#fff;font-weight:950;box-shadow:0 0 28px rgba(149,67,255,.22);
+}
+body.devone-admin .avatar-preview{width:82px;height:82px;border-radius:28px;font-size:2rem;}
+body.devone-admin .avatar-preview img,
+body.devone-admin .tiny-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+body.devone-admin .tiny-avatar{width:42px;height:42px;min-width:42px;border-radius:15px;font-size:.95rem;}
+body.devone-admin .user-cell{display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px;align-items:center;}
+body.devone-admin .user-cell strong{display:block;}
+body.devone-admin .user-cell small{display:block;color:var(--da-muted);font-size:.78rem;}
+body.devone-admin .user-cell .tiny-avatar{grid-row:span 2;}
+body.devone-admin .permission-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:10px;
+}
+body.devone-admin .permission-grid label{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:13px;
+  border-radius:16px;
+  border:1px solid var(--da-border2);
+  background:rgba(255,255,255,.045);
+  font-weight:800;
+}
+body.devone-admin .permission-grid input{width:auto!important;margin-top:3px;}
+body.devone-admin .permission-grid strong{display:block;color:#fff;font-size:.9rem;}
+body.devone-admin .permission-grid small{display:block;color:var(--da-muted);font-weight:700;line-height:1.45;margin-top:2px;}
+body.devone-admin .role-list{display:grid;gap:12px;}
+body.devone-admin .role-list article{
+  padding:16px;border-radius:18px;border:1px solid var(--da-border2);background:rgba(255,255,255,.045);
+}
+body.devone-admin .role-list article strong{font-size:1.05rem;}
+body.devone-admin .role-list article p{color:var(--da-muted);line-height:1.55;margin:8px 0;}
+body.devone-admin .role-list article small{color:var(--da-green);font-weight:900;}
+@media(max-width:1100px){
+  body.devone-admin .pages-editor-layout,
+  body.devone-admin .user-editor-layout,
+  body.devone-admin .users-grid-layout{grid-template-columns:1fr;}
+}
+@media(max-width:760px){
+  body.devone-admin .page-manager-hero,
+  body.devone-admin .users-hero{grid-template-columns:1fr;padding:22px;}
+  body.devone-admin .editor-row,
+  body.devone-admin .user-profile-row{grid-template-columns:1fr;}
+  body.devone-admin .permission-grid{grid-template-columns:1fr;}
+}
+
+/* DevOneCMS v1.5.8 auth/register polish */
+.devone-auth-page{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at top left, rgba(39,183,255,.20), transparent 35%),
+    radial-gradient(circle at top right, rgba(145,72,255,.22), transparent 35%),
+    linear-gradient(180deg,#050814,#081028 55%,#050814);
+}
+.devone-auth-shell{width:min(560px,100%);}
+.devone-auth-card{padding:28px;border-radius:28px;box-shadow:0 28px 90px rgba(0,0,0,.45);}
+.devone-auth-brand{display:flex;align-items:center;gap:16px;margin-bottom:20px;}
+.devone-auth-brand img{width:68px;height:68px;object-fit:contain;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:8px;}
+.devone-auth-brand .logo{width:68px;height:68px;display:grid;place-items:center;border-radius:18px;background:linear-gradient(135deg,#27b7ff,#9543ff);font-weight:950;font-size:1.6rem;color:#fff;}
+.devone-auth-brand h1{margin:0;line-height:1.05;font-size:clamp(2rem,7vw,3.2rem);letter-spacing:-.05em;}
+.devone-auth-form{display:grid;gap:14px;}
+.devone-auth-form label{display:grid;gap:7px;font-weight:800;color:#dce5ff;}
+.devone-auth-form input{min-height:48px;border-radius:14px;border:1px solid rgba(130,160,255,.28);background:rgba(255,255,255,.07);color:#fff;padding:0 14px;outline:none;}
+.devone-auth-form input:focus{border-color:#27b7ff;box-shadow:0 0 0 4px rgba(39,183,255,.12);}
+.devone-auth-form button{min-height:50px;margin-top:6px;}
+.devone-auth-links{margin:18px 0 0;text-align:center;color:#b9c5ff;font-weight:800;}
+.devone-auth-links a{color:#fff!important;text-decoration:none!important;}
+.success-card{border-color:rgba(46,245,173,.35)!important;background:rgba(46,245,173,.10)!important;color:#d9fff0!important;}
+
+/* DevOneCMS v1.5.9 sidebar cleanup + bottom login profile block */
+body.devone-admin .admin-nav{
+  min-height:calc(100vh - 120px);
+  align-content:start;
+}
+body.devone-admin .admin-user-mini.admin-user-mini-bottom{
+  margin:60px 0 10px!important;
+  padding:14px!important;
+  border-radius:18px;
+  border:1px solid var(--da-border2);
+  background:linear-gradient(135deg,rgba(39,183,255,.09),rgba(149,67,255,.11));
+  box-shadow:0 14px 36px rgba(0,0,0,.18);
+}
+body.devone-admin .admin-user-mini.admin-user-mini-bottom + a{
+  margin-top:0!important;
+}
+@media(max-width:980px){
+  body.devone-admin .admin-nav{min-height:auto;}
+  body.devone-admin .admin-user-mini.admin-user-mini-bottom{margin:42px 0 10px!important;}
+}
+
+
+/* DevOneCMS Wave 1b compact click submenu controls
+   Parent labels navigate normally; a checkbox-size animated plus toggles children. */
+body.devone-admin .admin-nav-group{
+  position:relative;
+  display:grid;
+  gap:6px;
+}
+body.devone-admin .admin-nav-parent-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 26px;
+  align-items:center;
+  gap:5px;
+}
+body.devone-admin .admin-nav-parent-row > .admin-nav-parent{
+  min-width:0;
+  width:100%;
+}
+body.devone-admin .admin-nav-parent .admin-nav-label{overflow:hidden;}
+body.devone-admin .admin-nav-toggle{
+  position:relative;
+  display:inline-grid;
+  place-items:center;
+  align-self:center;
+  width:24px!important;
+  height:24px!important;
+  min-width:24px!important;
+  min-height:24px!important;
+  max-width:24px!important;
+  max-height:24px!important;
+  margin:0!important;
+  padding:0!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  border-radius:7px!important;
+  background:rgba(255,255,255,.055)!important;
+  color:#fff!important;
+  box-shadow:none!important;
+  cursor:pointer;
+  line-height:1!important;
+  transform:none!important;
+  filter:none!important;
+  transition:background .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+}
+body.devone-admin .admin-nav-toggle:hover,
+body.devone-admin .admin-nav-toggle:focus-visible{
+  background:rgba(255,255,255,.12)!important;
+  border-color:rgba(120,150,255,.34)!important;
+  box-shadow:0 0 0 3px rgba(90,125,255,.10)!important;
+  transform:none!important;
+  filter:none!important;
+}
+body.devone-admin .admin-nav-plus{
+  position:relative;
+  display:block;
+  width:11px;
+  height:11px;
+}
+body.devone-admin .admin-nav-plus::before,
+body.devone-admin .admin-nav-plus::after{
+  position:absolute;
+  top:50%;
+  left:50%;
+  display:block;
+  border-radius:999px;
+  background:currentColor;
+  content:"";
+  transform:translate(-50%,-50%);
+  transform-origin:center;
+  transition:transform .2s ease,opacity .2s ease;
+}
+body.devone-admin .admin-nav-plus::before{
+  width:11px;
+  height:1.8px;
+}
+body.devone-admin .admin-nav-plus::after{
+  width:1.8px;
+  height:11px;
+}
+body.devone-admin .admin-nav-submenu{
+  display:none;
+  gap:5px;
+  margin:0 0 6px 12px;
+  padding:7px 0 7px 12px;
+  border-left:1px solid rgba(120,150,255,.34);
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));
+  border-radius:0 0 16px 16px;
+}
+body.devone-admin .admin-nav-group.open > .admin-nav-submenu,
+body.devone-admin .admin-nav-group.active > .admin-nav-submenu{
+  display:grid;
+  animation:devoneAdminSubmenuIn .16s ease both;
+}
+body.devone-admin .admin-nav-group.open > .admin-nav-parent-row > .admin-nav-toggle .admin-nav-plus::after,
+body.devone-admin .admin-nav-group.active > .admin-nav-parent-row > .admin-nav-toggle .admin-nav-plus::after{
+  transform:translate(-50%,-50%) scaleY(0);
+  opacity:0;
+}
+body.devone-admin .admin-nav-group.open > .admin-nav-parent-row > .admin-nav-toggle,
+body.devone-admin .admin-nav-group.active > .admin-nav-parent-row > .admin-nav-toggle{
+  border-color:rgba(120,150,255,.32)!important;
+  background:linear-gradient(135deg,rgba(39,183,255,.22),rgba(149,67,255,.25))!important;
+}
+body.devone-admin .sidebar .admin-nav-submenu a,
+body.devone-admin .sidebar a.admin-nav-subitem{
+  padding:9px 11px!important;
+  border-radius:12px!important;
+  font-size:.88rem!important;
+  color:#cfdcff!important;
+  background:rgba(255,255,255,.035)!important;
+  border:1px solid transparent!important;
+  box-shadow:none!important;
+}
+body.devone-admin .sidebar .admin-nav-submenu a:hover,
+body.devone-admin .sidebar .admin-nav-submenu a.active,
+body.devone-admin .sidebar a.admin-nav-subitem.active{
+  color:#fff!important;
+  background:linear-gradient(135deg,rgba(39,183,255,.16),rgba(149,67,255,.20))!important;
+  border-color:rgba(120,150,255,.28)!important;
+  transform:translateX(2px)!important;
+}
+body.devone-admin.devone-admin-theme-light .admin-nav-toggle{
+  border-color:rgba(17,17,17,.12)!important;
+  background:rgba(17,17,17,.045)!important;
+  color:#171717!important;
+}
+body.devone-admin.devone-admin-theme-light .admin-nav-toggle:hover,
+body.devone-admin.devone-admin-theme-light .admin-nav-toggle:focus-visible{
+  border-color:rgba(200,155,44,.38)!important;
+  background:rgba(200,155,44,.12)!important;
+  color:#5f450c!important;
+  box-shadow:0 0 0 3px rgba(200,155,44,.10)!important;
+}
+body.devone-admin.devone-admin-theme-light .admin-nav-group.open > .admin-nav-parent-row > .admin-nav-toggle,
+body.devone-admin.devone-admin-theme-light .admin-nav-group.active > .admin-nav-parent-row > .admin-nav-toggle{
+  border-color:rgba(200,155,44,.34)!important;
+  background:linear-gradient(135deg,rgba(246,228,168,.68),rgba(200,155,44,.18))!important;
+  color:#5f450c!important;
+}
+@keyframes devoneAdminSubmenuIn{
+  from{opacity:0;transform:translateY(-4px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@media(max-width:980px){
+  body.devone-admin .admin-nav-parent-row{grid-template-columns:minmax(0,1fr) 28px;}
+  body.devone-admin .admin-nav-toggle{
+    width:24px!important;
+    height:24px!important;
+    min-width:24px!important;
+    min-height:24px!important;
+  }
+  body.devone-admin .admin-nav-submenu{margin-left:10px;padding-left:12px;}
+}
+
+/* DevOneCMS v1.0.1 profile/media/logs finishing touches */
+body.devone-admin-page-logs .logs-hero{margin-bottom:18px;}
+body.devone-admin-page-logs .logs-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+body.devone-admin-page-logs .logs-table-card{overflow:hidden;}
+body.devone-admin-page-logs .logs-table td{vertical-align:top;}
+body.devone-admin-page-logs .log-action-badge{
+  display:inline-flex;
+  min-height:30px;
+  align-items:center;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid rgba(49,243,173,.24);
+  background:rgba(49,243,173,.10);
+  color:#dbfff3;
+  font-weight:900;
+  font-size:.82rem;
+  white-space:nowrap;
+}
+body.devone-admin-page-logs .logs-empty-state{
+  padding:24px;
+  border-radius:22px;
+  border:1px solid var(--da-border2);
+  background:rgba(255,255,255,.045);
+}
+body.devone-admin-page-media .media-toolbar span{color:var(--da-muted);font-weight:850;}
+body.devone-admin-page-users .avatar-preview img,
+body.devone-admin .tiny-avatar img{object-fit:cover;}
+@media (max-width:980px){
+  body.devone-admin-page-logs .logs-summary-grid{grid-template-columns:1fr;}
+}
+
+/* DeveloperOneCMS v1.0.4 media delete controls */
+body.devone-admin .media-delete-form{
+  margin:4px 0 0!important;
+  display:flex;
+  justify-content:flex-end;
+}
+body.devone-admin .media-delete-btn{
+  width:100%;
+  min-height:40px;
+  padding:9px 12px!important;
+  font-size:.86rem;
+}
+body.devone-admin .media-card .media-meta{
+  gap:10px!important;
+}
+
+/* DeveloperOneCMS v1.0.5 admin tidy: sidebar avatar, logs pagination */
+body.devone-admin .admin-user-mini.admin-user-mini-bottom{
+  display:grid;
+  grid-template-columns:46px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+}
+body.devone-admin .admin-user-mini-avatar{
+  width:46px;
+  height:46px;
+  border-radius:16px;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  flex:0 0 46px;
+  color:#fff;
+  font-weight:950;
+  background:linear-gradient(135deg,var(--da-blue),var(--da-purple));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 12px 30px rgba(39,183,255,.16);
+}
+body.devone-admin .admin-user-mini-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+body.devone-admin .admin-user-mini-avatar span{
+  color:#fff!important;
+  font-size:1.05rem!important;
+  line-height:1!important;
+}
+body.devone-admin .admin-user-mini-info{min-width:0;}
+body.devone-admin .admin-user-mini-info strong,
+body.devone-admin .admin-user-mini-info small{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+body.devone-admin .devone-pagination{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:16px 0 0;
+  margin-top:16px;
+  border-top:1px solid var(--da-border2);
+}
+body.devone-admin .devone-pagination .page-link,
+body.devone-admin .devone-pagination .page-dots{
+  min-height:38px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 13px;
+  border-radius:13px;
+  font-weight:900;
+  text-decoration:none!important;
+}
+body.devone-admin .devone-pagination .page-link{
+  color:#dce5ff!important;
+  border:1px solid var(--da-border2);
+  background:rgba(255,255,255,.045);
+}
+body.devone-admin .devone-pagination .page-link:hover,
+body.devone-admin .devone-pagination .page-link.active{
+  color:#fff!important;
+  border-color:rgba(39,183,255,.42);
+  background:linear-gradient(135deg,rgba(39,183,255,.20),rgba(149,67,255,.20));
+  transform:translateY(-1px);
+}
+body.devone-admin .devone-pagination .page-link.disabled{
+  pointer-events:none;
+  opacity:.45;
+}
+body.devone-admin .devone-pagination .page-dots{color:var(--da-muted);}
+@media(max-width:720px){
+  body.devone-admin .devone-pagination{justify-content:flex-start;}
+}
+
+/* DeveloperOneCMS v1.0.5 admin page title icons */
+body.devone-admin .admin-panel h1{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  flex-wrap:wrap;
+}
+body.devone-admin .admin-panel h1::before{
+  content:"✦";
+  width:44px;
+  height:44px;
+  min-width:44px;
+  display:inline-grid;
+  place-items:center;
+  border-radius:16px;
+  color:#fff;
+  font-size:.58em;
+  line-height:1;
+  background:linear-gradient(135deg,rgba(39,183,255,.92),rgba(149,67,255,.92));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 16px 34px rgba(39,183,255,.18), inset 0 1px 0 rgba(255,255,255,.22);
+  text-shadow:0 2px 10px rgba(0,0,0,.28);
+}
+body.devone-admin-page-dashboard .admin-panel h1::before{content:"⌂";}
+body.devone-admin-page-pages .admin-panel h1::before{content:"▤";}
+body.devone-admin-page-media .admin-panel h1::before{content:"◉";}
+body.devone-admin-page-themes .admin-panel h1::before{content:"◒";}
+body.devone-admin-page-plugins .admin-panel h1::before{content:"⚙";}
+body.devone-admin-page-libraries .admin-panel h1::before{content:"▦";}
+body.devone-admin-page-store .admin-panel h1::before{content:"◈";}
+body.devone-admin-page-github-importer .admin-panel h1::before{content:"⌁";}
+body.devone-admin-page-modules .admin-panel h1::before{content:"▧";}
+body.devone-admin-page-menus .admin-panel h1::before{content:"☰";}
+body.devone-admin-page-users .admin-panel h1::before{content:"👤";}
+body.devone-admin-page-settings .admin-panel h1::before{content:"⚙";}
+body.devone-admin-page-front-scripts .admin-panel h1::before{content:"</>";font-size:.40em;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-weight:950;}
+body.devone-admin-page-api-builder .admin-panel h1::before{content:"API";font-size:.34em;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-weight:950;letter-spacing:-.04em;}
+body.devone-admin-page-logs .admin-panel h1::before{content:"☷";}
+body.devone-admin-page-table-debug .admin-panel h1::before{content:"▥";}
+body.devone-admin-page-backups .admin-panel h1::before{content:"↺";}
+body.devone-admin-page-plugin-page .admin-panel h1::before{content:"⊞";}
+body.devone-admin-page-register .admin-panel h1::before{content:"＋";}
+body.devone-admin-page-marketplace .admin-panel h1::before{content:"◇";}
+body.devone-admin-page-store-submissions .admin-panel h1::before{content:"✉";}
+body.devone-admin-page-file-manager .admin-panel h1::before{content:"▣";}
+@media(max-width:720px){
+  body.devone-admin .admin-panel h1{gap:10px;}
+  body.devone-admin .admin-panel h1::before{width:38px;height:38px;min-width:38px;border-radius:14px;}
+}
+
+
+/* DeveloperOneCMS v1.0.6 final cleanup: user/role delete actions + normal dropdown inheritance */
+body.devone-admin .admin-nav-group > .admin-nav-parent{
+  width:100%;
+}
+body.devone-admin .admin-nav-group > .admin-nav-parent,
+body.devone-admin .admin-nav-group > .admin-nav-parent:hover,
+body.devone-admin .admin-nav-group > .admin-nav-parent.active{
+  /* Keep grouped parent links visually identical to normal sidebar links. */
+}
+body.devone-admin .user-action-row,
+body.devone-admin .role-action-row{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+}
+body.devone-admin .inline-delete-form{
+  margin:0!important;
+  display:inline-flex;
+}
+body.devone-admin .danger-btn,
+body.devone-admin button.danger-btn,
+body.devone-admin a.danger-btn{
+  color:#fff!important;
+  background:linear-gradient(135deg,rgba(255,70,100,.88),rgba(175,42,70,.88))!important;
+  border-color:rgba(255,105,130,.42)!important;
+  box-shadow:0 10px 26px rgba(255,70,100,.12)!important;
+}
+body.devone-admin .danger-btn:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.04);
+}
+body.devone-admin .settings-grid .smtp-card small,
+body.devone-admin .settings-grid .email-card small{
+  color:var(--da-muted);
+  font-weight:800;
+}
+
+
+/* DeveloperOneCMS v1.0.7 sidebar menu icon restore */
+body.devone-admin .admin-nav-group > .admin-nav-parent{gap:10px;}
+body.devone-admin .admin-nav-submenu .admin-nav-icon{width:22px;height:22px;min-width:22px;border-radius:8px;font-size:.72rem;}
+
+/* DeveloperOneCMS v1.0.11 mobile admin accordion/card tables */
+body.devone-admin .devone-mobile-cards{display:none;}
+body.devone-admin .devone-desktop-table{width:100%;}
+body.devone-admin .table td,
+body.devone-admin .table th{overflow-wrap:anywhere;word-break:normal;}
+body.devone-admin .table code{white-space:normal;overflow-wrap:anywhere;word-break:break-word;}
+body.devone-admin .user-action-row,
+body.devone-admin .role-action-row,
+body.devone-admin .inline-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+body.devone-admin .inline-actions form,
+body.devone-admin .user-action-row form,
+body.devone-admin .role-action-row form{margin:0;}
+
+@media(max-width:760px){
+  body.devone-admin main,
+  body.devone-admin .admin-main,
+  body.devone-admin .content,
+  body.devone-admin .dashboard-content{max-width:100%;overflow-x:hidden;}
+  body.devone-admin .card{max-width:100%;overflow-wrap:anywhere;}
+  body.devone-admin .devone-desktop-table{display:none!important;}
+  body.devone-admin .devone-mobile-cards{display:grid;gap:12px;width:100%;}
+  body.devone-admin .devone-mobile-card{
+    display:block;
+    width:100%;
+    border:1px solid var(--da-border)!important;
+    border-radius:20px!important;
+    background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.028))!important;
+    box-shadow:0 16px 46px rgba(0,0,0,.24);
+    overflow:hidden;
+  }
+  body.devone-admin .devone-mobile-card summary{
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr) auto;
+    gap:12px;
+    align-items:center;
+    padding:14px;
+    cursor:pointer;
+    list-style:none;
+    min-height:64px;
+  }
+  body.devone-admin .devone-mobile-card summary::-webkit-details-marker{display:none;}
+  body.devone-admin .devone-mobile-card-icon{
+    width:44px;height:44px;display:grid;place-items:center;border-radius:15px;
+    background:linear-gradient(135deg,var(--da-blue),var(--da-purple));
+    box-shadow:0 0 26px rgba(149,67,255,.22);
+    font-size:1.15rem;
+  }
+  body.devone-admin .devone-mobile-card-title-wrap{min-width:0;display:block;}
+  body.devone-admin .devone-mobile-card-title-wrap strong{display:block;color:#fff;font-size:1rem;line-height:1.18;overflow-wrap:anywhere;}
+  body.devone-admin .devone-mobile-card-title-wrap small{display:block;color:var(--da-muted);font-size:.78rem;line-height:1.35;margin-top:4px;overflow-wrap:anywhere;}
+  body.devone-admin .devone-mobile-card-arrow{
+    width:34px;height:34px;border-radius:12px;display:grid;place-items:center;
+    background:rgba(255,255,255,.08);border:1px solid var(--da-border2);color:#dbe7ff;font-weight:950;
+    transition:transform .18s ease;
+  }
+  body.devone-admin .devone-mobile-card[open] .devone-mobile-card-arrow{transform:rotate(180deg);}
+  body.devone-admin .devone-mobile-card-body{padding:0 14px 14px;display:grid;gap:13px;}
+  body.devone-admin .devone-mobile-meta-grid{
+    display:grid;
+    grid-template-columns:minmax(92px, .42fr) minmax(0, 1fr);
+    gap:9px 12px;
+    padding-top:12px;
+    border-top:1px solid rgba(255,255,255,.08);
+  }
+  body.devone-admin .devone-mobile-meta-grid>span{
+    color:#bfcaff;
+    text-transform:uppercase;
+    letter-spacing:.065em;
+    font-size:.68rem;
+    font-weight:950;
+  }
+  body.devone-admin .devone-mobile-meta-grid>strong,
+  body.devone-admin .devone-mobile-meta-grid>code{
+    min-width:0;
+    color:#fff;
+    font-size:.88rem;
+    line-height:1.35;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+  body.devone-admin .devone-mobile-card-actions,
+  body.devone-admin .devone-mobile-card-actions.inline-actions,
+  body.devone-admin .devone-mobile-card-actions.user-action-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  body.devone-admin .devone-mobile-card-actions form{margin:0;display:inline-flex;}
+  body.devone-admin .devone-mobile-card-actions .btn,
+  body.devone-admin .devone-mobile-card-actions .button,
+  body.devone-admin .devone-mobile-card-actions button{min-height:42px;}
+  body.devone-admin .user-cell{grid-template-columns:42px minmax(0,1fr);max-width:100%;}
+  body.devone-admin .user-cell strong,
+  body.devone-admin .user-cell small{overflow-wrap:anywhere;word-break:break-word;}
+  body.devone-admin .users-grid-layout .table-scroll{overflow:visible;}
+}
+
+/* DeveloperOneCMS v1.0.13 TRUE mobile admin cards
+   This intentionally uses a wider breakpoint and stronger selectors so mobile browsers
+   never render the desktop table and mobile card list at the same time. */
+@media screen and (min-width:901px){
+  html body.devone-admin .devone-mobile-cards,
+  html body.devone-admin .devone-mobile-card{display:none!important;}
+  html body.devone-admin .devone-desktop-table{display:block!important;}
+  html body.devone-admin table.devone-desktop-table{display:table!important;}
+}
+
+@media screen and (max-width:900px){
+  html body.devone-admin,
+  html body.devone-admin .admin-wrap,
+  html body.devone-admin .panel,
+  html body.devone-admin main,
+  html body.devone-admin .admin-main,
+  html body.devone-admin .content,
+  html body.devone-admin .dashboard-content{
+    max-width:100%!important;
+    width:100%!important;
+    overflow-x:hidden!important;
+  }
+
+  html body.devone-admin .card,
+  html body.devone-admin section.card,
+  html body.devone-admin .pages-list-card,
+  html body.devone-admin .users-grid-layout > .card{
+    max-width:100%!important;
+    width:100%!important;
+    overflow:hidden!important;
+    box-sizing:border-box!important;
+  }
+
+  html body.devone-admin .devone-desktop-table,
+  html body.devone-admin .table-scroll.devone-desktop-table,
+  html body.devone-admin div.devone-desktop-table,
+  html body.devone-admin table.devone-desktop-table{
+    display:none!important;
+    visibility:hidden!important;
+    width:0!important;
+    max-width:0!important;
+    height:0!important;
+    max-height:0!important;
+    min-height:0!important;
+    overflow:hidden!important;
+    opacity:0!important;
+    pointer-events:none!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+  }
+
+  html body.devone-admin .devone-desktop-table table,
+  html body.devone-admin .devone-desktop-table thead,
+  html body.devone-admin .devone-desktop-table tbody,
+  html body.devone-admin .devone-desktop-table tr,
+  html body.devone-admin .devone-desktop-table th,
+  html body.devone-admin .devone-desktop-table td{
+    display:none!important;
+  }
+
+  html body.devone-admin .devone-mobile-cards{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:14px!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin-top:14px!important;
+  }
+
+  html body.devone-admin .devone-mobile-card{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    box-sizing:border-box!important;
+    border:1px solid rgba(139,162,255,.22)!important;
+    border-radius:22px!important;
+    background:linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.028))!important;
+    box-shadow:0 18px 48px rgba(0,0,0,.28)!important;
+    overflow:hidden!important;
+  }
+
+  html body.devone-admin .devone-mobile-card summary{
+    display:grid!important;
+    grid-template-columns:auto minmax(0,1fr) auto!important;
+    gap:12px!important;
+    align-items:center!important;
+    padding:15px!important;
+    cursor:pointer!important;
+    list-style:none!important;
+    min-height:66px!important;
+  }
+
+  html body.devone-admin .devone-mobile-card summary::-webkit-details-marker{display:none!important;}
+  html body.devone-admin .devone-mobile-card summary::marker{content:""!important;}
+
+  html body.devone-admin .devone-mobile-card-icon,
+  html body.devone-admin .devone-mobile-card summary .tiny-avatar{
+    width:44px!important;
+    height:44px!important;
+    min-width:44px!important;
+    flex:0 0 44px!important;
+  }
+
+  html body.devone-admin .devone-mobile-card-title-wrap{
+    min-width:0!important;
+    display:block!important;
+    overflow:hidden!important;
+  }
+
+  html body.devone-admin .devone-mobile-card-title-wrap strong{
+    display:block!important;
+    color:#fff!important;
+    font-size:1.03rem!important;
+    line-height:1.18!important;
+    overflow-wrap:anywhere!important;
+    word-break:break-word!important;
+  }
+
+  html body.devone-admin .devone-mobile-card-title-wrap small{
+    display:block!important;
+    color:#bfcaff!important;
+    font-size:.78rem!important;
+    line-height:1.35!important;
+    margin-top:4px!important;
+    overflow-wrap:anywhere!important;
+    word-break:break-word!important;
+  }
+
+  html body.devone-admin .devone-mobile-card-arrow{
+    width:34px!important;
+    height:34px!important;
+    border-radius:12px!important;
+    display:grid!important;
+    place-items:center!important;
+    background:rgba(255,255,255,.08)!important;
+    border:1px solid rgba(139,162,255,.22)!important;
+    color:#dbe7ff!important;
+    font-weight:950!important;
+    transition:transform .18s ease!important;
+  }
+
+  html body.devone-admin .devone-mobile-card[open] .devone-mobile-card-arrow{transform:rotate(180deg)!important;}
+
+  html body.devone-admin .devone-mobile-card-body{
+    display:grid!important;
+    gap:14px!important;
+    padding:0 15px 15px!important;
+  }
+
+  html body.devone-admin .devone-mobile-meta-grid{
+    display:grid!important;
+    grid-template-columns:minmax(86px,.4fr) minmax(0,1fr)!important;
+    gap:10px 12px!important;
+    padding-top:13px!important;
+    border-top:1px solid rgba(255,255,255,.09)!important;
+  }
+
+  html body.devone-admin .devone-mobile-meta-grid > span{
+    color:#bfcaff!important;
+    text-transform:uppercase!important;
+    letter-spacing:.065em!important;
+    font-size:.68rem!important;
+    font-weight:950!important;
+  }
+
+  html body.devone-admin .devone-mobile-meta-grid > strong,
+  html body.devone-admin .devone-mobile-meta-grid > code,
+  html body.devone-admin .devone-mobile-meta-grid > div{
+    min-width:0!important;
+    color:#fff!important;
+    font-size:.9rem!important;
+    line-height:1.35!important;
+    overflow-wrap:anywhere!important;
+    word-break:break-word!important;
+    white-space:normal!important;
+  }
+
+  html body.devone-admin .devone-mobile-card-actions,
+  html body.devone-admin .devone-mobile-card-actions.inline-actions,
+  html body.devone-admin .devone-mobile-card-actions.user-action-row{
+    display:flex!important;
+    align-items:center!important;
+    gap:9px!important;
+    flex-wrap:wrap!important;
+  }
+
+  html body.devone-admin .devone-mobile-card-actions form{
+    margin:0!important;
+    display:inline-flex!important;
+  }
+
+  html body.devone-admin .devone-mobile-card-actions .btn,
+  html body.devone-admin .devone-mobile-card-actions .button,
+  html body.devone-admin .devone-mobile-card-actions button{
+    min-height:42px!important;
+    padding:0 16px!important;
+  }
+
+  html body.devone-admin .pages-list-card .section-head,
+  html body.devone-admin .users-grid-layout .section-head{
+    align-items:flex-start!important;
+    gap:10px!important;
+  }
+}
+
+/* DevOne Network / Multisite foundation v1.0.4 */
+body.devone-admin .devone-sites-topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  margin:0 0 18px;padding:14px;border:1px solid rgba(255,255,255,.10);border-radius:22px;
+  background:linear-gradient(135deg,rgba(255,122,24,.12),rgba(255,45,117,.08)),rgba(255,255,255,.045);
+  box-shadow:0 18px 60px rgba(0,0,0,.18);
+}
+body.devone-admin .devone-sites-current{display:flex;align-items:center;gap:10px;min-width:210px;}
+body.devone-admin .devone-sites-current span{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:14px;background:linear-gradient(135deg,#ff7a18,#ff2d75);color:#fff;font-size:0;font-weight:900;}
+body.devone-admin .devone-sites-current span:before{content:"🌐";font-size:18px;}
+body.devone-admin .devone-sites-current strong{display:block;color:#fff;font-size:1rem;line-height:1.1;overflow-wrap:anywhere;}
+body.devone-admin .devone-sites-switcher{margin:0;display:flex;align-items:center;gap:8px;flex:1;min-width:260px;}
+body.devone-admin .devone-sites-switcher select{width:100%;min-height:44px;border-radius:14px;}
+body.devone-admin .devone-sites-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+body.devone-admin-page-sites .admin-panel h1::before{content:"🌐";}
+body.devone-admin-page-domain .admin-panel h1::before{content:"🔗";}
+@media(max-width:760px){
+  body.devone-admin .devone-sites-topbar{display:grid;grid-template-columns:1fr;gap:10px;padding:12px;}
+  body.devone-admin .devone-sites-switcher{min-width:0;width:100%;}
+  body.devone-admin .devone-sites-actions .btn{width:100%;justify-content:center;}
+}
+
+
+/* DevOneCMS v1.1.9 Corporate Admin Theme + sidebar official logo
+   Keeps the original dark command-center theme as default.
+   Light corporate mode is enabled from Admin → Settings → Admin Appearance. */
+
+/* Official Developer One CMS logo in the admin side navigation. */
+body.devone-admin .admin-brand.admin-brand-official{
+  background:transparent!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
+  padding:4px 2px 18px!important;
+  margin:0 0 12px!important;
+  justify-content:center!important;
+}
+body.devone-admin .admin-brand.admin-brand-official .admin-brand-logo-official{
+  width:min(220px,100%)!important;
+  height:auto!important;
+  min-width:0!important;
+  max-height:none!important;
+  display:block!important;
+  object-fit:contain!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+body.devone-admin .admin-brand.admin-brand-official>span{display:none!important;}
+
+/* Settings page toggle switch. */
+body.devone-admin .devone-theme-toggle{
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr)!important;
+  gap:14px!important;
+  align-items:center!important;
+  padding:16px!important;
+  border:1px solid var(--da-border)!important;
+  border-radius:20px!important;
+  background:rgba(255,255,255,.045)!important;
+  cursor:pointer;
+}
+body.devone-admin .devone-theme-toggle input{
+  position:absolute!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  width:1px!important;
+  height:1px!important;
+}
+body.devone-admin .devone-theme-toggle-ui{
+  width:62px!important;
+  height:34px!important;
+  border-radius:999px!important;
+  display:block!important;
+  position:relative!important;
+  background:rgba(255,255,255,.12)!important;
+  border:1px solid var(--da-border)!important;
+  box-shadow:inset 0 1px 8px rgba(0,0,0,.22);
+}
+body.devone-admin .devone-theme-toggle-ui:after{
+  content:"";
+  position:absolute;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  left:4px;
+  top:3px;
+  background:#fff;
+  box-shadow:0 6px 18px rgba(0,0,0,.30);
+  transition:transform .18s ease;
+}
+body.devone-admin .devone-theme-toggle input:checked + .devone-theme-toggle-ui{
+  background:linear-gradient(90deg,var(--da-blue),var(--da-purple))!important;
+  border-color:rgba(255,255,255,.2)!important;
+}
+body.devone-admin .devone-theme-toggle input:checked + .devone-theme-toggle-ui:after{transform:translateX(28px);}
+body.devone-admin .devone-theme-toggle strong{display:block;color:#fff;font-size:1rem;}
+body.devone-admin .devone-theme-toggle small{display:block;color:var(--da-muted);font-size:.82rem;margin-top:4px;line-height:1.35;}
+body.devone-admin .devone-theme-preview-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin-top:14px;
+}
+body.devone-admin .devone-theme-preview{
+  border-radius:18px;
+  min-height:92px;
+  padding:16px;
+  border:1px solid var(--da-border);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  overflow:hidden;
+}
+body.devone-admin .devone-theme-preview strong{display:block;font-size:1.05rem;}
+body.devone-admin .devone-theme-preview small{display:block;margin-top:4px;line-height:1.35;}
+body.devone-admin .dark-preview{
+  background:
+    radial-gradient(circle at top left,rgba(39,183,255,.22),transparent 45%),
+    radial-gradient(circle at top right,rgba(149,67,255,.24),transparent 40%),
+    #090f22;
+  color:#fff;
+}
+body.devone-admin .dark-preview small{color:#b7c4ff;}
+body.devone-admin .light-preview{
+  background:
+    radial-gradient(circle at 16% 0%,rgba(246,228,168,.68),transparent 43%),
+    radial-gradient(circle at 92% 12%,rgba(200,155,44,.20),transparent 36%),
+    linear-gradient(145deg,#ffffff 0%,#fffaf0 62%,#f7ecd0 100%);
+  color:#17130d;
+  border-color:rgba(138,102,21,.24);
+  box-shadow:0 14px 34px rgba(72,52,9,.10);
+}
+body.devone-admin .light-preview small{color:#6b6559;}
+
+/* Corporate Glass — White & Gold admin theme.
+   The historical "light" value is intentionally retained for backwards
+   compatibility; this block replaces the former blue/purple Corporate Light
+   presentation without changing stored settings or requiring a migration. */
+body.devone-admin.devone-admin-theme-light{
+  --da-bg:#f5f0e4;
+  --da-bg2:#fffdf8;
+  --da-panel:#ffffff;
+  --da-panel2:#fffaf0;
+  --da-text:#17130d;
+  --da-muted:#6b6559;
+  --da-blue:#c89b2c;
+  --da-purple:#8a6615;
+  --da-pink:#d7aa3e;
+  --da-green:#16794c;
+  --da-gold:#c89b2c;
+  --da-border:rgba(108,78,14,.23);
+  --da-border2:rgba(108,78,14,.14);
+  --da-shadow:0 24px 70px rgba(72,52,9,.12);
+  color:var(--da-text)!important;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(246,228,168,.50),transparent 29%),
+    radial-gradient(circle at 94% 5%,rgba(200,155,44,.17),transparent 31%),
+    linear-gradient(180deg,#fffdf8 0%,#f5f0e4 100%)!important;
+}
+body.devone-admin.devone-admin-theme-light::before{
+  opacity:.55;
+  background-image:
+    linear-gradient(rgba(138,102,21,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(138,102,21,.045) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.5),transparent 84%);
+}
+
+/* White glass sidebar with black-and-gold navigation accents. */
+body.devone-admin.devone-admin-theme-light .sidebar{
+  background:
+    radial-gradient(circle at 8% 0%,rgba(246,228,168,.56),transparent 34%),
+    radial-gradient(circle at 96% 100%,rgba(200,155,44,.14),transparent 38%),
+    linear-gradient(180deg,rgba(255,255,255,.98) 0%,rgba(255,250,240,.97) 100%)!important;
+  border-right:1px solid rgba(108,78,14,.20)!important;
+  box-shadow:18px 0 64px rgba(72,52,9,.11)!important;
+  backdrop-filter:blur(24px);
+}
+body.devone-admin.devone-admin-theme-light .sidebar::after{
+  background:linear-gradient(180deg,transparent,rgba(200,155,44,.42),transparent)!important;
+}
+body.devone-admin.devone-admin-theme-light .admin-brand{
+  color:#17130d!important;
+}
+body.devone-admin.devone-admin-theme-light .admin-brand .logo{
+  background:#111!important;
+  color:#f6e4a8!important;
+  border-color:rgba(17,17,17,.12)!important;
+  box-shadow:0 12px 26px rgba(0,0,0,.16)!important;
+}
+body.devone-admin.devone-admin-theme-light .sidebar a{
+  color:#3f392e!important;
+  background:transparent!important;
+  border-color:transparent!important;
+}
+body.devone-admin.devone-admin-theme-light .sidebar a:hover,
+body.devone-admin.devone-admin-theme-light .sidebar a.active{
+  color:#17130d!important;
+  background:linear-gradient(135deg,rgba(255,248,223,.96),rgba(246,228,168,.58))!important;
+  border-color:rgba(200,155,44,.25)!important;
+  box-shadow:0 14px 30px rgba(72,52,9,.10)!important;
+}
+body.devone-admin.devone-admin-theme-light .admin-nav-icon{
+  color:#f6e4a8!important;
+  background:linear-gradient(145deg,#171717,#3b3020)!important;
+  border-color:rgba(17,17,17,.10)!important;
+  box-shadow:0 9px 20px rgba(0,0,0,.16)!important;
+}
+body.devone-admin.devone-admin-theme-light .sidebar a:hover .admin-nav-icon,
+body.devone-admin.devone-admin-theme-light .sidebar a.active .admin-nav-icon{
+  color:#fff!important;
+  background:linear-gradient(135deg,#d7aa3e,#8a6615)!important;
+}
+body.devone-admin.devone-admin-theme-light .admin-nav-submenu{
+  background:rgba(255,248,223,.72)!important;
+  border-color:rgba(200,155,44,.20)!important;
+}
+body.devone-admin.devone-admin-theme-light .admin-user-mini{
+  background:rgba(255,255,255,.86)!important;
+  border-color:rgba(108,78,14,.20)!important;
+  box-shadow:0 13px 30px rgba(72,52,9,.08)!important;
+  backdrop-filter:blur(16px);
+}
+body.devone-admin.devone-admin-theme-light .admin-user-mini-info span,
+body.devone-admin.devone-admin-theme-light .admin-user-mini-info small{color:#756d60!important;}
+body.devone-admin.devone-admin-theme-light .admin-user-mini-info strong{color:#17130d!important;}
+
+/* Main workspace and typography. */
+body.devone-admin.devone-admin-theme-light .admin-panel{
+  background:
+    radial-gradient(circle at 12% 0%,rgba(246,228,168,.32),transparent 26%),
+    radial-gradient(circle at 91% 3%,rgba(200,155,44,.12),transparent 29%),
+    transparent!important;
+}
+body.devone-admin.devone-admin-theme-light h1,
+body.devone-admin.devone-admin-theme-light h2,
+body.devone-admin.devone-admin-theme-light h3,
+body.devone-admin.devone-admin-theme-light h4{color:#17130d!important;}
+body.devone-admin.devone-admin-theme-light a{color:#8a6615!important;}
+body.devone-admin.devone-admin-theme-light a:hover{color:#5f450c!important;}
+body.devone-admin.devone-admin-theme-light .muted{color:#6b6559!important;opacity:1!important;}
+body.devone-admin.devone-admin-theme-light label{color:#342f26!important;}
+body.devone-admin.devone-admin-theme-light code,
+body.devone-admin.devone-admin-theme-light pre{color:#413722;}
+
+/* Cards and panels use white glass surfaces with restrained gold borders. */
+body.devone-admin.devone-admin-theme-light .card,
+body.devone-admin.devone-admin-theme-light .market-card,
+body.devone-admin.devone-admin-theme-light .settings-grid>section,
+body.devone-admin.devone-admin-theme-light .menu-editor-card,
+body.devone-admin.devone-admin-theme-light .table-debug-card{
+  color:#211d17!important;
+  background:rgba(255,255,255,.92)!important;
+  border:1px solid rgba(108,78,14,.18)!important;
+  border-radius:28px!important;
+  box-shadow:var(--da-shadow)!important;
+  backdrop-filter:blur(16px);
+}
+body.devone-admin.devone-admin-theme-light .card h2,
+body.devone-admin.devone-admin-theme-light .card h3,
+body.devone-admin.devone-admin-theme-light .settings-grid>section h2{color:#17130d!important;}
+body.devone-admin.devone-admin-theme-light .error-card{
+  background:#fff4f3!important;
+  border-color:#edb9b3!important;
+  color:#8d251d!important;
+}
+body.devone-admin.devone-admin-theme-light .section-head span,
+body.devone-admin.devone-admin-theme-light .pill,
+body.devone-admin.devone-admin-theme-light .badge,
+body.devone-admin.devone-admin-theme-light .status-pill{
+  background:#fff8df!important;
+  border-color:#ead79b!important;
+  color:#76550d!important;
+}
+
+/* Form controls and actions. */
+body.devone-admin.devone-admin-theme-light input,
+body.devone-admin.devone-admin-theme-light select,
+body.devone-admin.devone-admin-theme-light textarea{
+  color:#211d17!important;
+  background:rgba(255,255,255,.96)!important;
+  border:1px solid rgba(108,78,14,.28)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9)!important;
+}
+body.devone-admin.devone-admin-theme-light input::placeholder,
+body.devone-admin.devone-admin-theme-light textarea::placeholder{color:#9a9182!important;}
+body.devone-admin.devone-admin-theme-light input:focus,
+body.devone-admin.devone-admin-theme-light select:focus,
+body.devone-admin.devone-admin-theme-light textarea:focus{
+  border-color:#c89b2c!important;
+  box-shadow:0 0 0 4px rgba(200,155,44,.14)!important;
+}
+body.devone-admin.devone-admin-theme-light button,
+body.devone-admin.devone-admin-theme-light .btn,
+body.devone-admin.devone-admin-theme-light .button{
+  color:#fff!important;
+  background:linear-gradient(135deg,#d7aa3e 0%,#a27a1e 55%,#806014 100%)!important;
+  border-color:rgba(128,96,20,.35)!important;
+  box-shadow:0 16px 34px rgba(128,96,20,.22)!important;
+}
+body.devone-admin.devone-admin-theme-light button:hover,
+body.devone-admin.devone-admin-theme-light .btn:hover,
+body.devone-admin.devone-admin-theme-light .button:hover{
+  filter:brightness(1.035);
+  box-shadow:0 20px 42px rgba(128,96,20,.28)!important;
+}
+body.devone-admin.devone-admin-theme-light .btn.secondary,
+body.devone-admin.devone-admin-theme-light .button.secondary,
+body.devone-admin.devone-admin-theme-light .button-like.secondary{
+  background:rgba(255,255,255,.90)!important;
+  color:#342f26!important;
+  border:1px solid rgba(108,78,14,.24)!important;
+  box-shadow:0 9px 22px rgba(72,52,9,.06)!important;
+}
+body.devone-admin.devone-admin-theme-light .btn.danger,
+body.devone-admin.devone-admin-theme-light .button.danger,
+body.devone-admin.devone-admin-theme-light button.danger{
+  color:#fff!important;
+  background:linear-gradient(135deg,#c54b40,#8f271f)!important;
+  border-color:rgba(143,39,31,.32)!important;
+}
+
+/* Tables. */
+body.devone-admin.devone-admin-theme-light .table th{
+  color:#756d60!important;
+  border-color:rgba(108,78,14,.14)!important;
+}
+body.devone-admin.devone-admin-theme-light .table td{
+  background:rgba(255,255,255,.93)!important;
+  color:#211d17!important;
+  border-top:1px solid rgba(108,78,14,.13)!important;
+  border-bottom:1px solid rgba(108,78,14,.13)!important;
+}
+body.devone-admin.devone-admin-theme-light .table tr td:first-child{border-left:1px solid rgba(108,78,14,.13)!important;}
+body.devone-admin.devone-admin-theme-light .table tr td:last-child{border-right:1px solid rgba(108,78,14,.13)!important;}
+body.devone-admin.devone-admin-theme-light .table tr:hover td{background:#fff9e9!important;}
+
+/* Dashboard and feature hero surfaces. */
+body.devone-admin.devone-admin-theme-light .admin-dashboard-hero,
+body.devone-admin.devone-admin-theme-light .store-shell-hero,
+body.devone-admin.devone-admin-theme-light .sites-hero,
+body.devone-admin.devone-admin-theme-light .upgrade-hero{
+  color:#211d17!important;
+  background:
+    radial-gradient(circle at 16% 0%,rgba(246,228,168,.74),transparent 36%),
+    radial-gradient(circle at 90% 6%,rgba(200,155,44,.22),transparent 36%),
+    linear-gradient(145deg,#ffffff 0%,#fffaf0 68%,#f6e8bd 100%)!important;
+  border:1px solid rgba(108,78,14,.20)!important;
+  box-shadow:var(--da-shadow)!important;
+}
+body.devone-admin.devone-admin-theme-light .admin-dashboard-hero h1,
+body.devone-admin.devone-admin-theme-light .store-shell-hero h1,
+body.devone-admin.devone-admin-theme-light .sites-hero h1,
+body.devone-admin.devone-admin-theme-light .upgrade-hero h1{color:#17130d!important;}
+
+/* Network selector and responsive admin chrome. */
+body.devone-admin.devone-admin-theme-light .devone-sites-topbar{
+  background:rgba(255,255,255,.92)!important;
+  border:1px solid rgba(108,78,14,.19)!important;
+  box-shadow:0 14px 34px rgba(72,52,9,.08)!important;
+  backdrop-filter:blur(18px);
+}
+body.devone-admin.devone-admin-theme-light .devone-sites-current strong{color:#17130d!important;}
+body.devone-admin.devone-admin-theme-light .devone-sites-current span{
+  color:#fff!important;
+  background:linear-gradient(135deg,#d7aa3e,#8a6615)!important;
+}
+body.devone-admin.devone-admin-theme-light .admin-mobile-bar{
+  background:rgba(255,255,255,.94)!important;
+  border-bottom:1px solid rgba(108,78,14,.20)!important;
+  color:#211d17!important;
+  box-shadow:0 12px 30px rgba(72,52,9,.08)!important;
+  backdrop-filter:blur(20px);
+}
+body.devone-admin.devone-admin-theme-light .admin-mobile-bar strong{color:#17130d!important;}
+body.devone-admin.devone-admin-theme-light .admin-menu-toggle{
+  color:#f6e4a8!important;
+  background:#111!important;
+  border-color:#111!important;
+}
+@media screen and (max-width:900px){
+  html body.devone-admin.devone-admin-theme-light .devone-mobile-card{
+    background:rgba(255,255,255,.95)!important;
+    border-color:rgba(108,78,14,.19)!important;
+    box-shadow:0 18px 48px rgba(72,52,9,.12)!important;
+  }
+  html body.devone-admin.devone-admin-theme-light .devone-mobile-card-title-wrap strong,
+  html body.devone-admin.devone-admin-theme-light .devone-mobile-meta-grid > strong,
+  html body.devone-admin.devone-admin-theme-light .devone-mobile-meta-grid > code,
+  html body.devone-admin.devone-admin-theme-light .devone-mobile-meta-grid > div{color:#211d17!important;}
+  html body.devone-admin.devone-admin-theme-light .devone-mobile-card-title-wrap small,
+  html body.devone-admin.devone-admin-theme-light .devone-mobile-meta-grid > span{color:#756d60!important;}
+  html body.devone-admin.devone-admin-theme-light .devone-mobile-card-arrow{
+    background:#fff8df!important;
+    border-color:rgba(200,155,44,.25)!important;
+    color:#8a6615!important;
+  }
+  html body.devone-admin.devone-admin-theme-light .devone-mobile-meta-grid{border-top-color:rgba(108,78,14,.16)!important;}
+}
+
+/* Appearance selector and menu-style cards inside the white/gold theme. */
+body.devone-admin.devone-admin-theme-light .devone-theme-toggle{
+  background:linear-gradient(145deg,#fff,#fff8e3)!important;
+  border-color:rgba(108,78,14,.21)!important;
+  box-shadow:0 12px 28px rgba(72,52,9,.07)!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-theme-toggle strong{color:#17130d!important;}
+body.devone-admin.devone-admin-theme-light .devone-theme-toggle small{color:#6b6559!important;}
+body.devone-admin.devone-admin-theme-light .devone-theme-toggle-ui{
+  background:#eadfca!important;
+  border-color:#d5c297!important;
+  box-shadow:inset 0 1px 8px rgba(72,52,9,.12)!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-theme-toggle input:checked + .devone-theme-toggle-ui{
+  background:linear-gradient(135deg,#d7aa3e,#8a6615)!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-menu-style-preview{
+  background:rgba(255,255,255,.84)!important;
+  border-color:rgba(108,78,14,.17)!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-menu-style-preview.selected{
+  border-color:#c89b2c!important;
+  box-shadow:0 0 0 3px rgba(200,155,44,.13),0 16px 36px rgba(72,52,9,.10)!important;
+}
+
+@media(max-width:980px){
+  body.devone-admin .admin-brand.admin-brand-official{
+    justify-content:flex-start!important;
+    padding:10px 2px 16px!important;
+  }
+  body.devone-admin .admin-brand.admin-brand-official .admin-brand-logo-official{
+    width:210px!important;
+  }
+}
+
+@media(max-width:620px){
+  body.devone-admin .devone-theme-preview-grid{grid-template-columns:1fr;}
+}
+
+
+/* DevOneCMS v1.1.27 admin checkbox/radio layout fix
+   Keeps checkboxes beside their labels instead of inheriting full-width input styles. */
+body.devone-admin input[type="checkbox"],
+body.devone-admin input[type="radio"]{
+  width:18px!important;
+  height:18px!important;
+  min-width:18px!important;
+  max-width:18px!important;
+  flex:0 0 18px!important;
+  display:inline-block!important;
+  vertical-align:middle!important;
+  margin:0!important;
+  padding:0!important;
+  border-radius:5px!important;
+  accent-color:var(--da-green);
+  box-shadow:none!important;
+}
+body.devone-admin input[type="radio"]{border-radius:999px!important;}
+
+body.devone-admin label.inline-check,
+body.devone-admin label.check-row,
+body.devone-admin .inline-check,
+body.devone-admin .check-row{
+  display:inline-flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:9px!important;
+  width:auto!important;
+  max-width:100%!important;
+  min-height:28px!important;
+  line-height:1.35!important;
+  margin:8px 16px 8px 0!important;
+  white-space:normal!important;
+  text-align:left!important;
+}
+body.devone-admin label.inline-check input[type="checkbox"],
+body.devone-admin label.inline-check input[type="radio"],
+body.devone-admin label.check-row input[type="checkbox"],
+body.devone-admin label.check-row input[type="radio"],
+body.devone-admin .inline-check input[type="checkbox"],
+body.devone-admin .inline-check input[type="radio"],
+body.devone-admin .check-row input[type="checkbox"],
+body.devone-admin .check-row input[type="radio"]{
+  margin:0!important;
+}
+
+body.devone-admin .grid label.inline-check,
+body.devone-admin .grid label.check-row,
+body.devone-admin .settings-grid label.inline-check,
+body.devone-admin .settings-grid label.check-row,
+body.devone-admin form label.inline-check,
+body.devone-admin form label.check-row{
+  align-self:center!important;
+}
+
+body.devone-admin .permission-grid label{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:flex-start!important;
+  gap:10px!important;
+}
+body.devone-admin .permission-grid input[type="checkbox"]{
+  margin-top:3px!important;
+}
+
+body.devone-admin .backup-checkboxes label{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:8px!important;
+}
+body.devone-admin .backup-checkboxes input[type="checkbox"]{
+  width:18px!important;
+  min-width:18px!important;
+}
+
+@media(max-width:720px){
+  body.devone-admin label.inline-check,
+  body.devone-admin label.check-row,
+  body.devone-admin .inline-check,
+  body.devone-admin .check-row{
+    width:100%!important;
+    margin-right:0!important;
+  }
+}
+
+
+/* DevOne CMS v1.2.1 Menu Style selector preview */
+body.devone-admin .devone-menu-style-previews{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:6px 0 14px;
+}
+body.devone-admin .devone-menu-style-preview{
+  position:relative;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  grid-template-areas:"brand links" "title title" "copy copy";
+  align-items:center;
+  gap:9px 12px;
+  min-height:142px;
+  padding:16px !important;
+  border:1px solid var(--da-border2) !important;
+  border-radius:20px !important;
+  background:rgba(255,255,255,.045) !important;
+  color:inherit !important;
+  text-align:left;
+  cursor:pointer;
+  box-shadow:none !important;
+  filter:none !important;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+body.devone-admin .devone-menu-style-preview:hover{
+  transform:translateY(-2px);
+  border-color:var(--da-border) !important;
+}
+body.devone-admin .devone-menu-style-preview.selected{
+  border-color:#d7aa3e !important;
+  box-shadow:0 0 0 3px rgba(215,170,62,.14),0 16px 36px rgba(0,0,0,.14) !important;
+}
+body.devone-admin .devone-menu-style-preview .preview-brand{
+  grid-area:brand;
+  display:grid;
+  width:36px;
+  height:36px;
+  place-items:center;
+  border-radius:11px;
+  font-size:.78rem;
+  font-weight:950;
+}
+body.devone-admin .devone-menu-style-preview .preview-links{
+  grid-area:links;
+  display:flex;
+  justify-content:flex-end;
+  gap:5px;
+  padding:8px;
+  border-radius:999px;
+}
+body.devone-admin .devone-menu-style-preview .preview-links i{
+  display:block;
+  width:24%;
+  height:7px;
+  border-radius:999px;
+}
+body.devone-admin .devone-menu-style-preview strong{grid-area:title;display:block;margin-top:2px;}
+body.devone-admin .devone-menu-style-preview small{grid-area:copy;display:block;color:var(--da-muted);line-height:1.45;}
+body.devone-admin .classic-preview .preview-brand{
+  background:linear-gradient(135deg,var(--da-blue),var(--da-purple));
+  color:#fff;
+}
+body.devone-admin .classic-preview .preview-links{
+  background:rgba(9,15,35,.8);
+}
+body.devone-admin .classic-preview .preview-links i{
+  background:rgba(255,255,255,.5);
+}
+body.devone-admin .corporate-gold-preview{
+  background:linear-gradient(145deg,#fff,#fff8df) !important;
+  color:#171717 !important;
+}
+body.devone-admin .corporate-gold-preview .preview-brand{
+  background:#111;
+  color:#f6e4a8;
+}
+body.devone-admin .corporate-gold-preview .preview-links{
+  border:1px solid rgba(17,17,17,.08);
+  background:rgba(255,255,255,.85);
+  box-shadow:0 8px 20px rgba(74,52,8,.10);
+}
+body.devone-admin .corporate-gold-preview .preview-links i{
+  background:#c89b2c;
+}
+body.devone-admin .corporate-gold-preview small{
+  color:#625d52 !important;
+}
+@media(max-width:620px){
+  body.devone-admin .devone-menu-style-previews{grid-template-columns:1fr;}
+}
+
+/* ========================================================================== 
+   DevOneCMS 1.2.4 — Corporate Glass White & Gold contrast hotfix
+   --------------------------------------------------------------------------
+   Corrects legacy dark-palette selectors and page-level styles that could
+   leave white/pale text on the light admin theme. Also gives theme metadata a
+   dedicated translucent surface below screenshots so descriptions never sit
+   directly over preview images.
+   ========================================================================== */
+
+/* Stronger base contrast for the Corporate Glass workspace. */
+body.devone-admin.devone-admin-theme-light{
+  --da-text:#17130d;
+  --da-muted:#625c51;
+}
+body.devone-admin.devone-admin-theme-light .admin-panel,
+body.devone-admin.devone-admin-theme-light .admin-panel p,
+body.devone-admin.devone-admin-theme-light .admin-panel li,
+body.devone-admin.devone-admin-theme-light .admin-panel td{
+  color:#2d2922;
+}
+body.devone-admin.devone-admin-theme-light .admin-panel h1,
+body.devone-admin.devone-admin-theme-light .admin-panel h2,
+body.devone-admin.devone-admin-theme-light .admin-panel h3,
+body.devone-admin.devone-admin-theme-light .admin-panel h4,
+body.devone-admin.devone-admin-theme-light .admin-panel h5,
+body.devone-admin.devone-admin-theme-light .admin-panel h6{
+  color:#15120d!important;
+  text-shadow:none!important;
+}
+body.devone-admin.devone-admin-theme-light .admin-panel .muted,
+body.devone-admin.devone-admin-theme-light .admin-panel small{
+  color:#6d665a!important;
+}
+
+/* Dashboard hero, counters, Quick Access, and System Overview. */
+body.devone-admin.devone-admin-theme-light .admin-dashboard-hero,
+body.devone-admin.devone-admin-theme-light .page-manager-hero,
+body.devone-admin.devone-admin-theme-light .users-hero,
+body.devone-admin.devone-admin-theme-light .sites-hero,
+body.devone-admin.devone-admin-theme-light .upgrade-hero{
+  color:#211d17!important;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(246,228,168,.70),transparent 35%),
+    radial-gradient(circle at 91% 5%,rgba(200,155,44,.20),transparent 36%),
+    linear-gradient(145deg,#ffffff 0%,#fffaf0 68%,#f6e8bd 100%)!important;
+  border-color:rgba(108,78,14,.20)!important;
+}
+body.devone-admin.devone-admin-theme-light .admin-hero-copy,
+body.devone-admin.devone-admin-theme-light .page-manager-hero > div > p,
+body.devone-admin.devone-admin-theme-light .users-hero > div > p,
+body.devone-admin.devone-admin-theme-light .sites-hero > div > p,
+body.devone-admin.devone-admin-theme-light .upgrade-hero > div > p{
+  color:#514a3f!important;
+  opacity:1!important;
+}
+body.devone-admin.devone-admin-theme-light .admin-kicker{
+  color:#625b50!important;
+  background:linear-gradient(135deg,rgba(238,247,243,.96),rgba(255,240,229,.82))!important;
+  border-color:rgba(108,78,14,.20)!important;
+}
+body.devone-admin.devone-admin-theme-light .dashboard-stat-card{
+  color:#211d17!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.95),rgba(255,248,223,.76))!important;
+  border-color:rgba(108,78,14,.18)!important;
+  box-shadow:0 16px 42px rgba(72,52,9,.10)!important;
+}
+body.devone-admin.devone-admin-theme-light .dashboard-stat-card b,
+body.devone-admin.devone-admin-theme-light .dashboard-stat-card strong{
+  color:#17130d!important;
+}
+body.devone-admin.devone-admin-theme-light .dashboard-stat-card span{
+  color:#665f54!important;
+}
+body.devone-admin.devone-admin-theme-light .quick-access-grid a{
+  color:#211d17!important;
+  background:linear-gradient(145deg,#f7faff,#f6efff)!important;
+  border-color:rgba(108,78,14,.16)!important;
+}
+body.devone-admin.devone-admin-theme-light .quick-access-grid a:hover{
+  color:#17130d!important;
+  background:linear-gradient(145deg,#fffdf8,#fff3c9)!important;
+  border-color:rgba(200,155,44,.34)!important;
+}
+body.devone-admin.devone-admin-theme-light .quick-access-grid a strong{
+  color:#76550d!important;
+}
+body.devone-admin.devone-admin-theme-light .system-overview-list div{
+  background:#fffdf8!important;
+  border-color:rgba(108,78,14,.12)!important;
+}
+body.devone-admin.devone-admin-theme-light .system-overview-list span{
+  color:#6a6358!important;
+}
+body.devone-admin.devone-admin-theme-light .system-overview-list strong,
+body.devone-admin.devone-admin-theme-light .system-overview-list code{
+  color:#211d17!important;
+}
+
+/* Generic white-card content that inherited legacy white text. */
+body.devone-admin.devone-admin-theme-light :is(.card,.market-card,.settings-grid>section,.menu-editor-card,.table-debug-card) > :is(p,ul,ol,div):not(.admin-hero-actions):not(.inline-actions){
+  color:#3f3a32;
+}
+body.devone-admin.devone-admin-theme-light :is(.card,.market-card,.settings-grid>section,.menu-editor-card,.table-debug-card) strong:not(.btn):not(.button){
+  color:#211d17;
+}
+body.devone-admin.devone-admin-theme-light button strong,
+body.devone-admin.devone-admin-theme-light .btn strong,
+body.devone-admin.devone-admin-theme-light .button strong{
+  color:inherit!important;
+}
+
+/* Upgrade page contrast overrides for its page-level dark-mode CSS. */
+body.devone-admin.devone-admin-theme-light .devone-upgrade-hero{
+  color:#211d17!important;
+  background:linear-gradient(145deg,#ffffff,#fff8e5)!important;
+  border-color:rgba(108,78,14,.19)!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-upgrade-plan{
+  color:#342f26!important;
+  background:#fff8df!important;
+  border:1px solid #ead79b!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-upgrade-plan strong,
+body.devone-admin.devone-admin-theme-light .devone-price-stack strong{
+  color:#8a6615!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-feature-badge{
+  color:#173e31!important;
+  background:#eefaf4!important;
+  border-color:#9fd9bd!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-license-meta div{
+  color:#211d17!important;
+  background:#fffaf0!important;
+  border:1px solid rgba(108,78,14,.13)!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-license-meta span,
+body.devone-admin.devone-admin-theme-light .devone-purchase-table th{
+  color:#625c51!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-license-meta strong,
+body.devone-admin.devone-admin-theme-light .devone-purchase-table td{
+  color:#211d17!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-purchase-table td{
+  background:#fff!important;
+  border-color:rgba(108,78,14,.13)!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-launch-badge{
+  color:#16603f!important;
+  background:#eafaf2!important;
+  border-color:#9fdfbd!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-policy-warning{
+  color:#5d450f!important;
+  background:#fff9e8!important;
+  border-color:#e7c96f!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-policy-warning strong{
+  color:#8a5f00!important;
+}
+body.devone-admin.devone-admin-theme-light .devone-thankyou{
+  color:#174c36!important;
+  background:#eefaf4!important;
+  border-color:#9fd9bd!important;
+}
+
+/* Store page: replace page-level neon/dark text with readable corporate tones. */
+body.devone-admin.devone-admin-theme-light .devone-native-store{
+  --store-text:#17130d;
+  --store-muted:#655e53;
+  --store-blue:#b68618;
+  --store-purple:#8a6615;
+  --store-pink:#d7aa3e;
+  --store-green:#16794c;
+  --store-border:rgba(108,78,14,.20);
+  color:#211d17!important;
+}
+body.devone-admin.devone-admin-theme-light .store-shell-hero{
+  color:#211d17!important;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(219,246,235,.80),transparent 34%),
+    radial-gradient(circle at 92% 5%,rgba(249,213,207,.70),transparent 37%),
+    linear-gradient(145deg,#ffffff,#fffaf0)!important;
+  border-color:rgba(108,78,14,.20)!important;
+}
+body.devone-admin.devone-admin-theme-light .store-hero-copy h1{
+  background:linear-gradient(90deg,#17130d 0%,#5c4310 58%,#a87915 100%)!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  color:transparent!important;
+}
+body.devone-admin.devone-admin-theme-light .store-kicker{
+  color:#5d574c!important;
+  background:rgba(255,255,255,.72)!important;
+  border-color:rgba(108,78,14,.20)!important;
+}
+body.devone-admin.devone-admin-theme-light .store-hero-copy p,
+body.devone-admin.devone-admin-theme-light .store-featured-copy p,
+body.devone-admin.devone-admin-theme-light .store-advanced-card p,
+body.devone-admin.devone-admin-theme-light .store-locked-marketplace-card p,
+body.devone-admin.devone-admin-theme-light .native-card-body p{
+  color:#554f45!important;
+}
+body.devone-admin.devone-admin-theme-light .store-featured-stage,
+body.devone-admin.devone-admin-theme-light .store-advanced-card,
+body.devone-admin.devone-admin-theme-light .store-locked-marketplace-card,
+body.devone-admin.devone-admin-theme-light .native-store-card{
+  color:#211d17!important;
+  background:rgba(255,255,255,.93)!important;
+  border-color:rgba(108,78,14,.18)!important;
+  box-shadow:0 20px 55px rgba(72,52,9,.10)!important;
+}
+body.devone-admin.devone-admin-theme-light .store-featured-copy h2,
+body.devone-admin.devone-admin-theme-light .store-advanced-card h2,
+body.devone-admin.devone-admin-theme-light .store-advanced-card h3,
+body.devone-admin.devone-admin-theme-light .store-locked-marketplace-card h2,
+body.devone-admin.devone-admin-theme-light .store-locked-marketplace-card h3,
+body.devone-admin.devone-admin-theme-light .native-card-body h3{
+  color:#17130d!important;
+}
+body.devone-admin.devone-admin-theme-light .store-featured-copy b{
+  color:#16794c!important;
+}
+body.devone-admin.devone-admin-theme-light .store-stats-native > div{
+  color:#211d17!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(255,248,223,.72))!important;
+  border-color:rgba(108,78,14,.17)!important;
+  box-shadow:0 13px 32px rgba(72,52,9,.07)!important;
+}
+body.devone-admin.devone-admin-theme-light .store-stats-native strong{
+  background:linear-gradient(90deg,#6d4e0d,#b2841f)!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  color:transparent!important;
+}
+body.devone-admin.devone-admin-theme-light .store-stats-native span,
+body.devone-admin.devone-admin-theme-light .native-card-meta,
+body.devone-admin.devone-admin-theme-light .inline-check,
+body.devone-admin.devone-admin-theme-light .store-mini-note{
+  color:#655e53!important;
+}
+body.devone-admin.devone-admin-theme-light .store-advanced-card summary{
+  color:#211d17!important;
+  background:linear-gradient(135deg,#fff8df,#f8edcf)!important;
+}
+body.devone-admin.devone-admin-theme-light .store-advanced-grid section{
+  color:#2d2922!important;
+  background:#f8f5ed!important;
+  border-color:rgba(108,78,14,.13)!important;
+}
+body.devone-admin.devone-admin-theme-light .store-advanced-grid code,
+body.devone-admin.devone-admin-theme-light .store-locked-marketplace-card code{
+  color:#503c10!important;
+  background:#fff8df!important;
+}
+body.devone-admin.devone-admin-theme-light .store-toolbar-native{
+  background:linear-gradient(180deg,rgba(255,253,248,.98),rgba(255,253,248,.88))!important;
+  border-bottom:1px solid rgba(108,78,14,.12);
+}
+body.devone-admin.devone-admin-theme-light .devone-search-input{
+  color:#211d17!important;
+  background:#fff!important;
+  border-color:rgba(108,78,14,.24)!important;
+}
+body.devone-admin.devone-admin-theme-light .store-tabs button{
+  color:#3d372e!important;
+  background:#fff!important;
+  border:1px solid rgba(108,78,14,.19)!important;
+  box-shadow:0 7px 16px rgba(72,52,9,.05)!important;
+}
+body.devone-admin.devone-admin-theme-light .store-tabs button.active,
+body.devone-admin.devone-admin-theme-light .store-tabs button:hover{
+  color:#fff!important;
+  background:linear-gradient(135deg,#d7aa3e,#8a6615)!important;
+}
+body.devone-admin.devone-admin-theme-light .store-card-title-link{
+  color:#17130d!important;
+}
+body.devone-admin.devone-admin-theme-light .store-card-title-link:hover{
+  color:#76550d!important;
+}
+body.devone-admin.devone-admin-theme-light .store-price-badge.free{
+  color:#16603f!important;
+  background:#eafaf2!important;
+  border-color:#9fdfbd!important;
+}
+body.devone-admin.devone-admin-theme-light .store-price-badge.paid{
+  color:#704a0a!important;
+  background:#fff4dc!important;
+  border-color:#e8c77b!important;
+}
+
+/* Themes page: keep image and metadata in separate visual regions. */
+body.devone-admin.devone-admin-theme-light .theme-grid{
+  align-items:stretch;
+}
+body.devone-admin.devone-admin-theme-light .theme-card{
+  position:relative!important;
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  color:#211d17!important;
+  background:#fff!important;
+  border:1px solid rgba(108,78,14,.18)!important;
+  border-radius:24px!important;
+  box-shadow:0 18px 48px rgba(72,52,9,.10)!important;
+}
+body.devone-admin.devone-admin-theme-light .theme-card.active-theme,
+body.devone-admin.devone-admin-theme-light .theme-card.active{
+  border-color:#c89b2c!important;
+  box-shadow:0 0 0 3px rgba(200,155,44,.14),0 20px 55px rgba(72,52,9,.12)!important;
+}
+body.devone-admin.devone-admin-theme-light .theme-shot{
+  position:relative!important;
+  inset:auto!important;
+  z-index:1!important;
+  display:grid!important;
+  flex:0 0 230px!important;
+  width:100%!important;
+  height:230px!important;
+  min-height:230px!important;
+  max-height:230px!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  place-items:center!important;
+  color:#17130d!important;
+  background:linear-gradient(135deg,#eef3fa,#f5eafb)!important;
+  border-bottom:0!important;
+  font-size:1.55rem!important;
+  font-weight:900!important;
+  text-align:center!important;
+}
+body.devone-admin.devone-admin-theme-light .theme-shot > span{
+  position:relative!important;
+  z-index:2!important;
+  padding:20px!important;
+  color:#17130d!important;
+}
+body.devone-admin.devone-admin-theme-light .theme-shot img{
+  position:relative!important;
+  inset:auto!important;
+  z-index:1!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  opacity:1!important;
+  transform:none!important;
+}
+body.devone-admin.devone-admin-theme-light .theme-body{
+  position:relative!important;
+  inset:auto!important;
+  z-index:4!important;
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  width:100%!important;
+  min-height:218px!important;
+  margin:0!important;
+  padding:21px 22px 22px!important;
+  transform:none!important;
+  color:#2d2922!important;
+  background:rgba(255,253,248,.96)!important;
+  border-top:1px solid rgba(108,78,14,.16)!important;
+  box-shadow:0 -12px 30px rgba(72,52,9,.06)!important;
+  backdrop-filter:blur(18px)!important;
+}
+body.devone-admin.devone-admin-theme-light .theme-body h3{
+  margin:0 0 12px!important;
+  color:#17130d!important;
+  font-size:1.12rem!important;
+  line-height:1.25!important;
+}
+body.devone-admin.devone-admin-theme-light .theme-body p{
+  position:relative!important;
+  z-index:1!important;
+  margin:0 0 12px!important;
+  color:#4e483e!important;
+  line-height:1.55!important;
+}
+body.devone-admin.devone-admin-theme-light .theme-body .muted,
+body.devone-admin.devone-admin-theme-light .theme-body code{
+  color:#665f54!important;
+}
+body.devone-admin.devone-admin-theme-light .theme-body .inline-actions{
+  margin-top:auto!important;
+  padding-top:4px!important;
+}
+
+@media(max-width:680px){
+  body.devone-admin.devone-admin-theme-light .theme-shot{
+    flex-basis:200px!important;
+    height:200px!important;
+    min-height:200px!important;
+    max-height:200px!important;
+  }
+  body.devone-admin.devone-admin-theme-light .theme-body{
+    min-height:0!important;
+  }
+}
+
+/* DevOne 1.3.0 Stable core update UI */
+.devone-core-update-alert{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 18px;padding:14px 16px;border:1px solid rgba(86,156,214,.45);border-radius:12px;background:rgba(86,156,214,.12)}.devone-core-update-alert span{flex:1;min-width:220px}.devone-core-update-alert .btn{margin-left:auto}.devone-latest-card{max-width:980px}.devone-latest-card table{width:100%;border-collapse:collapse;margin:16px 0}.devone-latest-card th,.devone-latest-card td{text-align:left;padding:10px;border-bottom:1px solid rgba(127,127,127,.25)}
+
+/* ========================================================================
+   DevOne CMS 1.3 — Futuristic Permanent Admin Navigation
+   Applied to the canonical SuperAdmin dashboard shell.
+   Keeps the existing dynamic menu registry, permissions and plugin groups.
+   ======================================================================== */
+body.devone-admin{
+  --devone-sidebar-width:324px;
+}
+body.devone-admin .admin-wrap{
+  grid-template-columns:var(--devone-sidebar-width) minmax(0,1fr)!important;
+}
+body.devone-admin .sidebar,
+body.devone-admin.devone-admin-theme-light .sidebar{
+  position:sticky;
+  top:0;
+  height:100vh;
+  padding:18px 14px 14px!important;
+  overflow-y:auto;
+  overflow-x:hidden;
+  color:#f7f8fc!important;
+  background:
+    radial-gradient(circle at -8% -4%,rgba(54,156,255,.24),transparent 30%),
+    radial-gradient(circle at 110% 72%,rgba(154,77,255,.22),transparent 34%),
+    linear-gradient(180deg,rgba(10,11,17,.985) 0%,rgba(5,6,10,.995) 100%)!important;
+  border-right:1px solid rgba(255,255,255,.085)!important;
+  box-shadow:28px 0 80px rgba(0,0,0,.34)!important;
+  backdrop-filter:blur(24px);
+}
+body.devone-admin .sidebar::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.15;
+  background-image:
+    linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:34px 34px;
+  mask-image:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.75) 55%,transparent 96%);
+}
+body.devone-admin .sidebar::after,
+body.devone-admin.devone-admin-theme-light .sidebar::after{
+  background:linear-gradient(180deg,transparent,rgba(154,77,255,.68),rgba(54,156,255,.42),transparent)!important;
+}
+body.devone-admin .sidebar > *{position:relative;z-index:1;}
+
+/* Brand */
+body.devone-admin .admin-brand.admin-brand-official,
+body.devone-admin.devone-admin-theme-light .admin-brand.admin-brand-official{
+  min-height:68px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  margin:0 0 12px!important;
+  padding:10px 12px!important;
+  border:1px solid rgba(255,255,255,.075)!important;
+  border-radius:16px!important;
+  background:linear-gradient(110deg,rgba(154,77,255,.10),rgba(255,255,255,.025))!important;
+  box-shadow:none!important;
+}
+body.devone-admin .admin-brand.admin-brand-official .admin-brand-logo-official{
+  width:min(208px,100%)!important;
+  max-height:46px!important;
+  object-fit:contain!important;
+  object-position:left center!important;
+  filter:drop-shadow(0 0 20px rgba(117,89,255,.18));
+}
+
+/* Search */
+body.devone-admin .devone-admin-sidebar-search{
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr) auto;
+  align-items:center;
+  gap:5px;
+  min-height:46px;
+  margin:0 2px 13px;
+  padding:0 8px 0 4px;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:13px;
+  background:rgba(255,255,255,.035);
+  transition:border-color .18s ease,background .18s ease,box-shadow .18s ease;
+}
+body.devone-admin .devone-admin-sidebar-search:focus-within{
+  border-color:rgba(154,77,255,.38);
+  background:rgba(154,77,255,.07);
+  box-shadow:0 0 0 3px rgba(154,77,255,.08);
+}
+body.devone-admin .devone-admin-sidebar-search-icon{
+  color:#7a7f8e;
+  text-align:center;
+  font-size:1.1rem;
+}
+body.devone-admin .devone-admin-sidebar-search input{
+  width:100%!important;
+  min-width:0!important;
+  height:42px!important;
+  padding:0!important;
+  border:0!important;
+  outline:0!important;
+  background:transparent!important;
+  color:#fff!important;
+  box-shadow:none!important;
+  font-size:.82rem!important;
+}
+body.devone-admin .devone-admin-sidebar-search input::placeholder{color:#666b79!important;}
+body.devone-admin .devone-admin-sidebar-search kbd{
+  min-width:25px;
+  padding:4px 7px;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:6px;
+  background:rgba(255,255,255,.035);
+  color:#707582;
+  text-align:center;
+  font:700 .68rem/1 Inter,Segoe UI,sans-serif;
+}
+
+/* Sections */
+body.devone-admin .admin-nav,
+body.devone-admin .sidebar nav{
+  display:grid!important;
+  gap:3px!important;
+}
+body.devone-admin .devone-admin-nav-section{
+  display:block;
+  margin:17px 10px 7px;
+  color:#555966!important;
+  font-size:.63rem;
+  font-weight:900;
+  letter-spacing:.19em;
+  text-transform:uppercase;
+}
+body.devone-admin .devone-admin-nav-section:first-child{margin-top:5px;}
+body.devone-admin .devone-nav-search-hidden{display:none!important;}
+
+/* Main navigation items */
+body.devone-admin .sidebar .admin-nav > a,
+body.devone-admin.devone-admin-theme-light .sidebar .admin-nav > a,
+body.devone-admin .admin-nav-parent-row > .admin-nav-parent,
+body.devone-admin.devone-admin-theme-light .admin-nav-parent-row > .admin-nav-parent{
+  min-height:57px!important;
+  display:flex!important;
+  align-items:center!important;
+  margin:0!important;
+  padding:7px 9px!important;
+  color:#aeb2bf!important;
+  border:1px solid transparent!important;
+  border-radius:13px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  font-weight:700!important;
+  transform:none!important;
+  transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease!important;
+}
+body.devone-admin .sidebar .admin-nav > a:hover,
+body.devone-admin .sidebar .admin-nav > a.active,
+body.devone-admin.devone-admin-theme-light .sidebar .admin-nav > a:hover,
+body.devone-admin.devone-admin-theme-light .sidebar .admin-nav > a.active,
+body.devone-admin .admin-nav-parent-row > .admin-nav-parent:hover,
+body.devone-admin .admin-nav-parent-row > .admin-nav-parent.active,
+body.devone-admin.devone-admin-theme-light .admin-nav-parent-row > .admin-nav-parent:hover,
+body.devone-admin.devone-admin-theme-light .admin-nav-parent-row > .admin-nav-parent.active{
+  color:#fff!important;
+  border-color:rgba(154,77,255,.17)!important;
+  background:linear-gradient(90deg,rgba(141,70,255,.18),rgba(55,133,255,.065),transparent)!important;
+  box-shadow:none!important;
+  transform:translateX(2px)!important;
+}
+body.devone-admin .sidebar .admin-nav > a.active::before,
+body.devone-admin .admin-nav-parent-row > .admin-nav-parent.active::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:11px;
+  bottom:11px;
+  width:3px;
+  border-radius:0 999px 999px 0;
+  background:linear-gradient(#ff48bc,#9a4dff,#369cff);
+  box-shadow:0 0 15px rgba(156,72,255,.75);
+}
+body.devone-admin .admin-nav-label{gap:10px!important;align-items:center!important;}
+body.devone-admin .admin-nav-copy{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:3px;
+}
+body.devone-admin .admin-nav-text{
+  display:block;
+  color:inherit!important;
+  font-size:.81rem!important;
+  font-weight:760!important;
+  line-height:1.05;
+}
+body.devone-admin .admin-nav-meta{
+  display:block;
+  overflow:hidden;
+  color:#606573!important;
+  font-size:.64rem!important;
+  font-weight:600!important;
+  line-height:1.05;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+body.devone-admin .sidebar a:hover .admin-nav-meta,
+body.devone-admin .sidebar a.active .admin-nav-meta{color:#868b99!important;}
+body.devone-admin .admin-nav-icon,
+body.devone-admin.devone-admin-theme-light .admin-nav-icon{
+  width:36px!important;
+  height:36px!important;
+  min-width:36px!important;
+  display:inline-grid!important;
+  place-items:center!important;
+  color:#8b909d!important;
+  border:1px solid rgba(255,255,255,.06)!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.035)!important;
+  box-shadow:none!important;
+  font-size:.79rem!important;
+}
+body.devone-admin .sidebar a:hover .admin-nav-icon,
+body.devone-admin .sidebar a.active .admin-nav-icon,
+body.devone-admin.devone-admin-theme-light .sidebar a:hover .admin-nav-icon,
+body.devone-admin.devone-admin-theme-light .sidebar a.active .admin-nav-icon{
+  color:#fff!important;
+  border-color:rgba(159,78,255,.19)!important;
+  background:rgba(138,70,255,.13)!important;
+  box-shadow:none!important;
+}
+body.devone-admin .admin-nav-icon-code{font-size:.58rem!important;letter-spacing:-.04em;}
+
+/* Accordion groups */
+body.devone-admin .admin-nav-group{border:0!important;background:transparent!important;}
+body.devone-admin .admin-nav-parent-row{
+  grid-template-columns:minmax(0,1fr) 31px!important;
+  gap:3px!important;
+}
+body.devone-admin .admin-nav-toggle,
+body.devone-admin.devone-admin-theme-light .admin-nav-toggle{
+  width:29px!important;
+  height:29px!important;
+  min-width:29px!important;
+  min-height:29px!important;
+  align-self:center;
+  border:1px solid rgba(255,255,255,.06)!important;
+  border-radius:9px!important;
+  color:#696d7a!important;
+  background:rgba(255,255,255,.025)!important;
+  box-shadow:none!important;
+}
+body.devone-admin .admin-nav-toggle:hover,
+body.devone-admin .admin-nav-toggle:focus-visible,
+body.devone-admin.devone-admin-theme-light .admin-nav-toggle:hover,
+body.devone-admin.devone-admin-theme-light .admin-nav-toggle:focus-visible{
+  color:#fff!important;
+  border-color:rgba(154,77,255,.24)!important;
+  background:rgba(154,77,255,.10)!important;
+  box-shadow:0 0 0 3px rgba(154,77,255,.06)!important;
+}
+body.devone-admin .admin-nav-plus::before,
+body.devone-admin .admin-nav-plus::after{background:#696d7a!important;}
+body.devone-admin .admin-nav-group.open > .admin-nav-parent-row > .admin-nav-toggle,
+body.devone-admin .admin-nav-group.active > .admin-nav-parent-row > .admin-nav-toggle,
+body.devone-admin.devone-admin-theme-light .admin-nav-group.open > .admin-nav-parent-row > .admin-nav-toggle,
+body.devone-admin.devone-admin-theme-light .admin-nav-group.active > .admin-nav-parent-row > .admin-nav-toggle{
+  color:#fff!important;
+  border-color:rgba(154,77,255,.25)!important;
+  background:linear-gradient(135deg,rgba(255,72,188,.12),rgba(154,77,255,.18))!important;
+}
+body.devone-admin .admin-nav-group.open .admin-nav-plus::before,
+body.devone-admin .admin-nav-group.open .admin-nav-plus::after,
+body.devone-admin .admin-nav-group.active .admin-nav-plus::before,
+body.devone-admin .admin-nav-group.active .admin-nav-plus::after{background:#9a4dff!important;}
+body.devone-admin .admin-nav-submenu,
+body.devone-admin.devone-admin-theme-light .admin-nav-submenu{
+  margin:2px 0 5px 47px!important;
+  padding:4px 0 5px 13px!important;
+  border:0!important;
+  border-left:1px solid rgba(255,255,255,.07)!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body.devone-admin .sidebar .admin-nav-submenu a,
+body.devone-admin .sidebar a.admin-nav-subitem,
+body.devone-admin.devone-admin-theme-light .sidebar .admin-nav-submenu a,
+body.devone-admin.devone-admin-theme-light .sidebar a.admin-nav-subitem{
+  min-height:34px!important;
+  position:relative;
+  padding:6px 9px!important;
+  color:#747986!important;
+  border:0!important;
+  border-radius:8px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  font-size:.71rem!important;
+  font-weight:700!important;
+  transform:none!important;
+}
+body.devone-admin .sidebar .admin-nav-submenu a::before{
+  content:"";
+  width:4px;
+  height:4px;
+  flex:0 0 auto;
+  border-radius:50%;
+  background:#454a55;
+}
+body.devone-admin .sidebar .admin-nav-submenu a:hover,
+body.devone-admin .sidebar .admin-nav-submenu a.active,
+body.devone-admin.devone-admin-theme-light .sidebar .admin-nav-submenu a:hover,
+body.devone-admin.devone-admin-theme-light .sidebar .admin-nav-submenu a.active{
+  color:#fff!important;
+  background:rgba(255,255,255,.04)!important;
+}
+body.devone-admin .sidebar .admin-nav-submenu a:hover::before,
+body.devone-admin .sidebar .admin-nav-submenu a.active::before{
+  background:#9a4dff;
+  box-shadow:0 0 9px rgba(154,77,255,.85);
+}
+
+/* User and system footer */
+body.devone-admin .devone-admin-system-status{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:17px 4px 8px;
+  padding:9px 10px;
+  color:#fff;
+  border-top:1px solid rgba(255,255,255,.055);
+}
+body.devone-admin .devone-admin-system-status > span{
+  width:8px;
+  height:8px;
+  flex:0 0 auto;
+  border-radius:50%;
+  background:#40de88;
+  box-shadow:0 0 12px rgba(64,222,136,.58);
+}
+body.devone-admin .devone-admin-system-status div{display:flex;flex-direction:column;gap:2px;}
+body.devone-admin .devone-admin-system-status strong{font-size:.67rem;line-height:1;color:#dfe3ea;}
+body.devone-admin .devone-admin-system-status small{font-size:.59rem;line-height:1;color:#606573;}
+body.devone-admin .admin-user-mini,
+body.devone-admin.devone-admin-theme-light .admin-user-mini{
+  margin:0 2px 5px!important;
+  padding:10px!important;
+  border:1px solid rgba(255,255,255,.07)!important;
+  border-radius:13px!important;
+  background:linear-gradient(110deg,rgba(139,72,255,.08),rgba(255,255,255,.025))!important;
+  box-shadow:none!important;
+}
+body.devone-admin .admin-user-mini-info span,
+body.devone-admin .admin-user-mini-info small,
+body.devone-admin.devone-admin-theme-light .admin-user-mini-info span,
+body.devone-admin.devone-admin-theme-light .admin-user-mini-info small{color:#6d7280!important;}
+body.devone-admin .admin-user-mini-info strong,
+body.devone-admin.devone-admin-theme-light .admin-user-mini-info strong{color:#fff!important;}
+
+/* Mobile: same menu becomes off-canvas automatically. */
+@media(max-width:980px){
+  body.devone-admin{--devone-sidebar-width:min(88vw,324px);}
+  body.devone-admin .sidebar,
+  body.devone-admin.devone-admin-theme-light .sidebar{
+    top:64px!important;
+    width:var(--devone-sidebar-width)!important;
+    height:calc(100dvh - 64px)!important;
+    border-radius:0 18px 18px 0!important;
+  }
+  body.devone-admin .admin-brand.admin-brand-official{min-height:62px!important;}
+}
+@media(max-width:520px){
+  body.devone-admin{--devone-sidebar-width:calc(100vw - 16px);}
+  body.devone-admin .sidebar,
+  body.devone-admin.devone-admin-theme-light .sidebar{
+    left:8px!important;
+    bottom:8px!important;
+    width:var(--devone-sidebar-width)!important;
+    height:calc(100dvh - 80px)!important;
+    border:1px solid rgba(255,255,255,.09)!important;
+    border-radius:19px!important;
+  }
+}
+
+/* ============================================================
+   DevOne CMS — Admin Sidebar Theme Inheritance Bridge
+   The futuristic sidebar consumes the active Admin Appearance
+   design tokens instead of owning a hard-coded color scheme.
+   Any future admin theme that defines the standard --da-* tokens
+   automatically skins this sidebar as well.
+   ============================================================ */
+body.devone-admin{
+  --devone-nav-bg:var(--da-panel);
+  --devone-nav-bg-alt:var(--da-panel2);
+  --devone-nav-text:var(--da-text);
+  --devone-nav-muted:var(--da-muted);
+  --devone-nav-border:var(--da-border);
+  --devone-nav-border-soft:var(--da-border2);
+  --devone-nav-accent:var(--da-blue);
+  --devone-nav-accent-2:var(--da-purple);
+  --devone-nav-accent-3:var(--da-gold);
+  --devone-nav-success:var(--da-green);
+  --devone-nav-shadow:var(--da-shadow);
+
+  --devone-nav-surface:color-mix(in srgb,var(--devone-nav-bg) 94%,var(--devone-nav-accent) 6%);
+  --devone-nav-surface-soft:color-mix(in srgb,var(--devone-nav-bg-alt) 92%,var(--devone-nav-accent-2) 8%);
+  --devone-nav-hover:color-mix(in srgb,var(--devone-nav-bg-alt) 82%,var(--devone-nav-accent) 18%);
+  --devone-nav-active:color-mix(in srgb,var(--devone-nav-bg-alt) 72%,var(--devone-nav-accent) 28%);
+  --devone-nav-icon-bg:color-mix(in srgb,var(--devone-nav-bg-alt) 90%,var(--devone-nav-accent) 10%);
+  --devone-nav-icon-active:color-mix(in srgb,var(--devone-nav-bg-alt) 70%,var(--devone-nav-accent) 30%);
+  --devone-nav-focus:color-mix(in srgb,var(--devone-nav-accent) 18%,transparent);
+}
+
+/* Main shell */
+body.devone-admin .sidebar,
+body.devone-admin.devone-admin-theme-light .sidebar{
+  color:var(--devone-nav-text)!important;
+  background:
+    radial-gradient(circle at 8% 0%,color-mix(in srgb,var(--devone-nav-accent) 13%,transparent),transparent 36%),
+    radial-gradient(circle at 100% 82%,color-mix(in srgb,var(--devone-nav-accent-2) 12%,transparent),transparent 40%),
+    linear-gradient(180deg,var(--devone-nav-surface) 0%,var(--devone-nav-bg) 100%)!important;
+  border-right-color:var(--devone-nav-border)!important;
+  box-shadow:var(--devone-nav-shadow)!important;
+}
+body.devone-admin .sidebar::before{
+  background-image:
+    linear-gradient(color-mix(in srgb,var(--devone-nav-border) 22%,transparent) 1px,transparent 1px),
+    linear-gradient(90deg,color-mix(in srgb,var(--devone-nav-border) 22%,transparent) 1px,transparent 1px)!important;
+}
+
+/* Search */
+body.devone-admin .devone-admin-sidebar-search{
+  color:var(--devone-nav-text)!important;
+  border-color:var(--devone-nav-border-soft)!important;
+  background:color-mix(in srgb,var(--devone-nav-bg-alt) 88%,transparent)!important;
+}
+body.devone-admin .devone-admin-sidebar-search:focus-within{
+  border-color:var(--devone-nav-accent)!important;
+  box-shadow:0 0 0 3px var(--devone-nav-focus)!important;
+}
+body.devone-admin .devone-admin-sidebar-search-icon,
+body.devone-admin .devone-admin-sidebar-search kbd{
+  color:var(--devone-nav-muted)!important;
+}
+body.devone-admin .devone-admin-sidebar-search kbd{
+  border-color:var(--devone-nav-border-soft)!important;
+  background:color-mix(in srgb,var(--devone-nav-bg-alt) 82%,transparent)!important;
+}
+body.devone-admin .devone-admin-sidebar-search input{
+  color:var(--devone-nav-text)!important;
+  background:transparent!important;
+}
+body.devone-admin .devone-admin-sidebar-search input::placeholder{
+  color:color-mix(in srgb,var(--devone-nav-muted) 78%,transparent)!important;
+}
+
+/* Navigation headings */
+body.devone-admin .devone-admin-nav-section{
+  color:color-mix(in srgb,var(--devone-nav-muted) 76%,transparent)!important;
+}
+
+/* Main links and group parents */
+body.devone-admin .sidebar .admin-nav > a,
+body.devone-admin.devone-admin-theme-light .sidebar .admin-nav > a,
+body.devone-admin .admin-nav-parent-row > .admin-nav-parent,
+body.devone-admin.devone-admin-theme-light .admin-nav-parent-row > .admin-nav-parent{
+  color:color-mix(in srgb,var(--devone-nav-text) 72%,var(--devone-nav-muted) 28%)!important;
+  border-color:transparent!important;
+  background:transparent!important;
+}
+body.devone-admin .sidebar .admin-nav > a:hover,
+body.devone-admin .sidebar .admin-nav > a.active,
+body.devone-admin.devone-admin-theme-light .sidebar .admin-nav > a:hover,
+body.devone-admin.devone-admin-theme-light .sidebar .admin-nav > a.active,
+body.devone-admin .admin-nav-parent-row > .admin-nav-parent:hover,
+body.devone-admin .admin-nav-parent-row > .admin-nav-parent.active,
+body.devone-admin.devone-admin-theme-light .admin-nav-parent-row > .admin-nav-parent:hover,
+body.devone-admin.devone-admin-theme-light .admin-nav-parent-row > .admin-nav-parent.active{
+  color:var(--devone-nav-text)!important;
+  border-color:color-mix(in srgb,var(--devone-nav-accent) 30%,var(--devone-nav-border-soft))!important;
+  background:linear-gradient(90deg,var(--devone-nav-active),color-mix(in srgb,var(--devone-nav-hover) 58%,transparent),transparent)!important;
+}
+body.devone-admin .sidebar .admin-nav > a.active::before,
+body.devone-admin .admin-nav-parent-row > .admin-nav-parent.active::before{
+  background:linear-gradient(180deg,var(--devone-nav-accent-3),var(--devone-nav-accent),var(--devone-nav-accent-2))!important;
+  box-shadow:0 0 15px color-mix(in srgb,var(--devone-nav-accent) 64%,transparent)!important;
+}
+body.devone-admin .admin-nav-text{color:inherit!important;}
+body.devone-admin .admin-nav-meta{
+  color:color-mix(in srgb,var(--devone-nav-muted) 78%,transparent)!important;
+}
+body.devone-admin .sidebar a:hover .admin-nav-meta,
+body.devone-admin .sidebar a.active .admin-nav-meta{
+  color:var(--devone-nav-muted)!important;
+}
+
+/* Icons */
+body.devone-admin .admin-nav-icon,
+body.devone-admin.devone-admin-theme-light .admin-nav-icon{
+  color:var(--devone-nav-muted)!important;
+  border-color:var(--devone-nav-border-soft)!important;
+  background:var(--devone-nav-icon-bg)!important;
+}
+body.devone-admin .sidebar a:hover .admin-nav-icon,
+body.devone-admin .sidebar a.active .admin-nav-icon,
+body.devone-admin.devone-admin-theme-light .sidebar a:hover .admin-nav-icon,
+body.devone-admin.devone-admin-theme-light .sidebar a.active .admin-nav-icon{
+  color:var(--devone-nav-text)!important;
+  border-color:color-mix(in srgb,var(--devone-nav-accent) 35%,var(--devone-nav-border-soft))!important;
+  background:var(--devone-nav-icon-active)!important;
+}
+
+/* Accordion control */
+body.devone-admin .admin-nav-toggle,
+body.devone-admin.devone-admin-theme-light .admin-nav-toggle{
+  color:var(--devone-nav-muted)!important;
+  border-color:var(--devone-nav-border-soft)!important;
+  background:color-mix(in srgb,var(--devone-nav-bg-alt) 88%,transparent)!important;
+}
+body.devone-admin .admin-nav-toggle:hover,
+body.devone-admin .admin-nav-toggle:focus-visible,
+body.devone-admin.devone-admin-theme-light .admin-nav-toggle:hover,
+body.devone-admin.devone-admin-theme-light .admin-nav-toggle:focus-visible{
+  color:var(--devone-nav-text)!important;
+  border-color:color-mix(in srgb,var(--devone-nav-accent) 42%,var(--devone-nav-border))!important;
+  background:var(--devone-nav-hover)!important;
+  box-shadow:0 0 0 3px var(--devone-nav-focus)!important;
+}
+body.devone-admin .admin-nav-plus::before,
+body.devone-admin .admin-nav-plus::after{
+  background:var(--devone-nav-muted)!important;
+}
+body.devone-admin .admin-nav-group.open > .admin-nav-parent-row > .admin-nav-toggle,
+body.devone-admin .admin-nav-group.active > .admin-nav-parent-row > .admin-nav-toggle,
+body.devone-admin.devone-admin-theme-light .admin-nav-group.open > .admin-nav-parent-row > .admin-nav-toggle,
+body.devone-admin.devone-admin-theme-light .admin-nav-group.active > .admin-nav-parent-row > .admin-nav-toggle{
+  color:var(--devone-nav-text)!important;
+  border-color:color-mix(in srgb,var(--devone-nav-accent) 42%,var(--devone-nav-border))!important;
+  background:var(--devone-nav-active)!important;
+}
+body.devone-admin .admin-nav-group.open .admin-nav-plus::before,
+body.devone-admin .admin-nav-group.open .admin-nav-plus::after,
+body.devone-admin .admin-nav-group.active .admin-nav-plus::before,
+body.devone-admin .admin-nav-group.active .admin-nav-plus::after{
+  background:var(--devone-nav-accent)!important;
+}
+
+/* Submenus */
+body.devone-admin .admin-nav-submenu,
+body.devone-admin.devone-admin-theme-light .admin-nav-submenu{
+  border-left-color:var(--devone-nav-border-soft)!important;
+}
+body.devone-admin .sidebar .admin-nav-submenu a,
+body.devone-admin .sidebar a.admin-nav-subitem,
+body.devone-admin.devone-admin-theme-light .sidebar .admin-nav-submenu a,
+body.devone-admin.devone-admin-theme-light .sidebar a.admin-nav-subitem{
+  color:color-mix(in srgb,var(--devone-nav-muted) 88%,transparent)!important;
+  background:transparent!important;
+}
+body.devone-admin .sidebar .admin-nav-submenu a::before{
+  background:color-mix(in srgb,var(--devone-nav-muted) 48%,transparent)!important;
+}
+body.devone-admin .sidebar .admin-nav-submenu a:hover,
+body.devone-admin .sidebar .admin-nav-submenu a.active,
+body.devone-admin.devone-admin-theme-light .sidebar .admin-nav-submenu a:hover,
+body.devone-admin.devone-admin-theme-light .sidebar .admin-nav-submenu a.active{
+  color:var(--devone-nav-text)!important;
+  background:var(--devone-nav-hover)!important;
+}
+body.devone-admin .sidebar .admin-nav-submenu a:hover::before,
+body.devone-admin .sidebar .admin-nav-submenu a.active::before{
+  background:var(--devone-nav-accent)!important;
+  box-shadow:0 0 9px color-mix(in srgb,var(--devone-nav-accent) 70%,transparent)!important;
+}
+
+/* Footer / profile */
+body.devone-admin .devone-admin-system-status{
+  color:var(--devone-nav-text)!important;
+  border-top-color:var(--devone-nav-border-soft)!important;
+}
+body.devone-admin .devone-admin-system-status > span{
+  background:var(--devone-nav-success)!important;
+  box-shadow:0 0 12px color-mix(in srgb,var(--devone-nav-success) 60%,transparent)!important;
+}
+body.devone-admin .devone-admin-system-status strong{
+  color:var(--devone-nav-text)!important;
+}
+body.devone-admin .devone-admin-system-status small{
+  color:var(--devone-nav-muted)!important;
+}
+body.devone-admin .admin-user-mini,
+body.devone-admin.devone-admin-theme-light .admin-user-mini{
+  border-color:var(--devone-nav-border-soft)!important;
+  background:linear-gradient(110deg,var(--devone-nav-surface-soft),color-mix(in srgb,var(--devone-nav-bg) 95%,transparent))!important;
+}
+body.devone-admin .admin-user-mini-info span,
+body.devone-admin .admin-user-mini-info small,
+body.devone-admin.devone-admin-theme-light .admin-user-mini-info span,
+body.devone-admin.devone-admin-theme-light .admin-user-mini-info small{
+  color:var(--devone-nav-muted)!important;
+}
+body.devone-admin .admin-user-mini-info strong,
+body.devone-admin.devone-admin-theme-light .admin-user-mini-info strong{
+  color:var(--devone-nav-text)!important;
+}
+
+/* Mobile shell should inherit the same active theme border/surface. */
+@media(max-width:520px){
+  body.devone-admin .sidebar,
+  body.devone-admin.devone-admin-theme-light .sidebar{
+    border-color:var(--devone-nav-border)!important;
+  }
+}
+
+/* =========================================================
+   DEVONE SITE SETTINGS — VERTICAL CONFIGURATION FLOW
+   Keeps the Site Settings page scalable for future builds.
+   Theme-aware: consumes the existing Admin Appearance tokens.
+========================================================= */
+body.devone-admin .devone-settings-hero{
+  width:100%;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:28px;
+  margin:0 0 24px;
+  padding:8px 2px 22px;
+  border-bottom:1px solid var(--da-border);
+}
+body.devone-admin .devone-settings-hero h1{margin-bottom:10px;}
+body.devone-admin .devone-settings-hero .muted{max-width:780px;margin:0;line-height:1.65;}
+body.devone-admin .devone-settings-hero-meta{
+  flex:0 0 auto;
+  min-width:190px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:4px;
+  padding:12px 15px;
+  border:1px solid var(--da-border);
+  border-radius:16px;
+  background:var(--da-panel);
+  box-shadow:var(--da-shadow-soft,0 10px 30px rgba(0,0,0,.10));
+}
+body.devone-admin .devone-settings-hero-meta span{
+  color:var(--da-muted);
+  font-size:.72rem;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+}
+body.devone-admin .devone-settings-hero-meta strong{color:var(--da-text);font-size:.88rem;}
+
+/* Override the legacy dashboard-style settings columns. */
+body.devone-admin form.settings-grid.devone-settings-stack{
+  display:flex!important;
+  flex-direction:column!important;
+  grid-template-columns:none!important;
+  width:100%!important;
+  max-width:none!important;
+  gap:18px!important;
+  align-items:stretch!important;
+}
+body.devone-admin form.settings-grid.devone-settings-stack > .devone-settings-section{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  display:grid!important;
+  grid-template-columns:minmax(210px,285px) minmax(0,1fr)!important;
+  overflow:hidden;
+  border-radius:22px!important;
+}
+body.devone-admin .devone-settings-section-head{
+  position:relative;
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  padding:24px 22px;
+  border-right:1px solid var(--da-border);
+  background:var(--da-panel-2,var(--da-panel));
+}
+body.devone-admin .devone-settings-section-head::after{
+  content:"";
+  position:absolute;
+  left:0;
+  top:22px;
+  bottom:22px;
+  width:3px;
+  border-radius:0 999px 999px 0;
+  background:linear-gradient(180deg,var(--da-gold,var(--da-blue)),var(--da-blue,var(--da-purple)));
+  opacity:.9;
+}
+body.devone-admin .devone-settings-section-index{
+  flex:0 0 auto;
+  min-width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--da-border);
+  border-radius:11px;
+  color:var(--da-text);
+  background:var(--da-panel);
+  font-size:.67rem;
+  font-weight:950;
+  letter-spacing:.08em;
+}
+body.devone-admin .devone-settings-section-head h2{
+  margin:1px 0 7px!important;
+  color:var(--da-text)!important;
+  font-size:1.05rem!important;
+  letter-spacing:-.025em;
+}
+body.devone-admin .devone-settings-section-head p{
+  margin:0;
+  color:var(--da-muted);
+  font-size:.78rem;
+  line-height:1.5;
+}
+body.devone-admin .devone-settings-section-content{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+  padding:24px 26px 26px;
+  background:var(--da-panel);
+}
+body.devone-admin .devone-settings-section-content > label:not(.inline-check):not(.devone-theme-toggle){
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  width:100%;
+  margin:0!important;
+}
+body.devone-admin .devone-settings-section-content > .muted{
+  margin:0!important;
+  line-height:1.6;
+}
+body.devone-admin .devone-settings-section-content pre{
+  margin:0;
+  width:100%;
+  overflow:auto;
+  padding:16px 18px;
+  border:1px solid var(--da-border);
+  border-radius:15px;
+  background:var(--da-input,var(--da-panel-2,var(--da-panel)));
+  color:var(--da-text);
+}
+body.devone-admin .devone-settings-section-content .logo-preview-wrap{
+  margin:0;
+  padding:15px;
+  border:1px solid var(--da-border);
+  border-radius:16px;
+  background:var(--da-panel-2,var(--da-panel));
+}
+body.devone-admin .devone-settings-section[data-settings-section="menu"] .devone-menu-style-previews{
+  margin:2px 0 0;
+}
+body.devone-admin .devone-settings-section[data-settings-section="appearance"] .devone-theme-preview-grid{
+  margin-top:0;
+}
+body.devone-admin form.settings-grid.devone-settings-stack > .settings-actions{
+  position:sticky;
+  bottom:14px;
+  z-index:20;
+  width:100%;
+  display:flex!important;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:4px 0 0!important;
+  padding:12px!important;
+  border:1px solid var(--da-border);
+  border-radius:18px;
+  background:color-mix(in srgb,var(--da-panel) 92%,transparent);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:var(--da-shadow);
+}
+body.devone-admin form.settings-grid.devone-settings-stack > .settings-actions button{
+  min-width:150px;
+}
+
+@media (max-width:900px){
+  body.devone-admin .devone-settings-hero{align-items:flex-start;flex-direction:column;gap:15px;}
+  body.devone-admin .devone-settings-hero-meta{align-items:flex-start;min-width:0;width:100%;}
+  body.devone-admin form.settings-grid.devone-settings-stack > .devone-settings-section{
+    grid-template-columns:1fr!important;
+  }
+  body.devone-admin .devone-settings-section-head{
+    border-right:0;
+    border-bottom:1px solid var(--da-border);
+    padding:18px 18px 16px;
+  }
+  body.devone-admin .devone-settings-section-head::after{
+    top:auto;
+    right:18px;
+    left:18px;
+    bottom:0;
+    width:auto;
+    height:2px;
+    border-radius:999px;
+  }
+  body.devone-admin .devone-settings-section-content{padding:18px;}
+}
+
+@media (max-width:560px){
+  body.devone-admin .devone-settings-section-head{gap:10px;}
+  body.devone-admin .devone-settings-section-index{min-width:30px;height:30px;border-radius:9px;}
+  body.devone-admin form.settings-grid.devone-settings-stack > .settings-actions{
+    position:static;
+    display:grid!important;
+    grid-template-columns:1fr!important;
+  }
+  body.devone-admin form.settings-grid.devone-settings-stack > .settings-actions > *{width:100%!important;justify-content:center;}
+}
