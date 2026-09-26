@@ -1,22 +1,15 @@
 import type { Env } from "./types";
-import { hashPassword, json } from "./lib/crypto";
+import { hashPassword, json, sha256 } from "./lib/crypto";
 import { getCurrentUser, login, logout, requireCsrf, requireUser } from "./lib/auth";
 import { isInstalled, setSetting, setting } from "./lib/db";
 
-function corsHeaders(request: Request): HeadersInit {
-  const origin = request.headers.get("origin");
-  const headers: HeadersInit = {
+function securityHeaders(): HeadersInit {
+  return {
     "x-content-type-options": "nosniff",
     "x-frame-options": "SAMEORIGIN",
     "referrer-policy": "strict-origin-when-cross-origin",
     "permissions-policy": "camera=(), microphone=(), geolocation=()",
   };
-  if (origin) {
-    headers["access-control-allow-origin"] = origin;
-    headers["access-control-allow-credentials"] = "true";
-    headers["vary"] = "Origin";
-  }
-  return headers;
 }
 
 async function install(request: Request, env: Env): Promise<Response> {
@@ -73,26 +66,20 @@ async function install(request: Request, env: Env): Promise<Response> {
   const result = await env.DB.batch(statements);
   if (!result.length) return json({ ok: false, error: "Installation could not be completed." }, 500);
 
-  const home = await env.DB.prepare("INSERT INTO pages (site_id, slug, title, content, template, show_title, status, author_id) SELECT id, 'home', ?1, ?2, 'default', 0, 'published', owner_user_id FROM sites WHERE site_slug = ?3 LIMIT 1")
-    .bind(siteName, "<h1>Welcome to DevOne CMS 2.0</h1><p>Performance, Security, Design.</p>", siteSlug).run();
+  const site = await env.DB.prepare("SELECT id, owner_user_id FROM sites WHERE site_slug = ?1 LIMIT 1").bind(siteSlug).first<{ id: number; owner_user_id: number }>();
+  if (!site) return json({ ok: false, error: "Installation completed without a site record." }, 500);
 
-  return json({ ok: true, installed: true, site_id: home.meta.last_row_id, message: "DevOne CMS 2.0 foundation installed." }, 201);
+  await env.DB.batch([
+    env.DB.prepare("INSERT INTO site_users (site_id, user_id, role, status) VALUES (?1, ?2, 'site_admin', 'active')").bind(site.id, site.owner_user_id),
+    env.DB.prepare("INSERT INTO pages (site_id, slug, title, content, template, show_title, status, author_id) VALUES (?1, 'home', ?2, ?3, 'default', 0, 'published', ?4)").bind(site.id, siteName, "<h1>Welcome to DevOne CMS 2.0</h1><p>Performance, Security, Design.</p>", site.owner_user_id),
+  ]);
+
+  return json({ ok: true, installed: true, site_id: site.id, message: "DevOne CMS 2.0 foundation installed." }, 201);
 }
 
 async function api(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
   const path = url.pathname.replace(/\\/+$/, "") || "/";
-
-  if (request.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        ...corsHeaders(request),
-        "access-control-allow-methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-        "access-control-allow-headers": "content-type,x-devone-csrf",
-      },
-    });
-  }
 
   if (path === "/api/health" && request.method === "GET") {
     const installed = await isInstalled(env);
@@ -144,13 +131,13 @@ export default {
       if (url.pathname.startsWith("/api/")) {
         const response = await api(request, env);
         const headers = new Headers(response.headers);
-        for (const [key, value] of Object.entries(corsHeaders(request))) headers.set(key, value);
+        for (const [key, value] of Object.entries(securityHeaders())) headers.set(key, value);
         return new Response(response.body, { status: response.status, headers });
       }
       return env.ASSETS.fetch(request);
     } catch (error) {
       console.error("DevOne Worker error", error);
-      return json({ ok: false, error: "Internal server error." }, 500, corsHeaders(request));
+      return json({ ok: false, error: "Internal server error." }, 500, securityHeaders());
     }
   },
 };
