@@ -1,4 +1,4 @@
--- DevOne CMS 2.0.0-alpha.1
+-- DevOne CMS 2.0.0-alpha.2
 -- Cloudflare D1 / SQLite foundation.
 PRAGMA foreign_keys = ON;
 
