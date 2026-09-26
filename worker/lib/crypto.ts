@@ -1,6 +1,4 @@
 const encoder = new TextEncoder();
-const decoder = new TextDecoder();
-
 function bytesToBase64(bytes: Uint8Array): string {
   let binary = "";
   for (const byte of bytes) binary += String.fromCharCode(byte);
@@ -20,8 +18,8 @@ export function randomBytes(length: number): Uint8Array {
 
 export function randomToken(length = 32): string {
   return bytesToBase64(randomBytes(length))
-    .replace(/\\+/g, "-")
-    .replace(/\\//g, "_")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
     .replace(/=+$/g, "");
 }
 
