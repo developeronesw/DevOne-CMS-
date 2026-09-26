@@ -27,6 +27,47 @@ export async function requireUser(request: Request, env: Env): Promise<{ user: A
   return user ? { user } : json({ ok: false, error: "Authentication required." }, 401);
 }
 
+async function loginRateKey(request: Request, username: string): Promise<string> {
+  const ip = request.headers.get("cf-connecting-ip") ?? request.headers.get("x-forwarded-for") ?? "unknown";
+  return sha256(`login:${ip}:${username}`);
+}
+
+async function checkLoginRateLimit(request: Request, env: Env, username: string): Promise<Response | null> {
+  const key = await loginRateKey(request, username);
+  const row = await env.DB.prepare(
+    "SELECT attempts, window_started_at, blocked_until FROM auth_rate_limits WHERE key = ?1 LIMIT 1",
+  ).bind(key).first<{ attempts: number; window_started_at: string; blocked_until: string | null }>();
+
+  const now = Date.now();
+  if (row?.blocked_until && Date.parse(row.blocked_until.replace(" ", "T") + "Z") > now) {
+    return json({ ok: false, error: "Too many login attempts. Try again later." }, 429, { "retry-after": "900" });
+  }
+
+  if (row && now - Date.parse(row.window_started_at.replace(" ", "T") + "Z") < 15 * 60_000 && row.attempts >= 10) {
+    await env.DB.prepare(
+      "UPDATE auth_rate_limits SET blocked_until = datetime('now', '+15 minutes') WHERE key = ?1",
+    ).bind(key).run();
+    return json({ ok: false, error: "Too many login attempts. Try again later." }, 429, { "retry-after": "900" });
+  }
+
+  return null;
+}
+
+async function recordLoginFailure(request: Request, env: Env, username: string): Promise<void> {
+  const key = await loginRateKey(request, username);
+  await env.DB.prepare(
+    "INSERT INTO auth_rate_limits (key, attempts, window_started_at) VALUES (?1, 1, datetime('now')) " +
+    "ON CONFLICT(key) DO UPDATE SET attempts = CASE " +
+    "WHEN (julianday('now') - julianday(window_started_at)) * 86400 >= 900 THEN 1 ELSE attempts + 1 END, " +
+    "window_started_at = CASE " +
+    "WHEN (julianday('now') - julianday(window_started_at)) * 86400 >= 900 THEN datetime('now') ELSE window_started_at END",
+  ).bind(key).run();
+}
+
+async function clearLoginRateLimit(request: Request, env: Env, username: string): Promise<void> {
+  await env.DB.prepare("DELETE FROM auth_rate_limits WHERE key = ?1").bind(await loginRateKey(request, username)).run();
+}
+
 export async function login(request: Request, env: Env): Promise<Response> {
   const body = await request.json().catch(() => null) as { username?: string; password?: string } | null;
   const username = String(body?.username ?? "").trim().toLowerCase();
@@ -36,14 +77,19 @@ export async function login(request: Request, env: Env): Promise<Response> {
     return json({ ok: false, error: "Invalid credentials." }, 400);
   }
 
+  const limited = await checkLoginRateLimit(request, env, username);
+  if (limited) return limited;
+
   const user = await env.DB.prepare(
     "SELECT id, username, email, display_name, role, status, password_hash FROM users WHERE lower(username) = ?1 LIMIT 1",
   ).bind(username).first<AuthUser & { password_hash: string }>();
 
   if (!user || user.status !== "active" || !(await verifyPassword(password, user.password_hash))) {
+    await recordLoginFailure(request, env, username);
     return json({ ok: false, error: "Invalid credentials." }, 401);
   }
 
+  await clearLoginRateLimit(request, env, username);
   const token = randomToken(32);
   const csrfToken = randomToken(32);
   const tokenHash = await sha256(token);
@@ -74,6 +120,11 @@ export async function login(request: Request, env: Env): Promise<Response> {
 }
 
 export async function logout(request: Request, env: Env): Promise<Response> {
+  const session = await getSession(request, env);
+  if (!session) return json({ ok: true }, 200, { "set-cookie": clearSessionCookie });
+  if (!(await csrfValid(request, env, session))) {
+    return json({ ok: false, error: "CSRF validation failed." }, 403);
+  }
   const token = parseCookies(request).devone_session;
   if (token) await env.DB.prepare("DELETE FROM sessions WHERE token_hash = ?1").bind(await sha256(token)).run();
   return json({ ok: true }, 200, { "set-cookie": clearSessionCookie });
