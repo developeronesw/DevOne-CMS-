@@ -1,5 +1,5 @@
 import type { Env } from "./types";
-import { hashPassword, json, sha256 } from "./lib/crypto";
+import { hashPassword, json } from "./lib/crypto";
 import { getCurrentUser, login, logout, requireCsrf, requireUser } from "./lib/auth";
 import { isInstalled, setSetting, setting } from "./lib/db";
 
