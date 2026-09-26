@@ -58,7 +58,7 @@ async function install(request: Request, env: Env): Promise<Response> {
     env.DB.prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('site_name', ?1)").bind(siteName),
     env.DB.prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('site_title', ?1)").bind(siteName),
     env.DB.prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('site_tagline', 'Build. Manage. Evolve.')"),
-    env.DB.prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('cms_version', '2.0.0-alpha.1')"),
+    env.DB.prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('cms_version', '2.0.0-alpha.2')"),
     env.DB.prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('site_theme', 'devone-glass')"),
     env.DB.prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('installation_complete', '1')"),
   ];
@@ -83,12 +83,12 @@ async function api(request: Request, env: Env): Promise<Response> {
 
   if (path === "/api/health" && request.method === "GET") {
     const installed = await isInstalled(env);
-    return json({ ok: true, product: "DevOne CMS", version: "2.0.0-alpha.1", installed, runtime: "cloudflare-workers" });
+    return json({ ok: true, product: "DevOne CMS", version: "2.0.0-alpha.2", installed, runtime: "cloudflare-workers" });
   }
 
   if (path === "/api/system/status" && request.method === "GET") {
     const installed = await isInstalled(env);
-    return json({ ok: true, installed, version: await setting(env, "cms_version", "2.0.0-alpha.1") });
+    return json({ ok: true, installed, version: await setting(env, "cms_version", "2.0.0-alpha.2") });
   }
 
   if (path === "/api/install" && request.method === "POST") return install(request, env);
