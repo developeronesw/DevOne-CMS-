@@ -65,3 +65,8 @@ The resources belong to the Cloudflare account that deploys the Worker. DevOne d
 - Cloudflare credentials
 
 This is important for the self-hosted/serverless edition.
+
+
+## Current Cloudflare toolchain
+
+The 2.0 branch targets Vite 8.x and Wrangler 4.x. Wrangler is kept on the current 4.x line so Cloudflare's automatic D1/KV/R2 provisioning remains available. Cloudflare documents automatic provisioning for these bindings when resource IDs are omitted from Wrangler configuration. citeturn0search1
