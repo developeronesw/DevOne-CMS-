@@ -43,7 +43,6 @@ export interface DatabaseProvider {
   all<T = Record<string, unknown>>(sql: string, ...params: unknown[]): Promise<T[]>;
   run(sql: string, ...params: unknown[]): Promise<{ changes: number; lastInsertId?: number }>;
   batch(statements: Array<{ sql: string; params?: unknown[] }>): Promise<void>;
-  transaction<T>(callback: (db: DatabaseProvider) => Promise<T>): Promise<T>;
 }
 
 export interface CacheProvider {
