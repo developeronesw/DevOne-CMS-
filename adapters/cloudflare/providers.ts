@@ -33,12 +33,6 @@ export class CloudflareDatabase implements DatabaseProvider {
     await this.db.batch(prepared);
   }
 
-  async transaction<T>(callback: (db: DatabaseProvider) => Promise<T>): Promise<T> {
-    // D1 batch() provides atomic multi-statement transactions. The generic
-    // callback form is kept provider-neutral; callers requiring strict
-    // atomicity should use DatabaseProvider.batch().
-    return callback(this);
-  }
 }
 
 export class CloudflareCache implements CacheProvider {
