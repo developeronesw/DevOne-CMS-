@@ -1,26 +1,28 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "devone-cms",
-  "pages_build_output_dir": "./dist",
+  "main": "./worker/index.ts",
   "compatibility_date": "2026-09-25",
   "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
   "d1_databases": [
     {
-      "binding": "DB",
-      "database_name": "devone-cms-db",
-      "database_id": "REPLACE_BY_SETUP"
+      "binding": "DB"
     }
   ],
   "kv_namespaces": [
     {
-      "binding": "CACHE",
-      "id": "REPLACE_BY_SETUP"
+      "binding": "CACHE"
     }
   ],
   "r2_buckets": [
     {
-      "binding": "MEDIA",
-      "bucket_name": "devone-cms-media"
+      "binding": "MEDIA"
     }
   ]
 }
