@@ -1,5 +1,5 @@
 import type { Env, AuthUser, SessionRecord } from "../types";
-import { clearSessionCookie, hashPassword, json, parseCookies, randomToken, sessionCookie, sha256, verifyPassword } from "./crypto";
+import { clearSessionCookie, json, parseCookies, randomToken, sessionCookie, sha256, verifyPassword } from "./crypto";
 
 const SESSION_DAYS = 7;
 
