@@ -9,8 +9,8 @@ export interface AuthSession {
 
 export interface AuthService {
   getCurrentUser(request: Request): Promise<CoreUser | null>;
-  login(request: Request, username: string, password: string): Promise<{ user: CoreUser; csrfToken: string; expiresAt: string }>;
-  logout(request: Request): Promise<void>;
+  login(request: Request, username: string, password: string): Promise<{ user: CoreUser; csrfToken: string; expiresAt: string; sessionCookie: string }>;
+  logout(request: Request): Promise<string>;
   requireCsrf(request: Request): Promise<void>;
   revokeUserSessions(userId: number): Promise<void>;
 }
