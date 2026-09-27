@@ -1,7 +1,7 @@
 import type { CoreUser, DatabaseProvider } from "../api/types";
 import type { PermissionService } from "./types";
 
-function permissionMatches(granted: string, required: string): boolean {
+function parsePermissionList(value: string | null | undefined): string[] {\n  if (!value) return [];\n  try {\n    const parsed: unknown = JSON.parse(value);\n    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string") : [];\n  } catch {\n    return [];\n  }\n}\n\nfunction permissionMatches(granted: string, required: string): boolean {
   if (granted === "*") return true;
   if (granted === required) return true;
   if (granted.endsWith(".*")) return required.startsWith(granted.slice(0, -1));
@@ -18,11 +18,11 @@ export class DevOnePermissions implements PermissionService {
     const role = await this.db.first<{ permissions: string }>(
       "SELECT permissions FROM roles WHERE name = ?1 LIMIT 1", user.role,
     );
-    const granted: string[] = role?.permissions ? JSON.parse(role.permissions) : [];
+    const granted: string[] = parsePermissionList(role?.permissions);
     const override = await this.db.first<{ permissions_override: string | null }>(
       "SELECT permissions_override FROM users WHERE id = ?1 LIMIT 1", user.id,
     );
-    const extra: string[] = override?.permissions_override ? JSON.parse(override.permissions_override) : [];
+    const extra: string[] = parsePermissionList(override?.permissions_override);
     const allowed = [...granted, ...extra].some((item) => permissionMatches(item, permission));
     if (!allowed) return false;
     if (!siteId || user.role === "administrator") return true;
