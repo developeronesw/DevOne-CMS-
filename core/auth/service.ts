@@ -33,7 +33,7 @@ export class DevOneAuthService implements AuthService{
     const u=await this.db.first<CoreUser>("SELECT id,username,email,display_name,role,status FROM users WHERE id=?1 AND status='active' LIMIT 1",s.user_id);
     if(!u)return {user:null,csrfToken:null};
     const csrfToken=token();
-    await this.db.run("UPDATE sessions SET csrf_token_hash=?,last_seen_at=datetime('now') WHERE id=?1",await hash(csrfToken),s.id);
+    await this.db.run("UPDATE sessions SET csrf_token_hash=?1,last_seen_at=datetime('now') WHERE id=?2",await hash(csrfToken),s.id);
     return {user:u,csrfToken};
   }
   private async audit(id:number|null,action:string){try{await this.db.run("INSERT INTO activity_logs(user_id,action) VALUES(?1,?2)",id,action);}catch{}}
