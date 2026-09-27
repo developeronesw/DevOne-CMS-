@@ -192,3 +192,4 @@ test("auth login creates a session, returns safe user data, and logout revokes i
     raw.close();
   }
 });
+\ntest("Phase 3 admin API routes return protected live data",async()=>{const db:DatabaseProvider={first:async<T>(sql:string)=>sql.includes("FROM sites")?{id:1,site_name:"Demo"}as T:null,all:async<T>(sql:string)=>sql.includes("FROM sites")?[{id:1,site_name:"Demo"}]as T[]:[],run:async()=>({changes:1,lastInsertId:2}),batch:async()=>undefined};const user:CoreUser={id:1,username:"admin",email:"a@example.test",display_name:"Admin",role:"administrator",status:"active"};const api=createCoreApi({services:services(db),authenticate:async()=>user,authorize:async()=>true,validateCsrf:async()=>true});for(const p of ["/api/core/sites","/api/core/content","/api/core/media","/api/core/users","/api/core/settings"]){const r=await api.api.handle(new Request("http://localhost"+p));assert.equal(r.status,200,p);assert.equal((await r.json()).ok,true,p)}});
