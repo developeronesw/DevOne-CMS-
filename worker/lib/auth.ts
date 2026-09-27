@@ -201,11 +201,18 @@ export async function completePasswordReset(request: Request, env: Env): Promise
   await audit(env,row.user_id,"auth.password_reset_completed");
   return json({ok:true,sessions_revoked:true});
 }
+function constantTimeEqual(a: Uint8Array, b: Uint8Array): boolean {
+  if (a.byteLength !== b.byteLength) return false;
+  let difference = 0;
+  for (let index = 0; index < a.byteLength; index++) difference |= a[index] ^ b[index];
+  return difference === 0;
+}
+
 export async function csrfValid(request: Request, env: Env, session: SessionRecord): Promise<boolean> {
-  const providedHash=await sha256(request.headers.get("x-devone-csrf")??"");
-  const a=Uint8Array.from(atob(providedHash),(c)=>c.charCodeAt(0)), b=Uint8Array.from(atob(session.csrf_token_hash),(c)=>c.charCodeAt(0));
-  if (a.byteLength!==b.byteLength) return !crypto.subtle.timingSafeEqual(a,a);
-  return crypto.subtle.timingSafeEqual(a,b);
+  const providedHash = await sha256(request.headers.get("x-devone-csrf") ?? "");
+  const a = Uint8Array.from(atob(providedHash), (c) => c.charCodeAt(0));
+  const b = Uint8Array.from(atob(session.csrf_token_hash), (c) => c.charCodeAt(0));
+  return constantTimeEqual(a, b);
 }
 export async function requireCsrf(request: Request, env: Env): Promise<Response|null> {
   const session=await getSession(request,env);
