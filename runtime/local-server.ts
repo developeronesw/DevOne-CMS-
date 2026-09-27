@@ -3,6 +3,8 @@ import { createLocalRuntime } from "../adapters/local/runtime";
 import { createCoreApi } from "../core/api";
 import { DevOneAuthService, authErrorStatus } from "../core/auth";
 import { DevOnePermissions } from "../core/auth/permissions";
+import { DevOneMailService } from "../core/mail";
+import { LocalSmtpTransport } from "../adapters/local/mail";
 
 const port = Number(process.env.PORT ?? 8080);
 const host = process.env.HOST ?? "127.0.0.1";
@@ -13,6 +15,9 @@ const services = await createLocalRuntime({
 });
 const auth = new DevOneAuthService(services.db, { secureCookies: false });
 const permissions = new DevOnePermissions(services.db);
+let mail: DevOneMailService;
+const mailTransport = new LocalSmtpTransport(async () => mail.config());
+mail = new DevOneMailService(services, mailTransport);
 const core = createCoreApi({
   services,
   authenticate: request => auth.getCurrentUser(request),
@@ -21,6 +26,7 @@ const core = createCoreApi({
     const value = request.headers.get("x-devone-site-id");
     return value && /^\d+$/.test(value) ? Number(value) : null;
   },
+  mailTransport,
   validateCsrf: async request => {
     try { await auth.requireCsrf(request); return true; } catch { return false; }
   },
