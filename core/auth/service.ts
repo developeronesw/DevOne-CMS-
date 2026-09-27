@@ -27,6 +27,15 @@ export class DevOneAuthService implements AuthService{
   constructor(private db:DatabaseProvider,o:DevOneAuthOptions={}){this.secure=o.secureCookies??true;this.days=o.sessionDays??7;}
   private async session(r:Request){const c=cookies(r).devone_session;if(!c)return null;return this.db.first<{id:string;user_id:number;expires_at:string;csrf_token_hash:string}>("SELECT id,user_id,expires_at,csrf_token_hash FROM sessions WHERE token_hash=?1 AND expires_at>datetime('now') AND revoked_at IS NULL LIMIT 1",await hash(c));}
   async getCurrentUser(r:Request){const s=await this.session(r);if(!s)return null;const u=await this.db.first<CoreUser>("SELECT id,username,email,display_name,role,status FROM users WHERE id=?1 AND status='active' LIMIT 1",s.user_id);if(u)await this.db.run("UPDATE sessions SET last_seen_at=datetime('now') WHERE id=?1",s.id);return u;}
+  async restoreSession(r:Request):Promise<{user:CoreUser|null;csrfToken:string|null}>{
+    const s=await this.session(r);
+    if(!s)return {user:null,csrfToken:null};
+    const u=await this.db.first<CoreUser>("SELECT id,username,email,display_name,role,status FROM users WHERE id=?1 AND status='active' LIMIT 1",s.user_id);
+    if(!u)return {user:null,csrfToken:null};
+    const csrfToken=token();
+    await this.db.run("UPDATE sessions SET csrf_token_hash=?,last_seen_at=datetime('now') WHERE id=?1",await hash(csrfToken),s.id);
+    return {user:u,csrfToken};
+  }
   private async audit(id:number|null,action:string){try{await this.db.run("INSERT INTO activity_logs(user_id,action) VALUES(?1,?2)",id,action);}catch{}}
   async login(r:Request,username:string,password:string):Promise<AuthResult>{
     username=username.trim().toLowerCase();
