@@ -10,7 +10,7 @@ import type { CoreServices, DatabaseProvider } from "../core/api/types";
 import { DevOneInstaller } from "../core/installer";
 import { OfflineLicenseProvider } from "../core/license/offline";
 import { DevOneLicense } from "../core/license/service";
-import { DevOnePermissions } from "../core/auth/permissions";
+import { DevOnePermissions } from "../core/auth/permissions";\nimport { DevOneAuthService, passwordHash, authErrorStatus } from "../core/auth/service";
 import { LocalDatabase, LocalMedia } from "../adapters/local/providers";
 
 function services(db: DatabaseProvider): CoreServices {
@@ -107,5 +107,41 @@ test("local media rejects path traversal", async () => {
     assert.equal(await media.exists("safe/file.txt"), true);
   } finally {
     await rm(dir, { recursive: true, force: true });
+  }
+});
+
+\ntest("auth login creates a session, returns safe user data, and logout revokes it", async () => {
+  const raw = new DatabaseSync(":memory:");
+  const db = new LocalDatabase(raw);
+  raw.exec(`
+    CREATE TABLE users (
+      id INTEGER PRIMARY KEY, username TEXT NOT NULL, email TEXT NOT NULL,
+      display_name TEXT NOT NULL, role TEXT NOT NULL, status TEXT NOT NULL,
+      password_hash TEXT NOT NULL, password_changed_at TEXT, updated_at TEXT
+    );
+    CREATE TABLE sessions (
+      id TEXT PRIMARY KEY, user_id INTEGER NOT NULL, token_hash TEXT NOT NULL,
+      csrf_token_hash TEXT NOT NULL, expires_at TEXT NOT NULL,
+      revoked_at TEXT, last_seen_at TEXT
+    );
+    CREATE TABLE activity_logs (id INTEGER PRIMARY KEY, user_id INTEGER, action TEXT NOT NULL);
+  `);
+  await db.run("INSERT INTO users(id,username,email,display_name,role,status,password_hash) VALUES(1,?,?,?,?,?,?)",
+    "admin","admin@example.test","Admin","administrator","active",await passwordHash("correct horse battery staple"));
+  const auth = new DevOneAuthService(db,{secureCookies:false});
+  try {
+    const result = await auth.login(new Request("http://localhost/api/auth/login"),"ADMIN","correct horse battery staple");
+    assert.equal(result.user.username,"admin");
+    assert.equal("password_hash" in result.user,false);
+    assert.equal(authErrorStatus(new Error("Invalid credentials.")),401);
+    const cookie = result.sessionCookie.split(";")[0];
+    const authenticatedRequest = new Request("http://localhost/api/auth/me",{headers:{cookie}});
+    assert.equal((await auth.getCurrentUser(authenticatedRequest))?.id,1);
+    await assert.rejects(()=>auth.requireCsrf(new Request("http://localhost/api/auth/logout",{headers:{cookie,"x-devone-csrf":"wrong"}})));
+    const logoutCookie = await auth.logout(new Request("http://localhost/api/auth/logout",{headers:{cookie,"x-devone-csrf":result.csrfToken}}));
+    assert.match(logoutCookie,/Max-Age=0/);
+    assert.equal(await auth.getCurrentUser(authenticatedRequest),null);
+  } finally {
+    raw.close();
   }
 });
