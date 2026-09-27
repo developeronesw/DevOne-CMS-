@@ -1,19 +1,35 @@
 import { connect as tlsConnect, type TLSSocket } from "node:tls";
 import { connect as tcpConnect, type Socket } from "node:net";
-import { once } from "node:events";
 import type { MailConfig, MailMessage, MailTransport } from "../../core/mail";
 
 type Connection = Socket | TLSSocket;
 
-async function readResponse(socket: Connection): Promise<string> {
-  let buffer = "";
-  while (true) {
-    const [chunk] = await once(socket, "data");
-    buffer += (chunk as Buffer).toString("utf8");
-    const lines = buffer.split(/\r?\n/).filter((line: string) => line.length > 0);
-    const last = lines[lines.length - 1];
-    if (last && /^\d{3} /.test(last)) return lines.join("\n");
-  }
+type PromiseExecutor<T> = (
+  resolve: (value: T | PromiseLike<T>) => void,
+  reject: (reason?: unknown) => void,
+) => void;
+
+function createPromise<T>(executor: PromiseExecutor<T>): Promise<T> {
+  const PromiseCtor = globalThis.Promise as unknown as {
+    new <R>(executor: PromiseExecutor<R>): Promise<R>;
+  };
+  return new PromiseCtor(executor);
+}
+
+function readResponse(socket: Connection): Promise<string> {
+  return createPromise((resolve, reject) => {
+    let buffer = "";
+    const onData = (chunk: Buffer) => {
+      buffer += chunk.toString("utf8");
+      const lines = buffer.split(/\r?\n/).filter((line: string) => line.length > 0);
+      const last = lines[lines.length - 1];
+      if (last && /^\d{3} /.test(last)) { cleanup(); resolve(lines.join("\n")); }
+    };
+    const onError = (error: Error) => { cleanup(); reject(error); };
+    const cleanup = () => { socket.off("data", onData); socket.off("error", onError); };
+    socket.on("data", onData);
+    socket.once("error", onError);
+  });
 }
 
 async function command(socket: Connection, value: string): Promise<string> {
@@ -48,13 +64,16 @@ export class LocalSmtpTransport implements MailTransport {
   private async connection(): Promise<Connection> {
     const config = await this.config();
     if (config.encryption === "tls") {
-      const socket = tlsConnect({ host: config.host, port: config.port, servername: config.host });
-      await once(socket, "secureConnect");
-      return socket;
+      return createPromise((resolve, reject) => {
+        const socket = tlsConnect({ host: config.host, port: config.port, servername: config.host });
+        socket.once("secureConnect", () => resolve(socket));
+        socket.once("error", reject);
+      });
     }
-    const socket = tcpConnect(config.port, config.host);
-    await once(socket, "connect");
-    return socket;
+    return createPromise((resolve, reject) => {
+      const socket = tcpConnect(config.port, config.host, () => resolve(socket));
+      socket.once("error", reject);
+    });
   }
 
   private async authenticate(socket: Connection, config: MailConfig): Promise<void> {
@@ -95,8 +114,11 @@ export class LocalSmtpTransport implements MailTransport {
         if (!/^2/.test(response)) throw new Error("SMTP EHLO failed.");
         response = await command(socket, "STARTTLS");
         if (!/^2/.test(response)) throw new Error("SMTP STARTTLS failed.");
-        const secure = tlsConnect({ socket, servername: config.host });
-        await once(secure, "secureConnect");
+        const secure = await createPromise<TLSSocket>((resolve, reject) => {
+          const tls = tlsConnect({ socket, servername: config.host });
+          tls.once("secureConnect", () => resolve(tls));
+          tls.once("error", reject);
+        });
         return await this.sendOn(secure, message, config);
       }
       return await this.sendOn(socket, message, config);
