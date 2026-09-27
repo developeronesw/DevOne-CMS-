@@ -16,7 +16,9 @@ export function randomBytes(length: number): Uint8Array<ArrayBuffer> {
   crypto.getRandomValues(bytes);
   return bytes;
 }
-
+function arrayBuffer(bytes: Uint8Array): ArrayBuffer {
+  return bytes.slice().buffer as ArrayBuffer;
+}
 function constantTimeEqual(a: Uint8Array, b: Uint8Array): boolean {
   if (a.byteLength !== b.byteLength) return false;
   let difference = 0;
@@ -27,8 +29,7 @@ export function randomToken(length = 32): string {
   return bytesToBase64(randomBytes(length)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 }
 export async function sha256(value: string): Promise<string> {
-  const digest = await crypto.subtle.digest("SHA-256", encoder.encode(value).buffer);
-  return bytesToBase64(new Uint8Array(digest));
+  return bytesToBase64(new Uint8Array(await crypto.subtle.digest("SHA-256", arrayBuffer(encoder.encode(value)))));
 }
 export function validPassword(password: string): boolean {
   return password.length >= PASSWORD_MIN_LENGTH && password.length <= PASSWORD_MAX_LENGTH;
@@ -40,9 +41,9 @@ export function passwordNeedsRehash(stored: string): boolean {
 export async function hashPassword(password: string): Promise<string> {
   if (!validPassword(password)) throw new Error("Invalid password length.");
   const salt = randomBytes(16);
-  const key = await crypto.subtle.importKey("raw", encoder.encode(password).buffer, "PBKDF2", false, ["deriveBits"]);
+  const key = await crypto.subtle.importKey("raw", arrayBuffer(encoder.encode(password)), "PBKDF2", false, ["deriveBits"]);
   const bits = await crypto.subtle.deriveBits(
-    { name: "PBKDF2", salt: salt.buffer, iterations: PASSWORD_HASH_ITERATIONS, hash: "SHA-256" }, key, 256,
+    { name: "PBKDF2", salt: arrayBuffer(salt), iterations: PASSWORD_HASH_ITERATIONS, hash: "SHA-256" }, key, 256,
   );
   return ["pbkdf2","sha256",String(PASSWORD_HASH_ITERATIONS),bytesToBase64(salt),bytesToBase64(new Uint8Array(bits))].join("$");
 }
@@ -53,8 +54,8 @@ export async function verifyPassword(password: string, stored: string): Promise<
   if (!Number.isSafeInteger(iterations) || iterations < 100_000 || iterations > 2_000_000) return false;
   let salt: Uint8Array, expected: Uint8Array;
   try { salt = base64ToBytes(parts[3]); expected = base64ToBytes(parts[4]); } catch { return false; }
-  const key = await crypto.subtle.importKey("raw", encoder.encode(password).buffer, "PBKDF2", false, ["deriveBits"]);
-  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt: salt.buffer, iterations, hash: "SHA-256" }, key, expected.length * 8);
+  const key = await crypto.subtle.importKey("raw", arrayBuffer(encoder.encode(password)), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt: arrayBuffer(salt), iterations, hash: "SHA-256" }, key, expected.length * 8);
   const actual = new Uint8Array(bits);
   return constantTimeEqual(actual, expected);
 }
@@ -72,6 +73,6 @@ export function parseCookies(request: Request): Record<string, string> {
   }));
 }
 export function sessionCookie(token: string, maxAgeSeconds: number): string {
-  return [`devone_session=${encodeURIComponent(token)}`,"Path=/",`Max-Age=${Math.max(0,Math.floor(maxAgeSeconds))}`,"HttpOnly","Secure","SameSite=Lax"].join("; ");
+  return [`devone_session=${encodeURIComponent(token)}`, "Path=/", `Max-Age=${Math.max(0,Math.floor(maxAgeSeconds))}`, "HttpOnly", "Secure", "SameSite=Lax"].join("; ");
 }
 export const clearSessionCookie = "devone_session=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax";
