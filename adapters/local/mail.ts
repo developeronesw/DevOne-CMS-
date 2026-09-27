@@ -43,12 +43,12 @@ function body(message: MailMessage): string {
 }
 
 export class LocalSmtpTransport implements MailTransport {
-  constructor(private readonly config: MailConfig) {}
+  constructor(private readonly configSource: MailConfig | (() => Promise<MailConfig>)) {}
 
-  private connection(): Promise<Connection> {
-    if (this.config.encryption === "tls") {
+  private async config(): Promise<MailConfig> {\n    return typeof this.configSource === "function" ? await this.configSource() : this.configSource;\n  }\n\n  private async connection(): Promise<Connection> {\n    const config = await this.config();
+    if (config.encryption === "tls") {
       return new Promise((resolve, reject) => {
-        const socket = tlsConnect({ host: this.config.host, port: this.config.port, servername: this.config.host });
+        const socket = tlsConnect({ host: config.host, port: config.port, servername: this.config.host });
         socket.once("secureConnect", () => resolve(socket));
         socket.once("error", reject);
       });
@@ -60,8 +60,8 @@ export class LocalSmtpTransport implements MailTransport {
   }
 
   private async authenticate(socket: Connection): Promise<void> {
-    if (!this.config.username) return;
-    const value = Buffer.from(this.config.username + "\\0" + this.config.username + "\\0" + this.config.password).toString("base64");
+    if (!config.username) return;
+    const value = Buffer.from(this.config.username + "\\0" + this.config.username + "\\0" + config.password).toString("base64");
     const response = await command(socket, "AUTH PLAIN " + value);
     if (!/^2/.test(response)) throw new Error("SMTP authentication failed.");
   }
@@ -72,7 +72,7 @@ export class LocalSmtpTransport implements MailTransport {
     response = await command(socket, "EHLO devone.local");
     if (!/^2/.test(response)) throw new Error("SMTP EHLO failed.");
     await this.authenticate(socket);
-    response = await command(socket, "MAIL FROM:<" + header(message.fromEmail ?? this.config.fromEmail) + ">");
+    response = await command(socket, "MAIL FROM:<" + header(message.fromEmail ?? config.fromEmail) + ">");
     if (!/^2/.test(response)) throw new Error("SMTP MAIL FROM failed.");
     response = await command(socket, "RCPT TO:<" + header(message.to) + ">");
     if (!/^2/.test(response)) throw new Error("SMTP recipient rejected.");
