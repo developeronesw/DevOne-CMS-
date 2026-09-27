@@ -55,7 +55,7 @@ test("installer can complete against a clean provider without license-server acc
     },
     all: async () => [],
     run: async () => ({ changes: 1 }),
-    batch: async statements => { calls.push(...statements.map(s => s.sql)); },
+    batch: async statements => { calls.push(...statements.map(s => `${s.sql} ${JSON.stringify(s.params ?? [])}`)); },
   };
   const installer = new DevOneInstaller(services(db));
   const result = await installer.install({
