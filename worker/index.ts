@@ -29,8 +29,8 @@ async function api(request: Request, env: Env): Promise<Response> {
     });
     return core.api.handle(request);
   }
-  if (path==="/api/health"&&request.method==="GET") return json({ok:true,product:"DevOne CMS",version:"2.0.0-alpha.2",installed:await isInstalled(env),runtime:"cloudflare-workers"});
-  if (path==="/api/system/status"&&request.method==="GET") return json({ok:true,installed:await isInstalled(env),version:await setting(env,"cms_version","2.0.0-alpha.2")});
+  if (path==="/api/health"&&request.method==="GET") return json({ok:true,product:"DevOne CMS",version:"2.0.0-alpha.3",installed:await isInstalled(env),runtime:"cloudflare-workers"});
+  if (path==="/api/system/status"&&request.method==="GET") return json({ok:true,installed:await isInstalled(env),version:await setting(env,"cms_version","2.0.0-alpha.3")});
   if (path==="/api/auth/login"&&request.method==="POST") return login(request,env);
   if (path==="/api/auth/logout"&&request.method==="POST") return logout(request,env);
   if (path==="/api/auth/logout-all"&&request.method==="POST") return logoutAll(request,env);
