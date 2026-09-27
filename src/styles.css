@@ -18,3 +18,26 @@ h1{margin:25px 0 0;color:var(--ink);text-align:center;font-size:clamp(31px,5vw,4
 .page-footer{margin-top:auto;padding-top:30px;color:#7d8580;font-size:12px;text-align:center}.page-footer span{padding:0 5px;color:#a3aaa5}
 @media(max-width:640px){.installer-page{padding:27px 15px 19px}.brand-header{margin-bottom:23px;min-height:38px}.brand-wordmark{font-size:22px}.brand-version{right:3px;font-size:8px}.setup-panel{min-height:0;border-radius:23px}.setup-content{padding:36px 22px 30px}h1{margin-top:22px;font-size:clamp(29px,8vw,39px)}.intro{margin-top:14px;font-size:14px}.desktop-break{display:none}.choice-list{margin-top:29px;gap:11px}.choice-card{min-height:88px;gap:13px;padding:12px;border-radius:16px}.choice-icon{width:54px;height:54px;flex-basis:54px;border-radius:13px}.choice-icon-svg{width:32px;height:32px}.choice-title{font-size:15px}.choice-description{font-size:11px}.choice-footer{margin-top:17px}.selection-hint{font-size:11px}.primary-button{min-height:39px;padding:0 13px}.next-step-card{margin-top:29px;padding:15px}.detail-footer{align-items:flex-start;flex-direction:column;gap:8px}.coming-note{text-align:left}.page-footer{padding-top:23px;font-size:11px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+
+/* Guided installer flow */
+.wizard-heading{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.back-button{font-size:12px}.step-count{color:#8a928d;font-size:10px;font-weight:700;letter-spacing:.12em}.step-count span{padding:0 5px}
+.progress-track{width:100%;height:4px;margin-bottom:25px;border-radius:99px;background:#edf0ed;overflow:hidden}.progress-track span{display:block;height:100%;border-radius:99px;background:#347c5b;transition:width .2s ease}
+.wizard-intro{margin-top:11px;font-size:14px}
+.installer-form{width:100%;margin-top:25px;display:flex;flex-direction:column;gap:14px;text-align:left}
+.installer-form label{min-width:0;display:flex;flex-direction:column;gap:7px;color:#303934;font-size:12px;font-weight:600}
+.installer-form input:not([type=checkbox]),.installer-form select{width:100%;height:42px;padding:0 12px;border:1px solid #dfe5e0;border-radius:10px;background:#fff;color:#202722;font:400 13px inherit;outline:none}
+.installer-form input:focus,.installer-form select:focus{border-color:#5b9b79;box-shadow:0 0 0 3px rgba(38,116,84,.10)}
+.installer-form input::placeholder{color:#a4aca6}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.form-section-title{margin:2px 0 0;color:#77817a;font-size:10px;font-weight:700;letter-spacing:.14em}.form-section-spaced{margin-top:9px}
+.optional{display:inline;color:#929b95;font-size:10px;font-weight:400}.field-help{color:#8a938d;font-size:10px;font-weight:400;line-height:1.4}
+.form-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:7px}.form-actions .selection-hint{max-width:55%;line-height:1.4}
+.field-error{margin:0;color:#b33a32;font-size:11px}.inline-alert{width:100%;margin:13px 0 0;padding:11px 13px;border:1px solid #f0c8c2;border-radius:10px;background:#fff7f5;color:#a53b32;font-size:12px;line-height:1.5}
+.toggle-row{display:flex!important;flex-direction:row!important;align-items:center;justify-content:space-between;padding:15px;border:1px solid #e0e5e1;border-radius:13px;background:#fbfcfb}.toggle-row span{display:flex;flex-direction:column;gap:5px}.toggle-row strong{color:#28312b;font-size:13px}.toggle-row small{color:#7d867f;font-size:11px;font-weight:400}.toggle-row input[type=checkbox]{width:18px;height:18px;accent-color:#267454}
+.review-list{width:100%;margin-top:28px;border:1px solid #e0e5e1;border-radius:15px;overflow:hidden}.review-row{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:13px 15px;border-bottom:1px solid #edf0ed;font-size:12px}.review-row:last-child{border-bottom:0}.review-row>span{color:#7b847e}.review-row strong{max-width:62%;color:#28312b;text-align:right;font-weight:600;overflow-wrap:anywhere}.review-row small{color:#818a84;font-weight:400}
+.privacy-note{width:100%;margin-top:15px;padding:14px 15px;border:1px solid #e0e9e2;border-radius:12px;background:#f6faf7}.privacy-note strong{font-size:12px;color:#28563f}.privacy-note p{margin:5px 0 0;color:#737e76;font-size:11px;line-height:1.5}
+.installed-state{width:100%;padding:24px 0 10px;text-align:center}.success-mark{width:48px;height:48px;display:grid;place-items:center;margin:0 auto 17px;border-radius:50%;background:#e8f2ec;color:#267454;font-size:24px;font-weight:600}.status-note{margin:20px 0 0;color:#89918c;font-size:11px}
+@media(max-width:640px){.setup-content{width:100%}.installer-form{margin-top:21px;gap:12px}.form-grid{gap:10px}.installer-form input:not([type=checkbox]),.installer-form select{height:40px;padding:0 10px;font-size:12px}.form-actions{align-items:flex-end}.form-actions .selection-hint{max-width:48%;font-size:10px}.review-row{padding:11px 12px;gap:10px}.review-row strong{max-width:65%;font-size:11px}.wizard-heading{margin-bottom:12px}}
+@media(max-width:390px){.form-grid{grid-template-columns:1fr}.form-section-spaced{margin-top:6px}.form-actions{gap:8px}.form-actions .primary-button{white-space:nowrap}.step-count{font-size:9px}}
