@@ -2,7 +2,7 @@ import type { CoreServices } from "../api/types";
 import { decryptSecret } from "../security/secrets";
 import type { MailConfig, MailMessage, MailTransport } from "./types";
 
-const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export class DevOneMailService {
   constructor(private readonly services: CoreServices, private readonly transport: MailTransport | null) {}
@@ -46,8 +46,8 @@ export class DevOneMailService {
     });
   }
 
-  async test(): Promise<{ ok: true }> {
-    const config = await this.config();
+  async test(configOverride?: MailConfig): Promise<{ ok: true }> {
+    const config = configOverride ?? await this.config();
     if (!config.enabled) throw new Error("Mail delivery is disabled.");
     if (!this.transport) throw new Error("No mail transport is available for this runtime.");
     if (!config.fromEmail || !emailPattern.test(config.fromEmail)) {

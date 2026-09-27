@@ -3,6 +3,7 @@ export * from "./router";
 
 import { ApiRouter, DevOneApi, ok, fail } from "./router";
 import type { CoreApiOptions } from "./types";
+import type { MailConfig } from "../mail";
 import { DevOneLicense } from "../license";
 import { DevOneSiteService } from "../sites/service";
 import { DevOneInstaller } from "../installer";
@@ -20,11 +21,36 @@ export function createCoreApi(options: CoreApiOptions): { router: ApiRouter; api
 
   router.get("/api/install/status", async () => ok({ ok: true, ...(await installer.status()) }), { public: true });
 
-  router.post("/api/install/test-smtp", async () => {
+  router.get("/api/install/prerequisites", async () => {
+    const checks = options.installerPrerequisites
+      ? await options.installerPrerequisites()
+      : [{ id: "runtime-secret", label: "Runtime secret key", required: true, ok: Boolean(String(options.services.config.secret_key ?? "")), detail: "Used to protect stored secrets and sessions." }];
+    return ok({ ok: checks.every(check => !check.required || check.ok), checks });
+  }, { public: true });
+
+  router.post("/api/install/test-smtp", async (_request, context) => {
     try {
       const status = await installer.status();
       if (status.installed) return fail("Mail testing through the installer is disabled after installation.", 409);
-      await mail.test();
+      const body = (context.body ?? {}) as Record<string, unknown>;
+      const hasDraft = Object.keys(body).length > 0;
+      if (hasDraft) {
+        const config: MailConfig = {
+          enabled: Boolean(body.enabled),
+          host: String(body.host ?? "").trim(),
+          port: Number(body.port ?? 587),
+          encryption: String(body.encryption ?? "starttls") as MailConfig["encryption"],
+          username: String(body.username ?? "").trim(),
+          password: String(body.password ?? ""),
+          fromEmail: String(body.fromEmail ?? "").trim().toLowerCase(),
+          fromName: String(body.fromName ?? "").trim(),
+        };
+        if (!options.mailTransportFactory) return fail("This runtime does not support draft mail testing.", 400);
+        const draftMail = new DevOneMailService(options.services, options.mailTransportFactory(config));
+        await draftMail.test(config);
+      } else {
+        await mail.test();
+      }
       return ok({ ok: true, message: "Mail transport configuration test succeeded." });
     } catch (error) {
       return fail(error instanceof Error ? error.message : "Mail transport test failed.", 400);

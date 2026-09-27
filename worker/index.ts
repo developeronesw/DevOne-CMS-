@@ -7,6 +7,7 @@ import { DevOnePermissions } from "../core/auth/permissions";
 import { DevOneAuthService } from "../core/auth/service";
 import { createCloudflareServices } from "../adapters/cloudflare/providers";
 import { CloudflareMailTransport } from "../adapters/cloudflare/mail";
+import type { MailConfig } from "../core/mail";
 
 function securityHeaders(): HeadersInit {
   return {"x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","referrer-policy":"strict-origin-when-cross-origin","permissions-policy":"camera=(), microphone=(), geolocation=()"};
@@ -26,6 +27,15 @@ async function api(request: Request, env: Env): Promise<Response> {
       validateCsrf:async req=>{try{await auth.requireCsrf(req);return true;}catch{return false;}},
       maxBodyBytes:2*1024*1024,
       mailTransport,
+      mailTransportFactory: (config: MailConfig) => new CloudflareMailTransport({ email: env.EMAIL, fromEmail: config.fromEmail, fromName: config.fromName }),
+      installerPrerequisites: () => [
+        { id: "d1", label: "Cloudflare D1 database", required: true, ok: Boolean(env.DB), detail: "Required for CMS data and installer state." },
+        { id: "r2", label: "Cloudflare R2 media bucket", required: true, ok: Boolean(env.MEDIA), detail: "Required for media storage." },
+        { id: "kv", label: "Cloudflare KV cache", required: true, ok: Boolean(env.CACHE), detail: "Required for cache and runtime state." },
+        { id: "email", label: "Cloudflare Email Service", required: true, ok: Boolean(env.EMAIL), detail: "Required for outbound email on the Cloudflare runtime." },
+        { id: "secret", label: "DEVONE_SECRET_KEY", required: true, ok: Boolean(env.DEVONE_SECRET_KEY), detail: "Required to encrypt stored secrets." },
+        { id: "worker", label: "Cloudflare Worker runtime", required: true, ok: true, detail: "The installer is running inside the deployed Cloudflare Worker." },
+      ],
     });
     return core.api.handle(request);
   }

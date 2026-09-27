@@ -81,8 +81,16 @@ export interface CoreApiContext {
   body?: unknown;
 }
 
-import type { MailTransport } from "../mail";
+import type { MailConfig, MailTransport } from "../mail";
 import type { LicenseProvider } from "../license";
+
+export interface InstallerPrerequisite {
+  id: string;
+  label: string;
+  required: boolean;
+  ok: boolean;
+  detail: string;
+}
 
 export interface CoreApiOptions {
   services: CoreServices;
@@ -92,5 +100,7 @@ export interface CoreApiOptions {
   validateCsrf?: (request: Request, user: CoreUser) => Promise<boolean>;
   maxBodyBytes?: number;
   mailTransport?: MailTransport | null;
+  mailTransportFactory?: (config: MailConfig) => MailTransport;
+  installerPrerequisites?: () => Promise<InstallerPrerequisite[]> | InstallerPrerequisite[];
   licenseProvider?: LicenseProvider;
 }

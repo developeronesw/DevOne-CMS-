@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { ApiRouter, DevOneApi, fail, ok } from "../core/api/router";
+import { createCoreApi } from "../core/api";
 import type { CoreServices, DatabaseProvider } from "../core/api/types";
 import { DevOneInstaller } from "../core/installer";
 import { OfflineLicenseProvider } from "../core/license/offline";
@@ -42,6 +43,46 @@ test("API router reports allowed methods", async () => {
   const response = await api.handle(new Request("http://localhost/api/test", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" }));
   assert.equal(response.status, 405);
   assert.equal(response.headers.get("allow"), "GET");
+});
+
+test("installer prerequisite and draft mail test endpoints use public pre-install checks", async () => {
+  const db: DatabaseProvider = {
+    first: async <T>(sql: string) => sql.includes("installation_complete") ? null as T : null,
+    all: async () => [],
+    run: async () => ({ changes: 0 }),
+    batch: async () => undefined,
+  };
+  let testedConfig: unknown = null;
+  const api = createCoreApi({
+    services: services(db),
+    mailTransport: { send: async () => ({ messageId: "test" }), test: async () => ({ ok: true }) },
+    mailTransportFactory: config => {
+      testedConfig = config;
+      return { send: async () => ({ messageId: "draft" }), test: async () => ({ ok: true }) };
+    },
+    installerPrerequisites: () => [
+      { id: "database", label: "Database", required: true, ok: true, detail: "ready" },
+      { id: "secret", label: "Secret", required: true, ok: true, detail: "ready" },
+    ],
+  });
+  const prereq = await api.api.handle(new Request("http://localhost/api/install/prerequisites"));
+  assert.equal(prereq.status, 200);
+  assert.equal((await prereq.json()).ok, true);
+
+  const response = await api.api.handle(new Request("http://localhost/api/install/test-smtp", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      enabled: true, host: "smtp.example.test", port: 587, encryption: "starttls",
+      username: "mailer", password: "secret", fromEmail: "noreply@example.test", fromName: "DevOne",
+    }),
+  }));
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).ok, true);
+  assert.deepEqual(testedConfig, {
+    enabled: true, host: "smtp.example.test", port: 587, encryption: "starttls",
+    username: "mailer", password: "secret", fromEmail: "noreply@example.test", fromName: "DevOne",
+  });
 });
 
 test("installer can complete against a clean provider without license-server access", async () => {
