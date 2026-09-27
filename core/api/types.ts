@@ -77,6 +77,7 @@ export interface CoreApiContext {
   user: CoreUser | null;
   siteId: number | null;
   services: CoreServices;
+  body?: unknown;
 }
 
 export interface CoreApiOptions {
