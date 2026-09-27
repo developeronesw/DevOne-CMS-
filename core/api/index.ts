@@ -7,25 +7,12 @@ import { DevOneLicense } from "../license";
 import { DevOneSiteService } from "../sites/service";
 import { DevOneInstaller } from "../installer";
 import { DevOneMailService } from "../mail";
+import { OfflineLicenseProvider } from "../license/offline";
 
 export function createCoreApi(options: CoreApiOptions): { router: ApiRouter; api: DevOneApi } {
   const router = new ApiRouter();
 
-  const license = new DevOneLicense({
-    async get() {
-      const row = await options.services.db.first<{ setting_value: string }>(
-        "SELECT setting_value FROM settings WHERE setting_key = 'license_entitlement' LIMIT 1",
-      );
-      if (!row?.setting_value) return null;
-      try { return JSON.parse(row.setting_value); } catch { return null; }
-    },
-    async activate() {
-      throw new Error("License activation provider is not configured.");
-    },
-    async deactivate() {
-      await options.services.db.run("DELETE FROM settings WHERE setting_key = 'license_entitlement'");
-    },
-  });
+  const license = new DevOneLicense(options.licenseProvider ?? new OfflineLicenseProvider());
 
   const sites = new DevOneSiteService(options.services.db, license);
   const installer = new DevOneInstaller(options.services);
