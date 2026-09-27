@@ -1,0 +1,21 @@
+name: DevOne 2.0 Checks
+
+on:
+  push:
+    branches: ["serverless-2.0"]
+  pull_request:
+    branches: ["serverless-2.0"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      - run: git diff --check
