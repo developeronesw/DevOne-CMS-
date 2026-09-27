@@ -3,6 +3,7 @@ import { hashPassword, json } from "./lib/crypto";
 import { getCurrentUser, login, logout, requireCsrf, requireUser } from "./lib/auth";
 import { isInstalled, setSetting, setting } from "./lib/db";
 import { createCoreApi } from "../core/api";
+import { DevOnePermissions } from "../core/auth/permissions";
 import { createCloudflareServices } from "../adapters/cloudflare/providers";
 
 function securityHeaders(): HeadersInit {
@@ -85,14 +86,15 @@ async function api(request: Request, env: Env): Promise<Response> {
 
   if (path.startsWith("/api/core/")) {
     const services = createCloudflareServices(env);
+    const permissions = new DevOnePermissions(services.db);
     const core = createCoreApi({
       services,
       authenticate: async (req) => await getCurrentUser(req, env),
-      authorize: async (user, permission) => {
-        if (!user) return false;
-        if (user.role === "administrator") return true;
-        if (permission === "system.read") return user.role === "site_admin";
-        return false;
+      authorize: async (user, permission, siteId) => await permissions.has(user, permission, siteId),
+      resolveSite: async (req) => {
+        const value = req.headers.get("x-devone-site-id");
+        if (!value || !/^\\d+$/.test(value)) return null;
+        return Number(value);
       },
     });
     return core.api.handle(request);
