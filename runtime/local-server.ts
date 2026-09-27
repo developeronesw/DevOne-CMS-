@@ -61,8 +61,8 @@ async function routeAuth(request: Request, path: string): Promise<Response | nul
     }
   }
   if (path === "/api/auth/me" && request.method === "GET") {
-    const user = await auth.getCurrentUser(request);
-    return json({ ok: true, authenticated: Boolean(user), user });
+    const session = await auth.restoreSession(request);
+    return json({ ok: true, authenticated: Boolean(session.user), user: session.user, csrf_token: session.csrfToken });
   }
   return null;
 }
