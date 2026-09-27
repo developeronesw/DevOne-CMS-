@@ -10,7 +10,8 @@ import type { CoreServices, DatabaseProvider } from "../core/api/types";
 import { DevOneInstaller } from "../core/installer";
 import { OfflineLicenseProvider } from "../core/license/offline";
 import { DevOneLicense } from "../core/license/service";
-import { DevOnePermissions } from "../core/auth/permissions";\nimport { DevOneAuthService, passwordHash, authErrorStatus } from "../core/auth/service";
+import { DevOnePermissions } from "../core/auth/permissions";
+import { DevOneAuthService, passwordHash, authErrorStatus } from "../core/auth/service";
 import { LocalDatabase, LocalMedia } from "../adapters/local/providers";
 
 function services(db: DatabaseProvider): CoreServices {
@@ -110,7 +111,8 @@ test("local media rejects path traversal", async () => {
   }
 });
 
-\ntest("auth login creates a session, returns safe user data, and logout revokes it", async () => {
+
+test("auth login creates a session, returns safe user data, and logout revokes it", async () => {
   const raw = new DatabaseSync(":memory:");
   const db = new LocalDatabase(raw);
   raw.exec(`
