@@ -1,8 +1,11 @@
+import type { CloudflareEmailBinding } from "../adapters/cloudflare/mail";
+
 export interface Env {
   DB: D1Database;
   CACHE: KVNamespace;
   MEDIA: R2Bucket;
   ASSETS: Fetcher;
+  EMAIL?: CloudflareEmailBinding;
   DEVONE_SESSION_SECRET?: string;
   DEVONE_ENVIRONMENT?: string;
   DEVONE_SECRET_KEY?: string;
