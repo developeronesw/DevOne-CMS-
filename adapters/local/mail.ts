@@ -1,6 +1,6 @@
 import { connect as tlsConnect, type TLSSocket } from "node:tls";
 import { connect as tcpConnect, type Socket } from "node:net";
-import type { MailConfig, MailMessage, MailTransport } from "../core/mail";
+import type { MailConfig, MailMessage, MailTransport } from "../../core/mail";
 
 type Connection = Socket | TLSSocket;
 
