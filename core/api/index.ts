@@ -5,6 +5,7 @@ import { ApiRouter, DevOneApi, ok, fail } from "./router";
 import type { CoreApiOptions } from "./types";
 import { DevOneLicense } from "../license";
 import { DevOneSiteService } from "../sites/service";
+import { DevOneInstaller } from "../installer";
 
 export function createCoreApi(options: CoreApiOptions): { router: ApiRouter; api: DevOneApi } {
   const router = new ApiRouter();
@@ -26,6 +27,21 @@ export function createCoreApi(options: CoreApiOptions): { router: ApiRouter; api
   });
 
   const sites = new DevOneSiteService(options.services.db, license);
+  const installer = new DevOneInstaller(options.services);
+
+  router.get("/api/install/status", async () => ok({ ok: true, ...(await installer.status()) }), { public: true });
+
+  router.post("/api/install", async (_request, context) => {
+    try {
+      const body = (context.body ?? {}) as Record<string, unknown>;
+      const result = await installer.install(body as never);
+      return ok({ ok: true, installed: true, ...result, message: "DevOne CMS 2.0 foundation installed." }, 201);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Installation could not be completed.";
+      const status = /already installed|administrator already exists/.test(message) ? 409 : 400;
+      return fail(message, status);
+    }
+  }, { public: true, csrf: false });
 
   router.get("/api/core/health", async (_request, context) => {
     const installed = await context.services.db.first<{ setting_value: string }>(
