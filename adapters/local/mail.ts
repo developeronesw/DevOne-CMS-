@@ -45,33 +45,38 @@ function body(message: MailMessage): string {
 export class LocalSmtpTransport implements MailTransport {
   constructor(private readonly configSource: MailConfig | (() => Promise<MailConfig>)) {}
 
-  private async config(): Promise<MailConfig> {\n    return typeof this.configSource === "function" ? await this.configSource() : this.configSource;\n  }\n\n  private async connection(): Promise<Connection> {\n    const config = await this.config();
+  private async config(): Promise<MailConfig> {
+    return typeof this.configSource === "function" ? await this.configSource() : this.configSource;
+  }
+
+  private async connection(): Promise<Connection> {
+    const config = await this.config();
     if (config.encryption === "tls") {
       return new Promise((resolve, reject) => {
-        const socket = tlsConnect({ host: config.host, port: config.port, servername: this.config.host });
+        const socket = tlsConnect({ host: config.host, port: config.port, servername: config.host });
         socket.once("secureConnect", () => resolve(socket));
         socket.once("error", reject);
       });
     }
     return new Promise((resolve, reject) => {
-      const socket = tcpConnect(this.config.port, this.config.host, () => resolve(socket));
+      const socket = tcpConnect(config.port, config.host, () => resolve(socket));
       socket.once("error", reject);
     });
   }
 
-  private async authenticate(socket: Connection): Promise<void> {
+  private async authenticate(socket: Connection, config: MailConfig): Promise<void> {
     if (!config.username) return;
-    const value = Buffer.from(this.config.username + "\\0" + this.config.username + "\\0" + config.password).toString("base64");
+    const value = Buffer.from("\\0" + config.username + "\\0" + config.password).toString("base64");
     const response = await command(socket, "AUTH PLAIN " + value);
     if (!/^2/.test(response)) throw new Error("SMTP authentication failed.");
   }
 
-  private async sendOn(socket: Connection, message: MailMessage): Promise<{ messageId: string }> {
+  private async sendOn(socket: Connection, message: MailMessage, config: MailConfig): Promise<{ messageId: string }> {
     let response = await readResponse(socket);
     if (!/^2/.test(response)) throw new Error("SMTP server rejected the connection.");
     response = await command(socket, "EHLO devone.local");
     if (!/^2/.test(response)) throw new Error("SMTP EHLO failed.");
-    await this.authenticate(socket);
+    await this.authenticate(socket, config);
     response = await command(socket, "MAIL FROM:<" + header(message.fromEmail ?? config.fromEmail) + ">");
     if (!/^2/.test(response)) throw new Error("SMTP MAIL FROM failed.");
     response = await command(socket, "RCPT TO:<" + header(message.to) + ">");
@@ -87,9 +92,10 @@ export class LocalSmtpTransport implements MailTransport {
   }
 
   async send(message: MailMessage): Promise<{ messageId: string }> {
+    const config = await this.config();
     const socket = await this.connection();
     try {
-      if (this.config.encryption === "starttls") {
+      if (config.encryption === "starttls") {
         let response = await readResponse(socket);
         if (!/^2/.test(response)) throw new Error("SMTP server rejected the connection.");
         response = await command(socket, "EHLO devone.local");
@@ -97,13 +103,13 @@ export class LocalSmtpTransport implements MailTransport {
         response = await command(socket, "STARTTLS");
         if (!/^2/.test(response)) throw new Error("SMTP STARTTLS failed.");
         const secure = await new Promise<TLSSocket>((resolve, reject) => {
-          const tls = tlsConnect({ socket, servername: this.config.host });
+          const tls = tlsConnect({ socket, servername: config.host });
           tls.once("secureConnect", () => resolve(tls));
           tls.once("error", reject);
         });
-        return await this.sendOn(secure, message);
+        return await this.sendOn(secure, message, config);
       }
-      return await this.sendOn(socket, message);
+      return await this.sendOn(socket, message, config);
     } catch (error) {
       socket.destroy();
       throw error;
@@ -111,13 +117,14 @@ export class LocalSmtpTransport implements MailTransport {
   }
 
   async test(): Promise<{ ok: true }> {
+    const config = await this.config();
     const socket = await this.connection();
     try {
       let response = await readResponse(socket);
       if (!/^2/.test(response)) throw new Error("SMTP server rejected the connection.");
       response = await command(socket, "EHLO devone.local");
       if (!/^2/.test(response)) throw new Error("SMTP EHLO failed.");
-      if (this.config.encryption === "starttls") {
+      if (config.encryption === "starttls") {
         response = await command(socket, "STARTTLS");
         if (!/^2/.test(response)) throw new Error("SMTP STARTTLS failed.");
       }
