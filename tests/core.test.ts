@@ -8,6 +8,7 @@ import { join } from "node:path";
 import { ApiRouter, DevOneApi, fail, ok } from "../core/api/router";
 import { createCoreApi } from "../core/api";
 import type { CoreServices, CoreUser, DatabaseProvider } from "../core/api/types";
+import type { LicenseFeature } from "../core/license/types";
 import { DevOneInstaller } from "../core/installer";
 import { OfflineLicenseProvider } from "../core/license/offline";
 import { DevOneLicense } from "../core/license/service";
@@ -194,3 +195,45 @@ test("auth login creates a session, returns safe user data, and logout revokes i
 });
 
 test("Phase 3 admin API routes return protected live data",async()=>{const db:DatabaseProvider={first:async<T>(sql:string)=>sql.includes("FROM sites")?{id:1,site_name:"Demo"}as T:null,all:async<T>(sql:string)=>sql.includes("FROM sites")?[{id:1,site_name:"Demo"}]as T[]:[],run:async()=>({changes:1,lastInsertId:2}),batch:async()=>undefined};const user:CoreUser={id:1,username:"admin",email:"a@example.test",display_name:"Admin",role:"administrator",status:"active"};const api=createCoreApi({services:services(db),authenticate:async()=>user,authorize:async()=>true,validateCsrf:async()=>true});for(const p of ["/api/core/sites","/api/core/content","/api/core/media","/api/core/users","/api/core/settings"]){const r=await api.api.handle(new Request("http://localhost"+p));assert.equal(r.status,200,p);assert.equal((await r.json()).ok,true,p)}});
+
+test("Network entitlement is unlimited within its bound installation", async () => {
+  const entitlement = {
+    licenseId: "DEV-NETWORK-TEST",
+    product: "devone-cms" as const,
+    edition: "network" as const,
+    maxSites: null,
+    features: ["multisite", "network_admin", "network_users", "network_domains", "network_extensions"] as LicenseFeature[],
+    issuedAt: "2026-09-27T00:00:00.000Z",
+    expiresAt: null,
+    signature: "test-signature",
+  };
+  const provider = {
+    getEntitlement: async () => entitlement,
+    activate: async () => entitlement,
+    deactivate: async () => undefined,
+  };
+  const license = new DevOneLicense(provider);
+  assert.equal(await license.isFeatureEnabled("multisite"), true);
+  assert.equal(await license.canCreateSite(1000), true);
+});
+
+test("expired Network entitlement falls back to single-site capability", async () => {
+  const entitlement = {
+    licenseId: "DEV-NETWORK-EXPIRED",
+    product: "devone-cms" as const,
+    edition: "network" as const,
+    maxSites: null,
+    features: ["multisite"] as LicenseFeature[],
+    issuedAt: "2020-01-01T00:00:00.000Z",
+    expiresAt: "2020-01-02T00:00:00.000Z",
+    signature: "test-signature",
+  };
+  const provider = {
+    getEntitlement: async () => entitlement,
+    activate: async () => entitlement,
+    deactivate: async () => undefined,
+  };
+  const license = new DevOneLicense(provider);
+  assert.equal(await license.canCreateSite(0), true);
+  assert.equal(await license.canCreateSite(1), false);
+});

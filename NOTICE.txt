@@ -1,21 +1,11 @@
-DevOne CMS — Licensing Notice
+DevOne CMS 2.0 — Licensing Notice
 
-Copyright (C) 2026 Developer One Inc.
+Copyright (C) 2026 Developer One.
 
-DevOne CMS Core is free software: you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the Free
-Software Foundation, either version 3 of the License, or (at your option) any
-later version.
+DevOne CMS 2.0 is proprietary software. It is licensed, not sold. Except for rights expressly granted by the DevOne CMS 2.0 Software License Agreement, Developer One retains all rights, title, and interest in the proprietary DevOne CMS Core and associated intellectual property.
 
-DevOne CMS Core is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU General Public License for details.
+The base CMS may be used for one Site without a paid Network activation. Network/Multi-Site functionality requires a valid commercial Network entitlement.
 
-A verbatim copy of GNU GPL version 3 is included in LICENSE.txt and COPYING.
+One commercial Network License Key may be successfully activated on one DevOne CMS Installation only. After successful activation, the key is bound to that Installation and may not be reused to authorize another independent Installation. A Network License permits unlimited Sites within its authorized Installation.
 
-The GPL covers the software code in this distribution unless a file or bundled
-third-party component states a different compatible license. The GPL does not
-grant rights to Developer One Inc. trademarks, logos, service marks, marketplace
-accounts, hosted services, signing keys, paid support, or private service APIs.
-Modified distributions must not misrepresent their origin or imply endorsement
-by Developer One Inc.
+Third-party components bundled with DevOne CMS remain subject to their own applicable licenses. Their licenses are not changed by this notice.

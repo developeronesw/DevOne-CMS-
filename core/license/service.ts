@@ -18,7 +18,18 @@ export class DevOneLicense implements LicenseService {
     const entitlement = await this.get();
     if (!entitlement) return currentSiteCount < DEFAULT_SINGLE_SITE_LIMIT;
 
-    if (entitlement.expiresAt && Date.parse(entitlement.expiresAt) <= Date.now()) return currentSiteCount < DEFAULT_SINGLE_SITE_LIMIT;
+    if (entitlement.expiresAt && Date.parse(entitlement.expiresAt) <= Date.now()) {
+      return currentSiteCount < DEFAULT_SINGLE_SITE_LIMIT;
+    }
+
+    if (entitlement.edition !== "network") {
+      return currentSiteCount < DEFAULT_SINGLE_SITE_LIMIT;
+    }
+
+    // A Network entitlement is intentionally unlimited within its bound Installation.
+    if (entitlement.maxSites === null) return true;
+
+    // Retain a defensive finite limit for future signed entitlement formats.
     return currentSiteCount < Math.max(1, entitlement.maxSites);
   }
 

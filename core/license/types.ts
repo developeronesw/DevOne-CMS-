@@ -9,7 +9,8 @@ export interface LicenseEntitlement {
   licenseId: string;
   product: "devone-cms";
   edition: "single" | "network";
-  maxSites: number;
+  /** null means unlimited Sites within the authorized Installation. */
+  maxSites: number | null;
   features: LicenseFeature[];
   issuedAt: string;
   expiresAt: string | null;
