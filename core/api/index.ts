@@ -68,7 +68,7 @@ export function createCoreApi(options: CoreApiOptions): { router: ApiRouter; api
       return fail("This installation is limited to one site. A valid Network license is required for additional sites.", 403);
     }
 
-    const body = (context.services.config.lastBody ?? {}) as Record<string, unknown>;
+    const body = (context.body ?? {}) as Record<string, unknown>;
     const siteName = String(body.site_name ?? "").trim();
     const siteSlug = String(body.site_slug ?? "").trim().toLowerCase();
     const primaryDomain = String(body.primary_domain ?? "").trim();
