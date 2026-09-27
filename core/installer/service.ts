@@ -63,7 +63,7 @@ export class DevOneInstaller {
       ["site_url", input.site.url ?? ""],
       ["timezone", input.site.timezone ?? "UTC"],
       ["language", input.site.language ?? "en-US"],
-      ["cms_version", "2.0.0-alpha.2"],
+      ["cms_version", "2.0.0-alpha.3"],
       ["site_theme", "devone-glass"],
       ["smtp_enabled", smtp.enabled ? "1" : "0"],
       ["smtp_host", smtp.host ?? ""],
