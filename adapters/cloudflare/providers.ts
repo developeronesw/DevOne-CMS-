@@ -5,6 +5,7 @@ import type {
   MediaObject,
 } from "../../core/api/types";
 import type { Env } from "../../worker/types";
+import type { D1Database, KVNamespace, R2Bucket } from "@cloudflare/workers-types";
 
 export class CloudflareDatabase implements DatabaseProvider {
   constructor(private readonly db: D1Database) {}
