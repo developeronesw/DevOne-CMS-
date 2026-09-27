@@ -147,7 +147,13 @@ export class DevOneApi {
     if (!METHODS.includes(method)) return this.json(fail("Method not allowed.", 405, "method_not_allowed"), { "allow": METHODS.join(", ") });
 
     const matched = this.router.match(method, url.pathname);
-    if (!matched) return this.json(fail("API route not found.", 404, "route_not_found"));
+    if (!matched) {
+      const allowed = this.router.allowedMethods(url.pathname);
+      if (allowed.length) {
+        return this.json(fail("Method not allowed.", 405, "method_not_allowed"), { allow: allowed.join(", ") });
+      }
+      return this.json(fail("API route not found.", 404, "route_not_found"));
+    }
 
     const route = matched.route;
     const isStateChanging = STATE_CHANGING_METHODS.has(method);
