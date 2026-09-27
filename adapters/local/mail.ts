@@ -4,20 +4,8 @@ import type { MailConfig, MailMessage, MailTransport } from "../../core/mail";
 
 type Connection = Socket | TLSSocket;
 
-type PromiseExecutor<T> = (
-  resolve: (value: T | PromiseLike<T>) => void,
-  reject: (reason?: unknown) => void,
-) => void;
-
-function createPromise<T>(executor: PromiseExecutor<T>): Promise<T> {
-  const PromiseCtor = globalThis.Promise as unknown as {
-    new <R>(executor: PromiseExecutor<R>): Promise<R>;
-  };
-  return new PromiseCtor(executor);
-}
-
 function readResponse(socket: Connection): Promise<string> {
-  return createPromise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let buffer = "";
     const onData = (chunk: Buffer) => {
       buffer += chunk.toString("utf8");
@@ -64,13 +52,13 @@ export class LocalSmtpTransport implements MailTransport {
   private async connection(): Promise<Connection> {
     const config = await this.config();
     if (config.encryption === "tls") {
-      return createPromise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         const socket = tlsConnect({ host: config.host, port: config.port, servername: config.host });
         socket.once("secureConnect", () => resolve(socket));
         socket.once("error", reject);
       });
     }
-    return createPromise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const socket = tcpConnect(config.port, config.host, () => resolve(socket));
       socket.once("error", reject);
     });
@@ -114,7 +102,7 @@ export class LocalSmtpTransport implements MailTransport {
         if (!/^2/.test(response)) throw new Error("SMTP EHLO failed.");
         response = await command(socket, "STARTTLS");
         if (!/^2/.test(response)) throw new Error("SMTP STARTTLS failed.");
-        const secure = await createPromise<TLSSocket>((resolve, reject) => {
+        const secure = await new Promise<TLSSocket>((resolve, reject) => {
           const tls = tlsConnect({ socket, servername: config.host });
           tls.once("secureConnect", () => resolve(tls));
           tls.once("error", reject);
