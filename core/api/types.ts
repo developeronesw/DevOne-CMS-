@@ -81,6 +81,8 @@ export interface CoreApiContext {
   body?: unknown;
 }
 
+import type { MailTransport } from "../mail";
+
 export interface CoreApiOptions {
   services: CoreServices;
   authenticate?: (request: Request) => Promise<CoreUser | null>;
@@ -88,4 +90,5 @@ export interface CoreApiOptions {
   authorize?: (user: CoreUser | null, permission: string, siteId: number | null) => Promise<boolean>;
   validateCsrf?: (request: Request, user: CoreUser) => Promise<boolean>;
   maxBodyBytes?: number;
+  mailTransport?: MailTransport | null;
 }
