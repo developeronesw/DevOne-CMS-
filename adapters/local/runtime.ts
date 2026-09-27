@@ -30,7 +30,8 @@ export async function createLocalRuntime(options: LocalRuntimeOptions) {
   await mkdir(dataDir, { recursive: true });
   const mediaDir = resolve(options.mediaDir ?? (dataDir + "/media"));
   await mkdir(mediaDir, { recursive: true });
-  const database = options.database ?? Reflect.construct(DatabaseSync, [resolve(dataDir, "devone.sqlite")]) as DatabaseSync;
+  const Database = DatabaseSync as unknown as new (path: string) => DatabaseSync;
+  const database = options.database ?? new Database(resolve(dataDir, "devone.sqlite"));
   database.exec("PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;");
   await runLocalMigrations(database);
   const secretKey = await loadSecret(dataDir, options.secretKey ?? process.env.DEVONE_SECRET_KEY);
