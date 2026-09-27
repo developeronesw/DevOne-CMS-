@@ -7,7 +7,7 @@ import { join } from "node:path";
 
 import { ApiRouter, DevOneApi, fail, ok } from "../core/api/router";
 import { createCoreApi } from "../core/api";
-import type { CoreServices, DatabaseProvider } from "../core/api/types";
+import type { CoreServices, CoreUser, DatabaseProvider } from "../core/api/types";
 import { DevOneInstaller } from "../core/installer";
 import { OfflineLicenseProvider } from "../core/license/offline";
 import { DevOneLicense } from "../core/license/service";
