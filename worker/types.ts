@@ -1,5 +1,4 @@
 import type { CloudflareEmailBinding } from "../adapters/cloudflare/mail";
-import type { D1Database, KVNamespace, R2Bucket, Fetcher } from "@cloudflare/workers-types";
 
 export interface Env {
   DB: D1Database;
