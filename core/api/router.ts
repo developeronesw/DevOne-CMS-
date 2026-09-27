@@ -64,7 +64,7 @@ export class ApiRouter {
     return this.register({ ...options, method: "DELETE", path, handler });
   }
 
-  match(method: HttpMethod, path: string): { route: CompiledRoute; params: Record<string, string> } | null {
+  allowedMethods(path: string): HttpMethod[] {\n    const normalized = normalizePath(path);\n    const methods = new Set<HttpMethod>();\n    for (const route of this.routes) if (route.regex.test(normalized)) for (const method of route.methods) methods.add(method);\n    return [...methods];\n  }\n\n  match(method: HttpMethod, path: string): { route: CompiledRoute; params: Record<string, string> } | null {
     const normalized = normalizePath(path);
     for (const route of this.routes) {
       if (!route.methods.includes(method)) continue;
@@ -137,7 +137,7 @@ export class DevOneApi {
   async handle(request: Request): Promise<Response> {
     const url = new URL(request.url);
     const method = request.method as HttpMethod;
-    if (!METHODS.includes(method)) return this.json(fail("Method not allowed.", 405, "method_not_allowed"));
+    if (!METHODS.includes(method)) return this.json(fail("Method not allowed.", 405, "method_not_allowed"), { "allow": METHODS.join(", ") });
 
     const matched = this.router.match(method, url.pathname);
     if (!matched) return this.json(fail("API route not found.", 404, "route_not_found"));
@@ -199,8 +199,8 @@ export class DevOneApi {
     }
   }
 
-  private json(result: CoreResponse): Response {
-    const headers = new Headers(result.headers);
+  private json(result: CoreResponse, extraHeaders: HeadersInit = {}): Response {
+    const headers = new Headers(result.headers);\n    for (const [key, value] of new Headers(extraHeaders)) headers.set(key, value);
     headers.set("content-type", "application/json; charset=utf-8");
     headers.set("cache-control", "no-store");
     return new Response(JSON.stringify(result.body ?? null), { status: result.status, headers });
