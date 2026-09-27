@@ -1,7 +1,17 @@
 import type { CoreUser, DatabaseProvider } from "../api/types";
 import type { PermissionService } from "./types";
 
-function parsePermissionList(value: string | null | undefined): string[] {\n  if (!value) return [];\n  try {\n    const parsed: unknown = JSON.parse(value);\n    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string") : [];\n  } catch {\n    return [];\n  }\n}\n\nfunction permissionMatches(granted: string, required: string): boolean {
+function parsePermissionList(value: string | null | undefined): string[] {
+  if (!value) return [];
+  try {
+    const parsed: unknown = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+function permissionMatches(granted: string, required: string): boolean {
   if (granted === "*") return true;
   if (granted === required) return true;
   if (granted.endsWith(".*")) return required.startsWith(granted.slice(0, -1));
