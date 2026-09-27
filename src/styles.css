@@ -27,7 +27,7 @@ h1{margin:25px 0 0;color:var(--ink);text-align:center;font-size:clamp(31px,5vw,4
 .wizard-intro{margin-top:11px;font-size:14px}
 .installer-form{width:100%;margin-top:25px;display:flex;flex-direction:column;gap:14px;text-align:left}
 .installer-form label{min-width:0;display:flex;flex-direction:column;gap:7px;color:#303934;font-size:12px;font-weight:600}
-.installer-form input:not([type=checkbox]),.installer-form select{width:100%;height:42px;padding:0 12px;border:1px solid #dfe5e0;border-radius:10px;background:#fff;color:#202722;font:400 13px inherit;outline:none}
+.installer-form input:not([type=checkbox]),.installer-form select{width:100%;height:42px;padding:0 12px;border:1px solid #dfe5e0;border-radius:10px;background:#fff;color:#202722;font:inherit;font-size:13px;outline:none}
 .installer-form input:focus,.installer-form select:focus{border-color:#5b9b79;box-shadow:0 0 0 3px rgba(38,116,84,.10)}
 .installer-form input::placeholder{color:#a4aca6}
 .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
