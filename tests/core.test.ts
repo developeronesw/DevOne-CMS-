@@ -139,8 +139,12 @@ test("auth login creates a session, returns safe user data, and logout revokes i
     const cookie = result.sessionCookie.split(";")[0];
     const authenticatedRequest = new Request("http://localhost/api/auth/me",{headers:{cookie}});
     assert.equal((await auth.getCurrentUser(authenticatedRequest))?.id,1);
+    const restored = await auth.restoreSession(authenticatedRequest);
+    assert.equal(restored.user?.id,1);
+    assert.ok(restored.csrfToken);
+    await assert.rejects(()=>auth.requireCsrf(new Request("http://localhost/api/auth/logout",{headers:{cookie,"x-devone-csrf":result.csrfToken}})));
     await assert.rejects(()=>auth.requireCsrf(new Request("http://localhost/api/auth/logout",{headers:{cookie,"x-devone-csrf":"wrong"}})));
-    const logoutCookie = await auth.logout(new Request("http://localhost/api/auth/logout",{headers:{cookie,"x-devone-csrf":result.csrfToken}}));
+    const logoutCookie = await auth.logout(new Request("http://localhost/api/auth/logout",{headers:{cookie,"x-devone-csrf":restored.csrfToken!}}));
     assert.match(logoutCookie,/Max-Age=0/);
     assert.equal(await auth.getCurrentUser(authenticatedRequest),null);
   } finally {
