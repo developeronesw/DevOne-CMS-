@@ -37,7 +37,8 @@ export class DevOneAuthService implements AuthService{
     const sessionToken=token(),csrfToken=token(),id=crypto.randomUUID(),expiresAt=future(this.days);
     await this.db.run("INSERT INTO sessions(id,user_id,token_hash,csrf_token_hash,expires_at) VALUES(?,?,?,?,?)",id,u.id,await hash(sessionToken),await hash(csrfToken),expiresAt);
     await this.audit(u.id,"auth.login");
-    const { password_hash: _passwordHash, ...safeUser } = u;\n    return {user:safeUser,csrfToken,expiresAt,sessionCookie:setCookie(sessionToken,this.days*86400,this.secure)};
+    const { password_hash: _passwordHash, ...safeUser } = u;
+    return {user:safeUser,csrfToken,expiresAt,sessionCookie:setCookie(sessionToken,this.days*86400,this.secure)};
   }
   async requireCsrf(r:Request){const s=await this.session(r);if(!s)throw new Error("Authentication required.");const supplied=unb64(await hash(r.headers.get("x-devone-csrf")??"")),expected=unb64(s.csrf_token_hash);if(!eq(supplied,expected))throw new Error("CSRF validation failed.");}
   async logout(r:Request){const s=await this.session(r);if(!s)return clearCookie(this.secure);await this.requireCsrf(r);await this.db.run("UPDATE sessions SET revoked_at=datetime('now') WHERE id=?",s.id);await this.audit(s.user_id,"auth.logout");return clearCookie(this.secure);}
