@@ -9,9 +9,9 @@ function readResponse(socket: Connection): Promise<string> {
     let buffer = "";
     const onData = (chunk: Buffer) => {
       buffer += chunk.toString("utf8");
-      const lines = buffer.split(/\\r?\\n/).filter((line) => line.length > 0);
+      const lines = buffer.split(/\r?\n/).filter((line: string) => line.length > 0);
       const last = lines[lines.length - 1];
-      if (last && /^\\d{3} /.test(last)) { cleanup(); resolve(lines.join("\\n")); }
+      if (last && /^\d{3} /.test(last)) { cleanup(); resolve(lines.join("\n")); }
     };
     const onError = (error: Error) => { cleanup(); reject(error); };
     const cleanup = () => { socket.off("data", onData); socket.off("error", onError); };
@@ -21,11 +21,11 @@ function readResponse(socket: Connection): Promise<string> {
 }
 
 async function command(socket: Connection, value: string): Promise<string> {
-  socket.write(value + "\\r\\n");
+  socket.write(value + "\r\n");
   return readResponse(socket);
 }
 
-function header(value: string): string { return value.replace(/[\\r\\n]/g, ""); }
+function header(value: string): string { return value.replace(/[\r\n]/g, ""); }
 
 function body(message: MailMessage): string {
   const from = message.fromName
@@ -39,7 +39,7 @@ function body(message: MailMessage): string {
     "Content-Type: text/plain; charset=UTF-8",
   ];
   if (message.replyTo) lines.push("Reply-To: " + header(message.replyTo));
-  return lines.join("\\r\\n") + "\\r\\n\\r\\n" + message.text.replace(/\\r?\\n/g, "\\r\\n");
+  return lines.join("\r\n") + "\r\n\r\n" + message.text.replace(/\r?\n/g, "\r\n");
 }
 
 export class LocalSmtpTransport implements MailTransport {
@@ -66,7 +66,7 @@ export class LocalSmtpTransport implements MailTransport {
 
   private async authenticate(socket: Connection, config: MailConfig): Promise<void> {
     if (!config.username) return;
-    const value = Buffer.from("\\0" + config.username + "\\0" + config.password).toString("base64");
+    const value = Buffer.from("\0" + config.username + "\0" + config.password).toString("base64");
     const response = await command(socket, "AUTH PLAIN " + value);
     if (!/^2/.test(response)) throw new Error("SMTP authentication failed.");
   }
@@ -83,7 +83,7 @@ export class LocalSmtpTransport implements MailTransport {
     if (!/^2/.test(response)) throw new Error("SMTP recipient rejected.");
     response = await command(socket, "DATA");
     if (!/^3/.test(response)) throw new Error("SMTP DATA failed.");
-    socket.write(body(message).replace(/^\\./gm, "..") + "\\r\\n.\\r\\n");
+    socket.write(body(message).replace(/^\./gm, "..") + "\r\n.\r\n");
     response = await readResponse(socket);
     if (!/^2/.test(response)) throw new Error("SMTP message rejected.");
     await command(socket, "QUIT");
