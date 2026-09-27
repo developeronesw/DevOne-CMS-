@@ -6,6 +6,7 @@ import { createCoreApi } from "../core/api";
 import { DevOnePermissions } from "../core/auth/permissions";
 import { DevOneAuthService } from "../core/auth/service";
 import { createCloudflareServices } from "../adapters/cloudflare/providers";
+import { CloudflareMailTransport } from "../adapters/cloudflare/mail";
 
 function securityHeaders(): HeadersInit {
   return {"x-content-type-options":"nosniff","x-frame-options":"SAMEORIGIN","referrer-policy":"strict-origin-when-cross-origin","permissions-policy":"camera=(), microphone=(), geolocation=()"};
@@ -16,6 +17,7 @@ async function api(request: Request, env: Env): Promise<Response> {
     const services=createCloudflareServices(env);
     const permissions=new DevOnePermissions(services.db);
     const auth=new DevOneAuthService(services.db);
+    const mailTransport=new CloudflareMailTransport({email:env.EMAIL,fromEmail:""});
     const core=createCoreApi({
       services,
       authenticate:req=>auth.getCurrentUser(req),
@@ -23,6 +25,7 @@ async function api(request: Request, env: Env): Promise<Response> {
       resolveSite:async req=>{const value=req.headers.get("x-devone-site-id");return value&&/^\d+$/.test(value)?Number(value):null;},
       validateCsrf:async req=>{try{await auth.requireCsrf(req);return true;}catch{return false;}},
       maxBodyBytes:2*1024*1024,
+      mailTransport,
     });
     return core.api.handle(request);
   }
