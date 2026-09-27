@@ -26,6 +26,8 @@
   "include": [
     "src",
     "worker",
+    "core",
+    "adapters",
     "vite.config.ts"
   ]
 }
