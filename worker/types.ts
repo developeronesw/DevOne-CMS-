@@ -5,6 +5,7 @@ export interface Env {
   ASSETS: Fetcher;
   DEVONE_SESSION_SECRET?: string;
   DEVONE_ENVIRONMENT?: string;
+  DEVONE_SECRET_KEY?: string;
 }
 
 export interface AuthUser {
