@@ -1,6 +1,6 @@
 import type { InstallerInput } from "./types";
 
-const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const usernamePattern = /^[a-z0-9][a-z0-9._-]{2,99}$/;
 const slugPattern = /^[a-z0-9][a-z0-9-]{1,119}$/;
 
@@ -52,8 +52,6 @@ export function validateInstallerInput(input: InstallerInput): string | null {
   }
   const smtp = input.smtp;
   if (!smtp?.enabled) return null;
-  const port = smtp.port ?? 587;
-  const password = smtp.password ?? "";
   const port = smtp.port ?? 587;
   const password = smtp.password ?? "";
   if (!smtp.host || smtp.host.length > 255) return "SMTP host is required.";
