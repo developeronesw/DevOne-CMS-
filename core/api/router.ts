@@ -1,6 +1,8 @@
 import type { ApiHandler, ApiRoute, CoreApiContext, CoreApiOptions, CoreRequest, CoreResponse, HttpMethod } from "./types";
 
 const METHODS: HttpMethod[] = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"];
+const STATE_CHANGING_METHODS = new Set<HttpMethod>(["POST", "PUT", "PATCH", "DELETE"]);
+const DEFAULT_MAX_BODY_BYTES = 1024 * 1024;
 
 function normalizePath(path: string): string {
   const normalized = path.replace(/\/+$/, "");
@@ -94,6 +96,38 @@ export function fail(error: string, status = 400, code?: string, details?: unkno
   };
 }
 
+function hasJsonContentType(request: Request): boolean {
+  const contentType = request.headers.get("content-type") ?? "";
+  return contentType.toLowerCase().split(";")[0].trim() === "application/json";
+}
+
+async function parseBody(request: Request, maxBodyBytes: number): Promise<{ body?: unknown; error?: CoreResponse }> {
+  const contentLength = request.headers.get("content-length");
+  if (contentLength && Number.isFinite(Number(contentLength)) && Number(contentLength) > maxBodyBytes) {
+    return { error: fail("Request body is too large.", 413, "body_too_large") };
+  }
+
+  if (!request.body) return { body: undefined };
+
+  const contentType = request.headers.get("content-type") ?? "";
+  if (!hasJsonContentType(request)) {
+    return { error: fail("State-changing API requests must use application/json.", 415, "unsupported_media_type") };
+  }
+
+  const body = await request.arrayBuffer();
+  if (body.byteLength > maxBodyBytes) {
+    return { error: fail("Request body is too large.", 413, "body_too_large") };
+  }
+
+  if (body.byteLength === 0) return { error: fail("Request body is required.", 400, "empty_body") };
+
+  try {
+    return { body: JSON.parse(new TextDecoder().decode(body)) };
+  } catch {
+    return { error: fail("Malformed JSON request body.", 400, "invalid_json") };
+  }
+}
+
 export class DevOneApi {
   constructor(
     private readonly router: ApiRouter,
@@ -103,24 +137,36 @@ export class DevOneApi {
   async handle(request: Request): Promise<Response> {
     const url = new URL(request.url);
     const method = request.method as HttpMethod;
-    const matched = this.router.match(method, url.pathname);
+    if (!METHODS.includes(method)) return this.json(fail("Method not allowed.", 405, "method_not_allowed"));
 
+    const matched = this.router.match(method, url.pathname);
     if (!matched) return this.json(fail("API route not found.", 404, "route_not_found"));
 
-    let body: unknown;
-    if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
-      const contentType = request.headers.get("content-type") ?? "";
-      if (contentType.includes("application/json")) {
-        body = await request.json().catch(() => undefined);
-      }
+    const route = matched.route;
+    const isStateChanging = STATE_CHANGING_METHODS.has(method);
+    const bodyResult = isStateChanging
+      ? await parseBody(request, this.options.maxBodyBytes ?? DEFAULT_MAX_BODY_BYTES)
+      : { body: undefined };
+
+    if (bodyResult.error) return this.json(bodyResult.error);
+    const body = bodyResult.body;
+
+    let user: CoreApiContext["user"] = null;
+    try {
+      user = this.options.authenticate ? await this.options.authenticate(request) : null;
+    } catch {
+      return this.json(fail("Authentication could not be completed.", 500, "authentication_error"));
     }
 
-    const user = this.options.authenticate ? await this.options.authenticate(request) : null;
     const siteId = this.options.resolveSite ? await this.options.resolveSite(request, user) : null;
-    const route = matched.route;
 
     if (!route.public && !user) {
       return this.json(fail("Authentication required.", 401, "authentication_required"));
+    }
+
+    if (route.csrf !== false && isStateChanging && user && this.options.validateCsrf) {
+      const valid = await this.options.validateCsrf(request, user);
+      if (!valid) return this.json(fail("CSRF validation failed.", 403, "csrf_failed"));
     }
 
     if (route.permission && this.options.authorize) {
@@ -148,8 +194,8 @@ export class DevOneApi {
     try {
       return this.json(await route.handler(coreRequest, context));
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Internal server error.";
-      return this.json(fail(message, 500, "internal_error"));
+      console.error("DevOne Core API error", error);
+      return this.json(fail("Internal server error.", 500, "internal_error"));
     }
   }
 

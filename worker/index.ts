@@ -96,6 +96,11 @@ async function api(request: Request, env: Env): Promise<Response> {
         if (!value || !/^\\d+$/.test(value)) return null;
         return Number(value);
       },
+      validateCsrf: async (req) => {
+        const result = await requireCsrf(req, env);
+        return result === null;
+      },
+      maxBodyBytes: 1024 * 1024,
     });
     return core.api.handle(request);
   }

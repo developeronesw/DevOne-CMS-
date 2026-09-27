@@ -27,6 +27,7 @@ export interface ApiRoute {
   handler: ApiHandler;
   permission?: string;
   public?: boolean;
+  csrf?: boolean;
 }
 
 export interface CoreUser {
@@ -85,4 +86,6 @@ export interface CoreApiOptions {
   authenticate?: (request: Request) => Promise<CoreUser | null>;
   resolveSite?: (request: Request, user: CoreUser | null) => Promise<number | null>;
   authorize?: (user: CoreUser | null, permission: string, siteId: number | null) => Promise<boolean>;
+  validateCsrf?: (request: Request, user: CoreUser) => Promise<boolean>;
+  maxBodyBytes?: number;
 }
