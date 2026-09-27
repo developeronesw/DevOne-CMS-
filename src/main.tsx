@@ -1,124 +1,51 @@
-import { StrictMode, useState } from "react";
+import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
-type InstallMode = "local" | "cloudflare";
-
-function LocalIcon() {
-  return (
-    <svg viewBox="0 0 48 48" aria-hidden="true" className="choice-icon-svg">
-      <rect x="7" y="8" width="34" height="25" rx="3.5" />
-      <path d="M18 40h12M24 33v7M17 19l4 4-4 4M25 27h7" />
-    </svg>
-  );
+type Mode = "local" | "cloudflare";
+type Step = 0 | 1 | 2;
+type FormData = {
+  siteName:string; slug:string; url:string; timezone:string; language:string;
+  username:string; email:string; displayName:string; password:string; confirm:string;
+  smtpEnabled:boolean; smtpHost:string; smtpPort:string; smtpEncryption:"none"|"starttls"|"tls";
+  smtpUsername:string; smtpPassword:string; smtpFromEmail:string; smtpFromName:string;
+};
+const empty:FormData={siteName:"",slug:"",url:"",timezone:"UTC",language:"en-US",username:"",email:"",displayName:"",password:"",confirm:"",smtpEnabled:false,smtpHost:"",smtpPort:"587",smtpEncryption:"starttls",smtpUsername:"",smtpPassword:"",smtpFromEmail:"",smtpFromName:""};
+const slugify=(s:string)=>s.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,120);
+function LocalIcon(){return <svg viewBox="0 0 48 48" aria-hidden="true" className="choice-icon-svg"><rect x="7" y="8" width="34" height="25" rx="3.5"/><path d="M18 40h12M24 33v7M17 19l4 4-4 4M25 27h7"/></svg>}
+function CloudIcon(){return <svg viewBox="0 0 48 48" aria-hidden="true" className="choice-icon-svg cloud-icon"><path d="M12 34h25a7 7 0 0 0 .7-14 13 13 0 0 0-24.9-2.4A8.4 8.4 0 0 0 12 34Z"/><path d="M9 39h27"/></svg>}
+function App(){
+ const [mode,setMode]=useState<Mode|null>(null),[step,setStep]=useState<Step>(0),[form,setForm]=useState<FormData>(empty);
+ const [installed,setInstalled]=useState(false),[siteName,setSiteName]=useState(""),[statusError,setStatusError]=useState("");
+ const [error,setError]=useState(""),[busy,setBusy]=useState(false);
+ useEffect(()=>{let live=true;fetch("/api/install/status",{headers:{accept:"application/json"}}).then(async r=>{if(!r.ok)throw new Error();return r.json()}).then(d=>{if(live){setInstalled(Boolean(d.installed));setSiteName(d.siteName||"")}}).catch(()=>{if(live)setStatusError("Could not confirm installation status. Make sure the DevOne runtime is running and refresh.")});return()=>{live=false}},[]);
+ const set=(k:keyof FormData,v:string|boolean)=>{setForm(old=>{const n={...old,[k]:v};if(k==="siteName"&&!old.slug)n.slug=slugify(String(v));if(k==="email"&&!old.smtpFromEmail)n.smtpFromEmail=String(v);if(k==="siteName"&&!old.smtpFromName)n.smtpFromName=String(v);return n});setError("")};
+ const siteValid=form.siteName.trim().length>=2&&/^[a-z0-9][a-z0-9-]{1,119}$/.test(form.slug)&&/^[a-z0-9][a-z0-9._-]{2,99}$/i.test(form.username.trim())&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())&&form.password.length>=12&&form.password.length<=256&&form.password===form.confirm&&(!form.url.trim()||/^https?:\/\//i.test(form.url.trim()));
+ const emailValid=!form.smtpEnabled||(!!form.smtpHost.trim()&&Number.isInteger(Number(form.smtpPort))&&Number(form.smtpPort)>0&&Number(form.smtpPort)<=65535&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.smtpFromEmail.trim())&&!!form.smtpFromName.trim()&&(!form.smtpUsername.trim()||form.smtpPassword.length<=256));
+ async function submit(){if(!mode||!siteValid||!emailValid)return;setBusy(true);setError("");const payload={deployment:mode,admin:{username:form.username.trim().toLowerCase(),email:form.email.trim().toLowerCase(),displayName:form.displayName.trim(),password:form.password},site:{name:form.siteName.trim(),slug:form.slug.trim().toLowerCase(),url:form.url.trim(),timezone:form.timezone.trim()||"UTC",language:form.language.trim()||"en-US"},smtp:{enabled:form.smtpEnabled,host:form.smtpHost.trim(),port:Number(form.smtpPort||587),encryption:form.smtpEncryption,username:form.smtpUsername.trim(),password:form.smtpPassword,fromEmail:form.smtpFromEmail.trim().toLowerCase(),fromName:form.smtpFromName.trim()}};
+ try{const r=await fetch("/api/install",{method:"POST",headers:{"content-type":"application/json",accept:"application/json"},body:JSON.stringify(payload)});const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||d.message||"Installation failed. Review your settings and try again.");setInstalled(true);setSiteName(form.siteName);setForm(old=>({...old,password:"",confirm:"",smtpPassword:""}))}
+ catch(e){setError(e instanceof Error?e.message:"Installation failed. Please try again.")}finally{setBusy(false)}}
+ return <main className="installer-page"><div className="page-grid" aria-hidden="true"/>
+ <header className="brand-header" aria-label="DevOne CMS"><div className="brand-wordmark"><span>DevOne</span><span className="brand-muted">CMS</span></div><div className="brand-version">VERSION 2.0</div></header>
+ <section className="setup-panel" aria-labelledby="setup-title"><div className="setup-content"><div className="eyebrow"><span className="status-dot"/> DEVONE SETUP</div>
+ {installed?<div className="installed-state"><div className="success-mark" aria-hidden="true">✓</div><h1 id="setup-title">DevOne is ready</h1><p className="intro">This installation is already configured{siteName?` for ${siteName}`:""}. Sign in to your administrator account to continue.</p><p className="status-note">Installer locked · {mode==="cloudflare"?"Cloudflare deployment":"Existing installation"}</p></div>
+ :!mode?<><h1 id="setup-title">Choose where to install</h1><p className="intro">Get DevOne CMS running in the environment that works<br className="desktop-break"/> best for your project.</p><div className="choice-list" aria-label="Installation environment">
+ <button type="button" className="choice-card" onClick={()=>setMode("local")}><span className="choice-icon local-icon"><LocalIcon/></span><span className="choice-copy"><span className="choice-title">Install locally</span><span className="choice-description">Run DevOne on your own machine or server</span></span><span className="choice-arrow" aria-hidden="true">→</span></button>
+ <button type="button" className="choice-card" onClick={()=>setMode("cloudflare")}><span className="choice-icon cloud-choice-icon"><CloudIcon/></span><span className="choice-copy"><span className="choice-title">Deploy with Cloudflare</span><span className="choice-description">Launch globally on Cloudflare's network</span></span><span className="choice-arrow" aria-hidden="true">→</span></button></div>{statusError&&<p className="inline-alert" role="status">{statusError}</p>}</>
+ :<><div className="wizard-heading"><button className="text-button back-button" type="button" onClick={()=>{if(step===0)setMode(null);else setStep((step-1) as Step);setError("")}}>← {step===0?"Change method":"Back"}</button><span className="step-count">STEP {step+1} OF 3 <span>·</span> {mode==="local"?"LOCAL":"CLOUDFLARE"}</span></div><div className="progress-track" aria-label={`Step ${step+1} of 3`}><span style={{width:`${(step+1)/3*100}%`}}/></div>
+ {step===0&&<><h1 id="setup-title">Set up your site</h1><p className="intro wizard-intro">Add your site details and create the administrator account.</p><form className="installer-form" onSubmit={e=>{e.preventDefault();if(siteValid)setStep(1)}}>
+ <div className="form-section-title">SITE DETAILS</div><label>Site name<input required minLength={2} maxLength={190} value={form.siteName} onChange={e=>set("siteName",e.target.value)} placeholder="My new website"/></label>
+ <div className="form-grid"><label>Site slug<input required value={form.slug} onChange={e=>set("slug",e.target.value.toLowerCase())} placeholder="my-new-website"/></label><label>Site URL <span className="optional">Optional</span><input type="url" value={form.url} onChange={e=>set("url",e.target.value)} placeholder="https://example.com"/></label></div>
+ <div className="form-grid"><label>Timezone<input value={form.timezone} onChange={e=>set("timezone",e.target.value)} placeholder="UTC"/></label><label>Language<input value={form.language} onChange={e=>set("language",e.target.value)} placeholder="en-US"/></label></div>
+ <div className="form-section-title form-section-spaced">ADMINISTRATOR ACCOUNT</div><div className="form-grid"><label>Username<input required minLength={3} maxLength={100} value={form.username} onChange={e=>set("username",e.target.value)} autoComplete="username" placeholder="admin"/></label><label>Display name <span className="optional">Optional</span><input value={form.displayName} onChange={e=>set("displayName",e.target.value)} placeholder="Your name"/></label></div>
+ <label>Administrator email<input required type="email" value={form.email} onChange={e=>set("email",e.target.value)} autoComplete="email" placeholder="you@example.com"/></label>
+ <div className="form-grid"><label>Password <span className="field-help">12 characters minimum</span><input required type="password" minLength={12} maxLength={256} value={form.password} onChange={e=>set("password",e.target.value)} autoComplete="new-password"/></label><label>Confirm password<input required type="password" value={form.confirm} onChange={e=>set("confirm",e.target.value)} autoComplete="new-password"/></label></div>
+ {form.confirm&&form.password!==form.confirm&&<p className="field-error">Passwords do not match.</p>}{error&&<p className="inline-alert" role="alert">{error}</p>}<div className="form-actions"><span className="selection-hint">Review your settings before installation.</span><button className="primary-button" type="submit" disabled={!siteValid}>Continue <span>→</span></button></div></form></>}
+ {step===1&&<><h1 id="setup-title">Email configuration</h1><p className="intro wizard-intro">Email is optional. You can configure it now or add it later.</p><div className="installer-form"><label className="toggle-row"><span><strong>Configure outgoing email</strong><small>SMTP can deliver notifications and account messages.</small></span><input type="checkbox" checked={form.smtpEnabled} onChange={e=>set("smtpEnabled",e.target.checked)}/></label>
+ {form.smtpEnabled&&<><div className="form-grid"><label>SMTP host<input required value={form.smtpHost} onChange={e=>set("smtpHost",e.target.value)} placeholder="smtp.example.com"/></label><label>Port<input required type="number" min="1" max="65535" value={form.smtpPort} onChange={e=>set("smtpPort",e.target.value)}/></label></div><label>Connection security<select value={form.smtpEncryption} onChange={e=>set("smtpEncryption",e.target.value as FormData["smtpEncryption"])}><option value="starttls">STARTTLS (recommended)</option><option value="tls">TLS</option><option value="none">None</option></select></label><div className="form-grid"><label>SMTP username <span className="optional">Optional</span><input value={form.smtpUsername} onChange={e=>set("smtpUsername",e.target.value)} autoComplete="off"/></label><label>SMTP password <span className="optional">Optional</span><input type="password" value={form.smtpPassword} onChange={e=>set("smtpPassword",e.target.value)} autoComplete="new-password"/></label></div><div className="form-grid"><label>From email<input required type="email" value={form.smtpFromEmail} onChange={e=>set("smtpFromEmail",e.target.value)} placeholder="noreply@example.com"/></label><label>From name<input required value={form.smtpFromName} onChange={e=>set("smtpFromName",e.target.value)} placeholder={form.siteName||"Website"}/></label></div><p className="field-help">SMTP credentials are encrypted when saved by a runtime with its secret key. Live SMTP connection testing is not wired into this screen yet.</p></>}
+ {error&&<p className="inline-alert" role="alert">{error}</p>}<div className="form-actions"><button className="text-button" type="button" onClick={()=>setStep(0)}>← Back</button><button className="primary-button" type="button" disabled={!emailValid} onClick={()=>setStep(2)}>Review setup <span>→</span></button></div></div></>}
+ {step===2&&<><h1 id="setup-title">Review your setup</h1><p className="intro wizard-intro">Confirm these details. Installation creates the site and administrator account.</p><div className="review-list"><div className="review-row"><span>Environment</span><strong>{mode==="local"?"Local installation":"Cloudflare deployment"}</strong></div><div className="review-row"><span>Site</span><strong>{form.siteName} <small>/{form.slug}</small></strong></div><div className="review-row"><span>Site URL</span><strong>{form.url||"Not specified"}</strong></div><div className="review-row"><span>Administrator</span><strong>{form.username} · {form.email}</strong></div><div className="review-row"><span>Outgoing email</span><strong>{form.smtpEnabled?`${form.smtpHost} · port ${form.smtpPort}`:"Skip for now"}</strong></div></div><div className="privacy-note"><strong>License and registration</strong><p>Base single-site setup does not require a paid license key. This installer request does not send optional License Server registration data.</p></div>{error&&<p className="inline-alert" role="alert">{error}</p>}<div className="form-actions review-actions"><button className="text-button" type="button" onClick={()=>setStep(1)}>← Back</button><button className="primary-button" type="button" disabled={busy||!siteValid||!emailValid} onClick={submit}>{busy?"Installing…":"Install DevOne"} <span>→</span></button></div></>}
+ </>}
+ </div></section><footer className="page-footer">DevOne CMS <span>·</span> Simple content, built for developers</footer></main>
 }
-
-function CloudIcon() {
-  return (
-    <svg viewBox="0 0 48 48" aria-hidden="true" className="choice-icon-svg cloud-icon">
-      <path d="M12 34h25a7 7 0 0 0 .7-14 13 13 0 0 0-24.9-2.4A8.4 8.4 0 0 0 12 34Z" />
-      <path d="M9 39h27" />
-    </svg>
-  );
-}
-
-function App() {
-  const [mode, setMode] = useState<InstallMode | null>(null);
-  const [confirmed, setConfirmed] = useState(false);
-
-  const chooseMode = (nextMode: InstallMode) => {
-    setMode(nextMode);
-    setConfirmed(false);
-  };
-
-  const reset = () => {
-    setMode(null);
-    setConfirmed(false);
-  };
-
-  return (
-    <main className="installer-page">
-      <div className="page-grid" aria-hidden="true" />
-      <header className="brand-header" aria-label="DevOne CMS">
-        <div className="brand-wordmark"><span>DevOne</span><span className="brand-muted">CMS</span></div>
-        <div className="brand-version">VERSION 2.0</div>
-      </header>
-
-      <section className="setup-panel" aria-labelledby="setup-title">
-        <div className="setup-content">
-          <div className="eyebrow"><span className="status-dot" /> DEVONE SETUP</div>
-          {!confirmed ? (
-            <>
-              <h1 id="setup-title">Choose where to install</h1>
-              <p className="intro">Get DevOne CMS running in the environment that works<br className="desktop-break" /> best for your project.</p>
-
-              <div className="choice-list" aria-label="Installation environment">
-                <button
-                  type="button"
-                  className={`choice-card ${mode === "local" ? "is-selected" : ""}`}
-                  aria-pressed={mode === "local"}
-                  onClick={() => chooseMode("local")}
-                >
-                  <span className="choice-icon local-icon"><LocalIcon /></span>
-                  <span className="choice-copy">
-                    <span className="choice-title">Install locally</span>
-                    <span className="choice-description">Run DevOne on your own machine or server</span>
-                  </span>
-                  <span className="choice-arrow" aria-hidden="true">{mode === "local" ? "✓" : "→"}</span>
-                </button>
-
-                <button
-                  type="button"
-                  className={`choice-card ${mode === "cloudflare" ? "is-selected" : ""}`}
-                  aria-pressed={mode === "cloudflare"}
-                  onClick={() => chooseMode("cloudflare")}
-                >
-                  <span className="choice-icon cloud-choice-icon"><CloudIcon /></span>
-                  <span className="choice-copy">
-                    <span className="choice-title">Deploy with Cloudflare</span>
-                    <span className="choice-description">Launch globally on Cloudflare's network</span>
-                  </span>
-                  <span className="choice-arrow" aria-hidden="true">{mode === "cloudflare" ? "✓" : "→"}</span>
-                </button>
-              </div>
-
-              <div className="choice-footer">
-                <span className="selection-hint">{mode ? `${mode === "local" ? "Local installation" : "Cloudflare deployment"} selected` : "Select an environment to continue"}</span>
-                <button className="primary-button" type="button" disabled={!mode} onClick={() => setConfirmed(true)}>
-                  Continue <span aria-hidden="true">→</span>
-                </button>
-              </div>
-            </>
-          ) : (
-            <div className="selected-view">
-              <div className="eyebrow eyebrow-secondary">INSTALLATION METHOD</div>
-              <h1 id="setup-title">{mode === "local" ? "Install locally" : "Deploy with Cloudflare"}</h1>
-              <p className="intro selected-intro">
-                {mode === "local"
-                  ? "Run DevOne on a machine or server you control. The local setup path will guide you through runtime and storage configuration."
-                  : "Prepare your DevOne deployment for Cloudflare. The cloud setup path will guide you through account and resource configuration."}
-              </p>
-              <div className="next-step-card">
-                <span className="next-step-number">01</span>
-                <div>
-                  <strong>Next: environment setup</strong>
-                  <p>{mode === "local" ? "We’ll check the local runtime and prepare the installation settings." : "We’ll confirm the Cloudflare prerequisites and prepare your deployment settings."}</p>
-                </div>
-              </div>
-              <div className="choice-footer detail-footer">
-                <button className="text-button" type="button" onClick={reset}>← Change installation method</button>
-                <span className="coming-note">Guided setup screens are being connected next.</span>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <footer className="page-footer">DevOne CMS <span>·</span> Simple content, built for developers</footer>
-    </main>
-  );
-}
-
-createRoot(document.getElementById("root")!).render(
-  <StrictMode><App /></StrictMode>
-);
+createRoot(document.getElementById("root")!).render(<StrictMode><App/></StrictMode>);
