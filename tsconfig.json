@@ -20,7 +20,6 @@
     "noEmit": true,
     "types": [
       "vite/client",
-      "@cloudflare/workers-types",
       "node"
     ],
     "jsx": "react-jsx"
