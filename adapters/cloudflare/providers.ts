@@ -104,6 +104,7 @@ export function createCloudflareServices(env: Env) {
     config: {
       runtime: "cloudflare",
       environment: env.DEVONE_ENVIRONMENT ?? "production",
+      secret_key: env.DEVONE_SECRET_KEY ?? "",
     },
   };
 }
