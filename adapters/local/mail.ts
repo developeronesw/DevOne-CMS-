@@ -9,7 +9,7 @@ function readResponse(socket: Connection): Promise<string> {
     let buffer = "";
     const onData = (chunk: Buffer) => {
       buffer += chunk.toString("utf8");
-      const lines = buffer.split(/\\r?\\n/).filter(Boolean);
+      const lines = buffer.split(/\\r?\\n/).filter((line) => line.length > 0);
       const last = lines[lines.length - 1];
       if (last && /^\\d{3} /.test(last)) { cleanup(); resolve(lines.join("\\n")); }
     };
