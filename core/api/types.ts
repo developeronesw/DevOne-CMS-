@@ -82,6 +82,7 @@ export interface CoreApiContext {
 }
 
 import type { MailTransport } from "../mail";
+import type { LicenseProvider } from "../license";
 
 export interface CoreApiOptions {
   services: CoreServices;
@@ -91,4 +92,5 @@ export interface CoreApiOptions {
   validateCsrf?: (request: Request, user: CoreUser) => Promise<boolean>;
   maxBodyBytes?: number;
   mailTransport?: MailTransport | null;
+  licenseProvider?: LicenseProvider;
 }
