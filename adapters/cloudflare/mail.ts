@@ -44,7 +44,6 @@ export class CloudflareMailTransport implements MailTransport {
 
   async test(): Promise<{ ok: true }> {
     if (!this.options.email) throw new Error("Cloudflare Email Service binding EMAIL is not configured.");
-    if (!this.options.fromEmail) throw new Error("Set a sender email address for Cloudflare Email Service.");
     return { ok: true };
   }
 }
