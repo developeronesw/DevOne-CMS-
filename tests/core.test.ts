@@ -1,0 +1,112 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { DatabaseSync } from "node:sqlite";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
+import { ApiRouter, DevOneApi, fail, ok } from "../core/api/router";
+import type { CoreServices, DatabaseProvider } from "../core/api/types";
+import { DevOneInstaller } from "../core/installer";
+import { OfflineLicenseProvider } from "../core/license/offline";
+import { DevOneLicense } from "../core/license/service";
+import { DevOnePermissions } from "../core/auth/permissions";
+import { LocalDatabase, LocalMedia } from "../adapters/local/providers";
+
+function services(db: DatabaseProvider): CoreServices {
+  return {
+    db,
+    cache: { get: async () => null, set: async () => undefined, delete: async () => undefined },
+    media: { put: async () => ({ key: "", contentType: "", size: 0 }), get: async () => null, delete: async () => undefined, exists: async () => false },
+    config: { runtime: "test", environment: "test", secret_key: "test-secret" },
+  };
+}
+
+test("offline licensing defaults to no paid entitlement and one site", async () => {
+  const license = new DevOneLicense(new OfflineLicenseProvider());
+  assert.equal(await license.get(), null);
+  assert.equal(await license.isFeatureEnabled("multisite"), false);
+  assert.equal(await license.canCreateSite(0), true);
+  assert.equal(await license.canCreateSite(1), false);
+  await assert.rejects(() => license.requireFeature("network_admin"));
+  await assert.rejects(() => license.activate("DEVONE-TEST"));
+});
+
+test("API router reports allowed methods", async () => {
+  const router = new ApiRouter();
+  router.get("/api/test", async () => ok({ ok: true }));
+  const db: DatabaseProvider = {
+    first: async () => null, all: async () => [], run: async () => ({ changes: 0 }), batch: async () => undefined,
+  };
+  const api = new DevOneApi(router, { services: services(db) });
+  const response = await api.handle(new Request("http://localhost/api/test", { method: "POST", headers: { "content-type": "application/json" }, body: "{}" }));
+  assert.equal(response.status, 405);
+  assert.equal(response.headers.get("allow"), "GET");
+});
+
+test("installer can complete against a clean provider without license-server access", async () => {
+  const calls: string[] = [];
+  const db: DatabaseProvider = {
+    first: async <T>(sql: string) => {
+      if (sql.includes("installation_complete")) return null as T;
+      if (sql.includes("FROM users LIMIT")) return null as T;
+      if (sql.includes("FROM sites WHERE site_slug")) return { id: 1, owner_user_id: 1 } as T;
+      if (sql.includes("FROM users WHERE username")) return { id: 1 } as T;
+      return null;
+    },
+    all: async () => [],
+    run: async () => ({ changes: 1 }),
+    batch: async statements => { calls.push(...statements.map(s => s.sql)); },
+  };
+  const installer = new DevOneInstaller(services(db));
+  const result = await installer.install({
+    deployment: "local",
+    admin: { username: "admin", email: "admin@example.com", password: "correct horse battery staple", displayName: "Administrator" },
+    site: { name: "Test Site", slug: "test-site", url: "https://example.test", timezone: "UTC", language: "en-US" },
+    smtp: { enabled: false, host: "", port: 587, encryption: "starttls", username: "", password: "", fromEmail: "admin@example.com", fromName: "Test Site" },
+  });
+  assert.deepEqual(result, { siteId: 1, userId: 1, deployment: "local", smtpConfigured: false });
+  assert.ok(calls.some(sql => sql.includes("INSERT INTO users")));
+  assert.ok(calls.some(sql => sql.includes("installation_complete")));
+  assert.equal(calls.some(sql => sql.includes("license_entitlement")), false);
+});
+
+test("permissions fail closed when stored permission JSON is malformed", async () => {
+  const db: DatabaseProvider = {
+    first: async <T>(sql: string) => {
+      if (sql.includes("FROM roles")) return { permissions: "{bad json" } as T;
+      if (sql.includes("FROM users")) return { permissions_override: "[\"sites.read\"]" } as T;
+      return null;
+    },
+    all: async () => [], run: async () => ({ changes: 0 }), batch: async () => undefined,
+  };
+  const permissions = new DevOnePermissions(db);
+  const user = { id: 2, username: "editor", email: "e@example.com", display_name: "Editor", role: "editor", status: "active" };
+  assert.equal(await permissions.has(user, "sites.read"), true);
+  assert.equal(await permissions.has(user, "sites.create"), false);
+});
+
+test("local database batches roll back atomically", async () => {
+  const raw = new DatabaseSync(":memory:");
+  const db = new LocalDatabase(raw);
+  await db.run("CREATE TABLE items (id INTEGER PRIMARY KEY, name TEXT NOT NULL UNIQUE)");
+  await db.batch([{ sql: "INSERT INTO items(name) VALUES(?)", params: ["one"] }]);
+  await assert.rejects(() => db.batch([
+    { sql: "INSERT INTO items(name) VALUES(?)", params: ["two"] },
+    { sql: "INSERT INTO items(name) VALUES(?)", params: ["two"] },
+  ]));
+  assert.equal((await db.first<{ count: number }>("SELECT COUNT(*) AS count FROM items"))?.count, 1);
+  raw.close();
+});
+
+test("local media rejects path traversal", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "devone-media-"));
+  try {
+    const media = new LocalMedia(dir);
+    await assert.rejects(() => media.put("../escape.txt", "blocked"));
+    await media.put("safe/file.txt", "ok");
+    assert.equal(await media.exists("safe/file.txt"), true);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
