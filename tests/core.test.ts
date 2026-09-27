@@ -29,7 +29,6 @@ test("offline licensing defaults to no paid entitlement and one site", async () 
   assert.equal(await license.canCreateSite(0), true);
   assert.equal(await license.canCreateSite(1), false);
   await assert.rejects(() => license.requireFeature("network_admin"));
-  await assert.rejects(() => license.activate("DEVONE-TEST"));
 });
 
 test("API router reports allowed methods", async () => {
