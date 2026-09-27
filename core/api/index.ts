@@ -36,11 +36,11 @@ export function createCoreApi(options: CoreApiOptions): { router: ApiRouter; api
   router.post("/api/install/test-smtp", async () => {
     try {
       const status = await installer.status();
-      if (status.installed) return fail("SMTP testing through the installer is disabled after installation.", 409);
+      if (status.installed) return fail("Mail testing through the installer is disabled after installation.", 409);
       await mail.test();
-      return ok({ ok: true, message: "SMTP connection test succeeded." });
+      return ok({ ok: true, message: "Mail transport configuration test succeeded." });
     } catch (error) {
-      return fail(error instanceof Error ? error.message : "SMTP connection test failed.", 400);
+      return fail(error instanceof Error ? error.message : "Mail transport test failed.", 400);
     }
   }, { public: true, csrf: false });
 
