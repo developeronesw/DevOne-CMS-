@@ -1,6 +1,6 @@
 import type { Env } from "./types";
 import { json } from "./lib/crypto";
-import { adminResetPassword, changePassword, completePasswordReset, getCurrentUser, login, logout, logoutAll, requestPasswordReset, revokeMySessions } from "./lib/auth";
+import { adminResetPassword, changePassword, completePasswordReset, login, logout, logoutAll, requestPasswordReset, revokeMySessions } from "./lib/auth";
 import { isInstalled, setSetting, setting } from "./lib/db";
 import { createCoreApi } from "../core/api";
 import { DevOnePermissions } from "../core/auth/permissions";
@@ -39,7 +39,7 @@ async function api(request: Request, env: Env): Promise<Response> {
   if (path==="/api/auth/password/reset/request"&&request.method==="POST") return requestPasswordReset(request,env);
   if (path==="/api/auth/password/reset/complete"&&request.method==="POST") return completePasswordReset(request,env);
   if (path==="/api/auth/password/reset/admin"&&request.method==="POST") return adminResetPassword(request,env);
-  if (path==="/api/auth/me"&&request.method==="GET"){const user=await getCurrentUser(request,env);return json({ok:true,authenticated:Boolean(user),user});}
+  if (path==="/api/auth/me"&&request.method==="GET"){const auth=new DevOneAuthService(createCloudflareServices(env).db);const session=await auth.restoreSession(request);return json({ok:true,authenticated:Boolean(session.user),user:session.user,csrf_token:session.csrfToken});}
   if (path==="/api/settings"&&request.method==="GET"){const auth=await new DevOneAuthService(createCloudflareServices(env).db).getCurrentUser(request);if(!auth)return json({ok:false,error:"Authentication required."},401);if(auth.role!=="administrator")return json({ok:false,error:"Permission denied."},403);const rows=await env.DB.prepare("SELECT setting_key,setting_value FROM settings ORDER BY setting_key").all();const settings=(rows.results??[]).filter((row)=>!["smtp_password_encrypted","license_entitlement"].includes(String((row as {setting_key?:string}).setting_key)));return json({ok:true,settings});}
   if (path==="/api/settings"&&["POST","PUT","PATCH"].includes(request.method)){const auth=new DevOneAuthService(createCloudflareServices(env).db);try{await auth.requireCsrf(request);}catch(error){return json({ok:false,error:error instanceof Error?error.message:"CSRF validation failed."},403);}const user=await auth.getCurrentUser(request);if(!user)return json({ok:false,error:"Authentication required."},401);if(user.role!=="administrator")return json({ok:false,error:"Permission denied."},403);const body=await request.json().catch(()=>null) as {key?:string;value?:string}|null;const key=String(body?.key??"").trim();if(!/^[a-zA-Z0-9_.-]{1,120}$/.test(key))return json({ok:false,error:"Invalid setting key."},400);await setSetting(env,key,String(body?.value??""));return json({ok:true});}
   return json({ok:false,error:"API route not found."},404);
