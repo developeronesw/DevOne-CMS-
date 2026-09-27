@@ -52,10 +52,12 @@ export function validateInstallerInput(input: InstallerInput): string | null {
   }
   const smtp = input.smtp;
   if (!smtp?.enabled) return null;
+  const port = smtp.port ?? 587;
+  const password = smtp.password ?? "";
   if (!smtp.host || smtp.host.length > 255) return "SMTP host is required.";
-  if (!Number.isInteger(smtp.port) || smtp.port < 1 || smtp.port > 65535) return "SMTP port must be between 1 and 65535.";
+  if (!Number.isInteger(port) || port < 1 || port > 65535) return "SMTP port must be between 1 and 65535.";
   if (!["none", "starttls", "tls"].includes(smtp.encryption ?? "")) return "Invalid SMTP encryption mode.";
-  if (smtp.username && smtp.password.length > 256) return "SMTP password is too long.";
+  if (smtp.username && password.length > 256) return "SMTP password is too long.";
   if (!emailPattern.test(smtp.fromEmail ?? "")) return "Invalid SMTP from email.";
   if (!smtp.fromName) return "SMTP from name is required.";
   return null;
