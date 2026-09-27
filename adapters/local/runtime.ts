@@ -1,5 +1,4 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { randomBytes } from "node:crypto";
 import { resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { createLocalServices } from "./providers";
@@ -20,7 +19,11 @@ async function loadSecret(dataDir: string, supplied?: string): Promise<string> {
     const value = (await readFile(path, "utf8")).trim();
     if (value) return value;
   } catch {}
-  const value = randomBytes(32).toString("base64url");
+  const bytes = new Uint8Array(32);
+  globalThis.crypto.getRandomValues(bytes);
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  const value = btoa(binary).replace(/\\+/g, "-").replace(/\\//g, "_").replace(/=+$/, "");
   await writeFile(path, value + "\n", { encoding: "utf8", mode: 0o600 });
   return value;
 }
