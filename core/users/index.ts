@@ -14,7 +14,7 @@ export class DevOneUsers implements UserService {
 
   async create(input: { username: string; email: string; displayName: string; passwordHash: string; role?: string }): Promise<CoreUser> {
     const result = await this.db.run(
-      "INSERT INTO users (username, password_hash, email, display_name, role, status) VALUES (?1, ?2, ?3, ?4, ?5, 'active')",
+      "INSERT INTO users (username, password_hash, email, display_name, role, status, password_changed_at) VALUES (?1, ?2, ?3, ?4, ?5, 'active', CURRENT_TIMESTAMP)",
       input.username.toLowerCase(), input.passwordHash, input.email.toLowerCase(), input.displayName, input.role ?? "subscriber",
     );
     const user = await this.getById(result.lastInsertId ?? 0);
@@ -23,6 +23,19 @@ export class DevOneUsers implements UserService {
   }
 
   async disable(id: number): Promise<void> {
-    await this.db.run("UPDATE users SET status = 'disabled', updated_at = CURRENT_TIMESTAMP WHERE id = ?1", id);
+    await this.db.batch([
+      {
+        sql: "UPDATE users SET status = 'disabled', updated_at = CURRENT_TIMESTAMP WHERE id = ?1",
+        params: [id],
+      },
+      {
+        sql: "UPDATE sessions SET revoked_at = CURRENT_TIMESTAMP WHERE user_id = ?1 AND revoked_at IS NULL",
+        params: [id],
+      },
+      {
+        sql: "UPDATE password_reset_tokens SET used_at = CURRENT_TIMESTAMP WHERE user_id = ?1 AND used_at IS NULL",
+        params: [id],
+      },
+    ]);
   }
 }
