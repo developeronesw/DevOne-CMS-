@@ -4,6 +4,7 @@ import { adminResetPassword, changePassword, completePasswordReset, getCurrentUs
 import { isInstalled, setSetting, setting } from "./lib/db";
 import { createCoreApi } from "../core/api";
 import { DevOnePermissions } from "../core/auth/permissions";
+import { DevOneAuthService } from "../core/auth/service";
 import { createCloudflareServices } from "../adapters/cloudflare/providers";
 
 function securityHeaders(): HeadersInit {
@@ -50,7 +51,7 @@ async function api(request: Request, env: Env): Promise<Response> {
   const url=new URL(request.url), path=url.pathname.replace(/\/+$/,"")||"/";
   if (path.startsWith("/api/core/")) {
     const services=createCloudflareServices(env), permissions=new DevOnePermissions(services.db);
-    const core=createCoreApi({services,authenticate:async(req)=>await getCurrentUser(req,env),authorize:async(user,permission,siteId)=>await permissions.has(user,permission,siteId),resolveSite:async(req)=>{const value=req.headers.get("x-devone-site-id");return value&&/^\d+$/.test(value)?Number(value):null;},validateCsrf:async(req)=>{const result=await requireCsrf(req,env);return result===null;},maxBodyBytes:1024*1024});
+    const core=createCoreApi({services,authenticate:async(req)=>await new DevOneAuthService(createCloudflareServices(env).db).getCurrentUser(req),authorize:async(user,permission,siteId)=>await permissions.has(user,permission,siteId),resolveSite:async(req)=>{const value=req.headers.get("x-devone-site-id");return value&&/^\d+$/.test(value)?Number(value):null;},validateCsrf:async(req)=>{try{await new DevOneAuthService(createCloudflareServices(env).db).requireCsrf(req);return true;}catch{return false;}},maxBodyBytes:1024*1024});
     return core.api.handle(request);
   }
   if (path==="/api/health"&&request.method==="GET") return json({ok:true,product:"DevOne CMS",version:"2.0.0-alpha.2",installed:await isInstalled(env),runtime:"cloudflare-workers"});
