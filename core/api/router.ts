@@ -64,7 +64,14 @@ export class ApiRouter {
     return this.register({ ...options, method: "DELETE", path, handler });
   }
 
-  allowedMethods(path: string): HttpMethod[] {\n    const normalized = normalizePath(path);\n    const methods = new Set<HttpMethod>();\n    for (const route of this.routes) if (route.regex.test(normalized)) for (const method of route.methods) methods.add(method);\n    return [...methods];\n  }\n\n  match(method: HttpMethod, path: string): { route: CompiledRoute; params: Record<string, string> } | null {
+  allowedMethods(path: string): HttpMethod[] {
+    const normalized = normalizePath(path);
+    const methods = new Set<HttpMethod>();
+    for (const route of this.routes) if (route.regex.test(normalized)) for (const method of route.methods) methods.add(method);
+    return [...methods];
+  }
+
+  match(method: HttpMethod, path: string): { route: CompiledRoute; params: Record<string, string> } | null {
     const normalized = normalizePath(path);
     for (const route of this.routes) {
       if (!route.methods.includes(method)) continue;
@@ -200,7 +207,8 @@ export class DevOneApi {
   }
 
   private json(result: CoreResponse, extraHeaders: HeadersInit = {}): Response {
-    const headers = new Headers(result.headers);\n    for (const [key, value] of new Headers(extraHeaders)) headers.set(key, value);
+    const headers = new Headers(result.headers);
+    for (const [key, value] of new Headers(extraHeaders)) headers.set(key, value);
     headers.set("content-type", "application/json; charset=utf-8");
     headers.set("cache-control", "no-store");
     return new Response(JSON.stringify(result.body ?? null), { status: result.status, headers });
