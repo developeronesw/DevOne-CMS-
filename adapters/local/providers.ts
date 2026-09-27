@@ -1,5 +1,5 @@
 import { mkdir, readFile, writeFile, unlink, stat, access } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { dirname, resolve, relative, isAbsolute, sep } from "node:path";
 import type { DatabaseProvider, CacheProvider, MediaProvider, MediaObject } from "../../core/api/types";
 import type { LocalRuntimeOptions } from "./runtime";
 export class LocalDatabase implements DatabaseProvider {
@@ -17,7 +17,7 @@ export class LocalCache implements CacheProvider {
 }
 export class LocalMedia implements MediaProvider {
  private readonly root:string;constructor(root:string){this.root=resolve(root);}
- private safe(key:string):string{const normalized=key.replace(/\\/g,"/").replace(/^\/+/, "");const path=resolve(this.root,normalized);if(path!==this.root&&!path.startsWith(this.root+"/"))throw new Error("Invalid media key.");return path;}
+ private safe(key:string):string{const normalized=key.replace(/\\/g,"/").replace(/^\/+/, "");const path=resolve(this.root,normalized);const rel=relative(this.root,path);if(isAbsolute(rel)||rel.startsWith(".."+sep)||rel==="..")throw new Error("Invalid media key.");return path;}
  async put(key:string,body:ReadableStream|ArrayBuffer|Uint8Array|string,options:{contentType?:string;metadata?:Record<string,string>}={}):Promise<MediaObject>{const path=this.safe(key);await mkdir(dirname(path),{recursive:true});let data:Uint8Array;if(typeof body==="string")data=new TextEncoder().encode(body);else if(body instanceof Uint8Array)data=body;else if(body instanceof ArrayBuffer)data=new Uint8Array(body);else data=new Uint8Array(await new Response(body).arrayBuffer());await writeFile(path,data);const info=await stat(path);return {key,contentType:options.contentType??"",size:info.size,metadata:options.metadata};}
  async get(key:string):Promise<Response|null>{try{return new Response(await readFile(this.safe(key)));}catch(e){if((e as NodeJS.ErrnoException).code==="ENOENT")return null;throw e;}}
  async delete(key:string):Promise<void>{try{await unlink(this.safe(key));}catch(e){if((e as NodeJS.ErrnoException).code!=="ENOENT")throw e;}}
