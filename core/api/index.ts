@@ -6,6 +6,7 @@ import type { CoreApiOptions } from "./types";
 import { DevOneLicense } from "../license";
 import { DevOneSiteService } from "../sites/service";
 import { DevOneInstaller } from "../installer";
+import { DevOneMailService } from "../mail";
 
 export function createCoreApi(options: CoreApiOptions): { router: ApiRouter; api: DevOneApi } {
   const router = new ApiRouter();
@@ -28,8 +29,20 @@ export function createCoreApi(options: CoreApiOptions): { router: ApiRouter; api
 
   const sites = new DevOneSiteService(options.services.db, license);
   const installer = new DevOneInstaller(options.services);
+  const mail = new DevOneMailService(options.services, options.mailTransport ?? null);
 
   router.get("/api/install/status", async () => ok({ ok: true, ...(await installer.status()) }), { public: true });
+
+  router.post("/api/install/test-smtp", async () => {
+    try {
+      const status = await installer.status();
+      if (status.installed) return fail("SMTP testing through the installer is disabled after installation.", 409);
+      await mail.test();
+      return ok({ ok: true, message: "SMTP connection test succeeded." });
+    } catch (error) {
+      return fail(error instanceof Error ? error.message : "SMTP connection test failed.", 400);
+    }
+  }, { public: true, csrf: false });
 
   router.post("/api/install", async (_request, context) => {
     try {
