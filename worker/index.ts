@@ -64,7 +64,7 @@ async function api(request: Request, env: Env): Promise<Response> {
   if (path==="/api/auth/password/reset/request"&&request.method==="POST") return requestPasswordReset(request,env);
   if (path==="/api/auth/password/reset/complete"&&request.method==="POST") return completePasswordReset(request,env);
   if (path==="/api/auth/password/reset/admin"&&request.method==="POST") return adminResetPassword(request,env);
-  if (path==="/api/auth/me"&&request.method==="GET") return json({ok:true,authenticated:Boolean(await getCurrentUser(request,env)),user:await getCurrentUser(request,env)});
+  if (path==="/api/auth/me"&&request.method==="GET"){const user=await getCurrentUser(request,env);return json({ok:true,authenticated:Boolean(user),user});}
   if (path==="/api/settings"&&request.method==="GET"){const auth=await requireUser(request,env);if(auth instanceof Response)return auth;const rows=await env.DB.prepare("SELECT setting_key,setting_value FROM settings ORDER BY setting_key").all();return json({ok:true,settings:rows.results});}
   if (path==="/api/settings"&&["POST","PUT","PATCH"].includes(request.method)){const csrf=await requireCsrf(request,env);if(csrf)return csrf;const auth=await requireUser(request,env);if(auth instanceof Response)return auth;if(auth.user.role!=="administrator")return json({ok:false,error:"Permission denied."},403);const body=await request.json().catch(()=>null) as {key?:string;value?:string}|null;const key=String(body?.key??"").trim();if(!/^[a-zA-Z0-9_.-]{1,120}$/.test(key))return json({ok:false,error:"Invalid setting key."},400);await setSetting(env,key,String(body?.value??""));return json({ok:true});}
   return json({ok:false,error:"API route not found."},404);
