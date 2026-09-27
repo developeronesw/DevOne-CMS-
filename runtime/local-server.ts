@@ -27,6 +27,7 @@ const core = createCoreApi({
     return value && /^\d+$/.test(value) ? Number(value) : null;
   },
   mailTransport,
+  mailTransportFactory: config => new LocalSmtpTransport(config),
   validateCsrf: async request => {
     try { await auth.requireCsrf(request); return true; } catch { return false; }
   },
@@ -71,8 +72,8 @@ async function handle(request: Request): Promise<Response> {
   const path = url.pathname.replace(/\/+$/, "") || "/";
   const authResponse = await routeAuth(request, path);
   if (authResponse) return authResponse;
-  if (path.startsWith("/api/core/")) return core.api.handle(request);
-  if (path === "/api/health" && request.method === "GET") return json({ ok: true, product: "DevOne CMS", version: "2.0.0-alpha.2", runtime: "local", database: "sqlite", media: "filesystem", cache: "memory" });
+  if (path.startsWith("/api/core/") || path.startsWith("/api/install")) return core.api.handle(request);
+  if (path === "/api/health" && request.method === "GET") return json({ ok: true, product: "DevOne CMS", version: "2.0.0-alpha.3", runtime: "local", database: "sqlite", media: "filesystem", cache: "memory" });
   if (path === "/api/runtime/status" && request.method === "GET") {
     const migrations = await services.db.all("SELECT name, applied_at FROM devone_migrations ORDER BY name");
     return json({ ok: true, runtime: services.config.runtime, migrations });
@@ -83,7 +84,19 @@ const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url ?? "/", "http://" + (req.headers.host ?? "localhost"));
     const chunks: Buffer[] = [];
-    for await (const chunk of req) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    let totalBytes = 0;
+    const maxBytes = 2 * 1024 * 1024;
+    for await (const chunk of req) {
+      const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+      totalBytes += buffer.length;
+      if (totalBytes > maxBytes) {
+        res.writeHead(413, { "content-type": "application/json", "cache-control": "no-store" });
+        res.end(JSON.stringify({ ok: false, error: "Request body is too large.", code: "body_too_large" }));
+        req.destroy();
+        return;
+      }
+      chunks.push(buffer);
+    }
     const request = new Request(url, {
       method: req.method,
       headers: Object.fromEntries(Object.entries(req.headers).flatMap(([key, value]) => value === undefined ? [] : [[key, Array.isArray(value) ? value.join(", ") : value]])),

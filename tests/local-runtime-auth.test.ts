@@ -40,6 +40,12 @@ test("local runtime auth flow survives session restore and logout", async () => 
     assert.equal(initial.status, 200);
     assert.equal((await initial.json()).installed, false);
 
+    const prerequisites = await fetch(baseUrl + "/api/install/prerequisites");
+    assert.equal(prerequisites.status, 200);
+    const prerequisiteBody = await prerequisites.json() as { ok: boolean; checks: Array<{ id: string; ok: boolean }> };
+    assert.equal(prerequisiteBody.ok, true);
+    assert.equal(prerequisiteBody.checks.some(check => check.id === "runtime-secret" && check.ok), true);
+
     const install = await fetch(baseUrl + "/api/install", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -55,6 +61,9 @@ test("local runtime auth flow survives session restore and logout", async () => 
     const installed = await fetch(baseUrl + "/api/install/status");
     assert.equal((await installed.json()).installed, true);
 
+    const settingsUnauthorized = await fetch(baseUrl + "/api/core/settings");
+    assert.equal(settingsUnauthorized.status, 401);
+
     const login = await fetch(baseUrl + "/api/auth/login", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -65,7 +74,24 @@ test("local runtime auth flow survives session restore and logout", async () => 
     assert.equal(loginBody.ok, true);
     assert.equal(loginBody.user.username, "admin");
     assert.ok(loginBody.csrf_token);
+
+    const csrfAfterLogin = loginBody.csrf_token;
     cookie = cookiePair(login.headers.get("set-cookie"));
+
+    const settingsBefore = await fetch(baseUrl + "/api/core/settings", { headers: { cookie } });
+    assert.equal(settingsBefore.status, 200);
+
+    const settingsUpdate = await fetch(baseUrl + "/api/core/settings", {
+      method: "PATCH",
+      headers: { cookie, "content-type": "application/json", "x-devone-csrf": csrfAfterLogin },
+      body: JSON.stringify({ site_settings: { site_tagline: "Phase 5 verified", timezone: "UTC", language: "en-US" } }),
+    });
+    assert.equal(settingsUpdate.status, 200, await settingsUpdate.text());
+
+    const settingsAfter = await fetch(baseUrl + "/api/core/settings", { headers: { cookie } });
+    assert.equal(settingsAfter.status, 200);
+    const settingsAfterBody = await settingsAfter.json() as { site_settings: Record<string, string> };
+    assert.equal(settingsAfterBody.site_settings.site_tagline, "Phase 5 verified");
 
     const restored = await fetch(baseUrl + "/api/auth/me", { headers: { cookie } });
     assert.equal(restored.status, 200);
@@ -74,6 +100,13 @@ test("local runtime auth flow survives session restore and logout", async () => 
     assert.equal(restoredBody.user.id > 0, true);
     assert.ok(restoredBody.csrf_token);
     assert.notEqual(restoredBody.csrf_token, loginBody.csrf_token);
+
+    const smtpAfterInstall = await fetch(baseUrl + "/api/install/test-smtp", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ enabled: false }),
+    });
+    assert.equal(smtpAfterInstall.status, 409);
 
     const logout = await fetch(baseUrl + "/api/auth/logout", {
       method: "POST",
