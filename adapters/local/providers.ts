@@ -23,4 +23,4 @@ export class LocalMedia implements MediaProvider {
  async delete(key:string):Promise<void>{try{await unlink(this.safe(key));}catch(e){if((e as NodeJS.ErrnoException).code!=="ENOENT")throw e;}}
  async exists(key:string):Promise<boolean>{try{await access(this.safe(key));return true;}catch{return false;}}
 }
-export function createLocalServices(options:LocalRuntimeOptions){return {db:new LocalDatabase(options.database!),cache:new LocalCache(),media:new LocalMedia(options.mediaDir!),config:{runtime:"local",environment:options.environment??"development",media_dir:options.mediaDir}};}
+export function createLocalServices(options:LocalRuntimeOptions & {secretKey?:string}){return {db:new LocalDatabase(options.database!),cache:new LocalCache(),media:new LocalMedia(options.mediaDir!),config:{runtime:"local",environment:options.environment??"development",media_dir:options.mediaDir,secret_key:options.secretKey??""}};}
