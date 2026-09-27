@@ -54,6 +54,8 @@ export function validateInstallerInput(input: InstallerInput): string | null {
   if (!smtp?.enabled) return null;
   const port = smtp.port ?? 587;
   const password = smtp.password ?? "";
+  const port = smtp.port ?? 587;
+  const password = smtp.password ?? "";
   if (!smtp.host || smtp.host.length > 255) return "SMTP host is required.";
   if (!Number.isInteger(port) || port < 1 || port > 65535) return "SMTP port must be between 1 and 65535.";
   if (!["none", "starttls", "tls"].includes(smtp.encryption ?? "")) return "Invalid SMTP encryption mode.";
